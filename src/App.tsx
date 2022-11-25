@@ -1,26 +1,33 @@
 import type { Component } from "solid-js";
-
-import logo from "./logo.svg";
-import styles from "./App.module.css";
+import { getContext } from "./Context";
+import "./background.css";
 
 const App: Component = () => {
+  const { theme } = getContext();
   return (
-    <div class={styles.App}>
-      <header class={styles.header}>
-        <p class="text-red-400">test</p>
-        <img src={logo} class={styles.logo} alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Solid
-        </a>
-      </header>
+    <div
+      class="relative top-0 bottom-0 left-0 right-0 min-h-screen"
+      classList={{ dark: theme().isDark }}
+    >
+      <main
+        class="max-w-2xl mx-auto p-4 md:px-0 z-20 relative dark:text-gray-200 min-h-screen
+      flex flex-col justify-between"
+      ></main>
+      <div
+        classList={{ night: theme().isDark }}
+        class="absolute top-0 bottom-0 left-0 right-0 block z-0 h-full 
+        pointer-events-none sky"
+      ></div>
+      <div
+        classList={{ empty: theme().isDark }}
+        class="absolute top-0 bottom-0 left-0 right-0 block z-10 pointer-events-none
+        clouds"
+      ></div>
+      <div
+        classList={{ empty: !theme().isDark }}
+        class="absolute top-0 bottom-0 left-0 right-0 block z-10 pointer-events-none
+        stars"
+      ></div>
     </div>
   );
 };

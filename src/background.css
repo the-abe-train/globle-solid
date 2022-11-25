@@ -1,0 +1,66 @@
+@property --myColor1 {
+  syntax: "<color>";
+  initial-value: rgba(63, 201, 255, 0.7);
+  inherits: false;
+}
+
+@property --myColor2 {
+  syntax: "<color>";
+  initial-value: rgba(255, 196, 87, 0.7);
+  inherits: false;
+}
+
+@property --foreground {
+  syntax: "<color>";
+  initial-value: transparent;
+  inherits: false;
+}
+
+.sky {
+  background: blue;
+  background: radial-gradient(
+      ellipse at top,
+      var(--myColor1, rgba(63, 201, 255, 0.7)),
+      var(--foreground, transparent)
+    ),
+    radial-gradient(
+        ellipse at bottom,
+        var(--myColor2, rgba(255, 196, 87, 0.7)),
+        var(--foreground, transparent)
+      )
+      no-repeat fixed;
+  transition: --myColor1 1s, --myColor2 1s, --foreground 1s;
+}
+
+.night {
+  --myColor1: #160152;
+  --myColor2: #7d3074;
+  --foreground: black;
+}
+
+.stars {
+  background: transparent
+    url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/1231630/stars.png) repeat;
+  opacity: 0.5;
+  transition-property: opacity;
+  transition-delay: 700ms;
+  transition-duration: 600ms;
+}
+
+.clouds {
+  background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/131045/clouds.png),
+    url(https://assets.codepen.io/557388/clouds.png);
+  background-repeat: repeat repeat;
+  margin-top: 8rem;
+  opacity: 0.3;
+  transition-property: opacity;
+  transition-delay: 700ms;
+  transition-duration: 600ms;
+}
+
+.empty {
+  transition-delay: 0ms;
+  transition-duration: 10ms;
+  transition-property: opacity;
+  opacity: 0;
+}

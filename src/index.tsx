@@ -1,7 +1,20 @@
 /* @refresh reload */
-import { render } from 'solid-js/web';
+/// <reference types="google.accounts" />
 
-import './index.css';
-import App from './App';
+import { render } from "solid-js/web";
 
-render(() => <App />, document.getElementById('root') as HTMLElement);
+import "./index.css";
+import App from "./App";
+import { Router } from "@solidjs/router";
+import { GlobalContext, makeContext } from "./Context";
+
+render(
+  () => (
+    <Router>
+      <GlobalContext.Provider value={makeContext("Stored")}>
+        <App />
+      </GlobalContext.Provider>
+    </Router>
+  ),
+  document.getElementById("root") as HTMLElement
+);
