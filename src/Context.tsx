@@ -7,6 +7,7 @@ import {
   Setter,
   useContext,
 } from "solid-js";
+import { Locale } from "./i18n";
 
 function getStorageValue<T extends object>(key: string, defaultValue?: T) {
   const saved = localStorage.getItem(key);
@@ -23,25 +24,11 @@ export function useLocalStorage<T extends Record<string, any>>(
   key: string,
   defaultValue: T
 ): [Accessor<T>, Setter<T>] {
-  // const expiringDefault = Object.keys(defaultValue).includes("expiration")
-  //   ? { ...defaultValue }
-  //   : { ...defaultValue, expiration: null };
-
   const storedValue = getStorageValue<T>(key, defaultValue);
-
-  // Get expiration from local storage
-  // If expiration is later than now, don't edit expiration and change value
-  // If expiration is earlier than now, reset expiration and reset value
-  // const expiration = dayjs(storedValue.expiration || "9999-12-31").endOf("day");
-  // const isNotExpired = expiration.isAfter(dayjs());
-  // const startingValue = isNotExpired ? storedValue : defaultValue;
-
   const [newValue, setNewValue] = createSignal(storedValue);
-
   createEffect(() => {
     localStorage.setItem(key, JSON.stringify(newValue()));
   });
-
   return [newValue, setNewValue];
 }
 
@@ -62,6 +49,7 @@ export const makeContext = (mode: "Stored" | "Static") => {
     },
     distanceUnit: { unit: "km" as Unit },
     token: { google: "" },
+    locale: { locale: "en-CA" as Locale },
   };
 
   type Keys = keyof typeof initial;
@@ -82,11 +70,8 @@ export const makeContext = (mode: "Stored" | "Static") => {
   const [storedStats, storeStats] = create("statistics");
   const [storedGuesses, storeGuesses] = create("guesses");
   const [token, setToken] = create("token");
-  // const [storedGuesses, storeGuesses] = useLocalStorage(
-  //   "guesses",
-  //   initial["guesses"]
-  // );
   const [distanceUnit, setDistanceUnit] = create("distanceUnit");
+  const [locale, setLocale] = create("locale");
 
   return {
     theme,
@@ -101,6 +86,8 @@ export const makeContext = (mode: "Stored" | "Static") => {
     setDistanceUnit,
     token,
     setToken,
+    locale,
+    setLocale,
   };
 };
 

@@ -29,7 +29,7 @@ export default function Header({ showStats, setShowStats }: Props) {
             class="text-2xl sm:text-3xl font-extrabold font-header w-min 
           sm:w-max text-center"
           >
-            GLOBLE: CAPITALS
+            GLOBLE
           </h1>
         </A>
         <div class="space-x-1 flex absolute right-0 bottom-1">
