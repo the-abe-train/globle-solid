@@ -7,6 +7,7 @@ import { useNavigate } from "@solidjs/router";
 import SelectMenu from "../components/SelectMenu";
 import { languages, translatePage } from "../i18n";
 import NavGlobe from "../components/globes/NavGlobe";
+import { createPracticeAns } from "../util/practice";
 // const NavGlobe = lazy(() => import("../components/globes/NavGlobe"));
 
 export default function () {
@@ -25,9 +26,8 @@ export default function () {
   });
 
   function enterPracticeMode() {
-    return null;
-    // createPracticeAns();
-    // navigate("/practice");
+    createPracticeAns();
+    navigate("/practice");
   }
 
   return (

@@ -20,13 +20,10 @@ export function formatName(country: Country, locale: Locale) {
   // const { locale } = getContext().locale();
   const { NAME_LEN, ABBREV, NAME } = country.properties;
   let name = NAME;
-  console.log({ locale });
   if (locale !== "en-CA") {
     const langName = langNameMap[locale];
     name = country.properties[langName];
-    console.log("French name", name);
   }
   if (NAME_LEN >= 10) name = ABBREV;
-  console.log(name);
   return name;
 }

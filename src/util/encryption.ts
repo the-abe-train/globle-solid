@@ -1,6 +1,7 @@
 import crypto from "crypto-js";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+import { getPracticeAns } from "./practice";
 dayjs.extend(advancedFormat);
 
 const key = import.meta.env.VITE_CRYPTO_KEY;

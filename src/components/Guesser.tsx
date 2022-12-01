@@ -3,7 +3,7 @@ import rawAnswerData from "../data/country_data.json";
 import Fuse from "fuse.js";
 import { getContext } from "../Context";
 import { polygonDistance } from "../util/geometry";
-import { GuessStore } from "../routes/Game";
+import { GuessStore } from "../util/stores";
 
 type Props = {
   guesses: GuessStore;
@@ -90,16 +90,18 @@ export default function (props: Props) {
     const newCountry = findCountry(guess);
     if (!newCountry) return;
 
+    const name = newCountry.properties.NAME;
     const distance = polygonDistance(newCountry, props.ans);
     newCountry["proximity"] = distance;
     props.addGuess(newCountry);
 
-    if (newCountry.properties.NAME === props.ans.properties.NAME) return;
+    if (name === props.ans.properties.NAME) return;
+    if (distance === 0) return setMsg(`${name} is adjacent to the answer!`);
     if (props.guesses.length <= 1) return setMsg(mountMsg);
     const lastGuess = props.guesses.list[props.guesses.length - 2];
     const lastDistance = lastGuess.proximity ?? 0;
     const direction = distance < lastDistance ? "warmer!" : "cooler.";
-    setMsg(`${newCountry.properties.NAME} is ${direction}`);
+    setMsg(`${name} is ${direction}`);
   }
 
   return (

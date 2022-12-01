@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import { translatePage } from "./i18n";
 import Modal from "./components/Modal";
 import Statistics from "./components/Statistics";
+import Practice from "./routes/Practice";
 
 const Home = lazy(() => import("./routes/Home"));
 const Settings = lazy(() => import("./routes/Settings"));
@@ -34,6 +35,7 @@ const App: Component = () => {
         <Routes>
           <Route path="/" component={Home} />
           <Route path="/game" element={<Game setShowStats={setShowStats} />} />
+          <Route path="/practice" component={Practice} />
           <Route path="/settings" component={Settings} />
           <Route path="/faq" component={FAQ} />
         </Routes>

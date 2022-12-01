@@ -91,7 +91,6 @@ export default function (props: Props) {
 
   // When there's a new guess, turn globe to that point
   createEffect(() => {
-    const start = dayjs();
     if (props.guesses.length > 0) {
       const newestGuess = props.guesses.list[props.guesses.length - 1];
       const newPoint = findCentre(newestGuess);
@@ -100,7 +99,6 @@ export default function (props: Props) {
       globe.polygonsData(unwrap(props.guesses.list));
     }
     const end = dayjs();
-    console.log(end.diff(start));
   });
 
   // When player clicks on a city name, turn to it

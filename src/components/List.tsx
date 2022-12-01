@@ -10,8 +10,9 @@ import {
 } from "solid-js";
 import { getContext } from "../Context";
 import { langNameMap } from "../i18n";
-import { GuessStore } from "../routes/Game";
+// import { GuessStore } from "../routes/Game";
 import { findCentre } from "../util/geometry";
+import { GuessStore } from "../util/stores";
 import { formatKm } from "../util/text";
 import Toggle from "./Toggle";
 
