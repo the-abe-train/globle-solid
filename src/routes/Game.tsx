@@ -23,6 +23,7 @@ import { polygonDistance } from "../util/geometry";
 import GameGlobe from "../components/globes/GameGlobe";
 import { getColour } from "../util/colour";
 import { formatName } from "../util/text";
+import { translatePage } from "../i18n";
 
 // const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
@@ -49,6 +50,7 @@ type Props = {
 function Inner(props: Props) {
   // Signals
   const context = getContext();
+  const { locale } = getContext().locale();
   const [pov, setPov] = createSignal<Coords | null>(null);
 
   const lastWin = dayjs(context.storedStats().lastWin);
@@ -90,7 +92,7 @@ function Inner(props: Props) {
           label: `<p
           class="text-black py-1 px-2 text-center font-bold bg-yellow-50"
           style="background-color: ${labelBg};"
-          >${formatName(country)}</p>`,
+          >${formatName(country, locale)}</p>`,
         };
         return output;
       });
@@ -106,6 +108,7 @@ function Inner(props: Props) {
   });
 
   onMount(() => {
+    translatePage();
     const expiration = dayjs(context.storedGuesses().expiration);
     if (dayjs().isAfter(expiration)) context.resetGuesses();
     if (win()) setTimeout(() => props.setShowStats(true), 3000);

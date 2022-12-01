@@ -25,6 +25,7 @@ type Props = {
 
 export default function (props: Props) {
   const context = getContext();
+  const { locale } = getContext().locale();
 
   // Refs
   let globeRef: HTMLDivElement | undefined;
@@ -74,7 +75,7 @@ export default function (props: Props) {
           (c) => `<p
         class="text-black py-1 px-2 text-center font-bold bg-yellow-50"
         style="background-color: ${labelBg};"
-        >${formatName(c as Country)}</p>`
+        >${formatName(c as Country, locale)}</p>`
         )
         .polygonStrokeColor(() => "black")(globeRef);
 

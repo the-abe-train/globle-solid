@@ -129,6 +129,7 @@ export default function (props: Props) {
           disabled:bg-blue-900 text-white 
           font-bold py-1 md:py-2 px-4 rounded focus:shadow-outline"
           disabled={props.win() || !props.ans}
+          data-i18n="Game2"
         >
           Enter
         </button>

@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { createSignal, For, onCleanup } from "solid-js";
 import UAParser from "ua-parser-js";
 import outlines from "../data/country_outlines.json";
@@ -58,7 +59,7 @@ export default function () {
                   </g>
                 </svg>
                 <figcaption class="text-left sm:text-center font-bold my-auto">
-                  {outline.name}
+                  {i18next.t(outline.name)}
                 </figcaption>
               </figure>
             );

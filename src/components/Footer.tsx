@@ -23,12 +23,17 @@ export default function Footer() {
           <Icon shape="github" size={14} />
         </a>
       </span>
-      <span>
-        Have a question?{" "}
-        <A href="/faq" class="underline" data-cy="faq-footer-link">
+      <p>
+        <span data-i18n="Aux2">Have a question?</span>{" "}
+        <A
+          href="/faq"
+          class="underline"
+          data-cy="faq-footer-link"
+          data-i18n="Aux3"
+        >
           Check out the FAQ.
         </A>
-      </span>
+      </p>
     </footer>
   );
 }

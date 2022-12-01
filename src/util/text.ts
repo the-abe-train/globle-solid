@@ -16,13 +16,17 @@ export function formatKm(m: number) {
   return `${format(rounded)}`;
 }
 
-export function formatName(country: Country) {
-  const { locale } = getContext().locale();
+export function formatName(country: Country, locale: Locale) {
+  // const { locale } = getContext().locale();
   const { NAME_LEN, ABBREV, NAME } = country.properties;
-  let name = NAME_LEN >= 10 ? ABBREV : NAME;
-  const langName = langNameMap[locale];
+  let name = NAME;
+  console.log({ locale });
   if (locale !== "en-CA") {
+    const langName = langNameMap[locale];
     name = country.properties[langName];
+    console.log("French name", name);
   }
+  if (NAME_LEN >= 10) name = ABBREV;
+  console.log(name);
   return name;
 }
