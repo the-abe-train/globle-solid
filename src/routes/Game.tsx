@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import {
   createEffect,
-  createMemo,
   createResource,
   createSignal,
   lazy,
@@ -14,18 +13,16 @@ import {
 import { createStore } from "solid-js/store";
 import Guesser from "../components/Guesser";
 import List from "../components/List";
-import data from "../data/country_data.json";
 import { getAnswer } from "../util/encryption";
-// import { emojiString } from "../util/emojis";
+import { emojiString } from "../util/colour";
 import { getContext } from "../Context";
 import { getCountry } from "../util/data";
 import { polygonDistance } from "../util/geometry";
-import GameGlobe from "../components/globes/GameGlobe";
 import { getColour } from "../util/colour";
 import { formatName } from "../util/text";
 import { translatePage } from "../i18n";
 
-// const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
+const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
 type OuterProps = {
   setShowStats: Setter<boolean>;
@@ -136,16 +133,16 @@ function Inner(props: Props) {
           ...context.storedStats().usedGuesses,
           context.storedGuesses().countries.length,
         ];
-        // const emojiGuesses = emojiString(restoredGuesses(), ans());
+        const emojiGuesses = emojiString(guesses.list, props.ans);
         const newStats = {
           lastWin: today.toString(),
           gamesWon,
           currentStreak,
           maxStreak,
           usedGuesses,
-          // emojiGuesses,
+          emojiGuesses,
         };
-        // context.storeStats(newStats);
+        context.storeStats(newStats);
 
         // Show stats
         setTimeout(() => props.setShowStats(true), 2000);
@@ -170,7 +167,7 @@ function Inner(props: Props) {
         win={win}
         ans={props.ans}
       />
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
       </Suspense>
       <List guesses={guesses} setPov={setPov} ans={props.ans} />

@@ -59,7 +59,7 @@ export default function () {
         <span class="font-medium text-base">Play practice game</span>
       </button>
       <Backup />
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <NavGlobe />
       </Suspense>
     </div>

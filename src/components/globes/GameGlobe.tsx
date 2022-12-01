@@ -121,7 +121,7 @@ export default function (props: Props) {
   return (
     <div>
       <Show when={!isLoaded()}>
-        <p>Loading...</p>
+        <p data-i18n="Loading">Loading...</p>
       </Show>
       <div
         ref={globeRef!}

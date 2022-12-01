@@ -50,7 +50,7 @@ export const getColour = (
   return colour;
 };
 
-export const getColourEmoji = (guess: Country, answer: Country) => {
+const getColourEmoji = (guess: Country, answer: Country) => {
   if (guess.properties.NAME === answer.properties.NAME) return GREEN_SQUARE;
   if (guess.proximity == null) {
     guess["proximity"] = polygonDistance(guess, answer);
@@ -66,3 +66,15 @@ export const getColourEmoji = (guess: Country, answer: Country) => {
     return WHITE_SQUARE;
   }
 };
+
+export function emojiString(guesses: Country[], answer: Country) {
+  if (!answer) return "";
+  const chunks = [];
+  for (let i = 0; i < guesses.length; i += 8) {
+    chunks.push(guesses.slice(i, i + 8));
+  }
+  const emojiGuesses = chunks
+    .map((each) => each.map((guess) => getColourEmoji(guess, answer)).join(""))
+    .join("\n");
+  return emojiGuesses;
+}

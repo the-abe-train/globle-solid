@@ -185,7 +185,7 @@ export default function () {
         <Switch>
           <Match when={backupStats.loading}>
             {" "}
-            <p>Loading...</p>{" "}
+            <p data-i18n="Loading">Loading...</p>{" "}
           </Match>
           <Match when={backupStats.error}>
             {" "}

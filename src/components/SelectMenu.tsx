@@ -18,7 +18,7 @@ export default function (props: Props) {
         name="location"
         class="mt-1 block w-1/2 rounded-md border-gray-300 py-2 pl-3 pr-10 
         text-base focus:border-indigo-500 focus:outline-none 
-        focus:ring-indigo-500 sm:text-sm"
+        focus:ring-indigo-500 sm:text-sm text-black"
         value={props.choice()}
         onChange={(e) => props.choose(e.currentTarget.value)}
       >

@@ -1,5 +1,3 @@
-import { Messages } from "../../lib/locale";
-
 export const English: Messages = {
   name: "English",
   helpTitle: "How to play",
