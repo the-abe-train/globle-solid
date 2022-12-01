@@ -1,6 +1,7 @@
 import {
   Accessor,
   createEffect,
+  createMemo,
   createSignal,
   For,
   Match,
@@ -10,12 +11,13 @@ import {
 } from "solid-js";
 import { getContext } from "../Context";
 import { langNameMap } from "../i18n";
+import { GuessStore } from "../routes/Game";
 import { findCentre } from "../util/distance";
 import { formatKm } from "../util/text";
 import Toggle from "./Toggle";
 
 type Props = {
-  guesses: Accessor<Country[]>;
+  guesses: GuessStore;
   setPov: Setter<Coords>;
   ans: Country;
 };
@@ -26,20 +28,24 @@ export default function (props: Props) {
 
   const langName = langNameMap[context.locale().locale];
 
-  function proxSort(a: Country, z: Country) {
-    const proximityA = a.proximity ?? 0;
-    const proximityZ = z.proximity ?? 0;
-    return proximityA - proximityZ;
-  }
+  const sortedGuesses = createMemo(() => {
+    return isSortedByDistance() ? props.guesses.sorted : props.guesses.list;
+  });
 
-  const sortedGuesses = () => {
-    if (isSortedByDistance()) {
-      const guesses = [...props.guesses()];
-      return guesses.sort(proxSort);
-    } else {
-      return props.guesses();
-    }
-  };
+  // function proxSort(a: Country, z: Country) {
+  //   const proximityA = a.proximity ?? 0;
+  //   const proximityZ = z.proximity ?? 0;
+  //   return proximityA - proximityZ;
+  // }
+
+  // const sortedGuesses = () => {
+  //   if (isSortedByDistance()) {
+  //     const guesses = [...props.guesses];
+  //     return guesses.sort(proxSort);
+  //   } else {
+  //     return props.guesses;
+  //   }
+  // };
 
   const isAlreadyShowingKm = context.distanceUnit().unit === "km";
   const [isShowingKm, setShowingKm] = createSignal(isAlreadyShowingKm);
@@ -47,19 +53,18 @@ export default function (props: Props) {
     context.setDistanceUnit({ unit: isShowingKm() ? "km" : "miles" })
   );
 
-  const closest = () => {
-    if (props.guesses().length === 0) return 0;
-    const distances = props
-      .guesses()
-      .map((guess) => guess.proximity ?? 0)
-      .sort((a, z) => a - z);
-    return distances[0];
-  };
+  // const closest = () => {
+  //   if (props.guesses.length === 0) return 0;
+  //   const distances = props.guesses
+  //     .map((guess) => guess.proximity ?? 0)
+  //     .sort((a, z) => a - z);
+  //   return distances[0];
+  // };
 
   return (
     <div class="py-8 dark:text-white z-30 mb-16">
       <Switch fallback={<p>Guesses will appear here.</p>}>
-        <Match when={props.guesses().length < 1}>
+        <Match when={props.guesses.length < 1}>
           <p>Guesses will appear here.</p>
         </Match>
         <Match when={isSortedByDistance()}>
@@ -96,10 +101,10 @@ export default function (props: Props) {
           }}
         </For>
       </ul>
-      <Show when={props.guesses().length > 0}>
+      <Show when={props.guesses.length > 0}>
         <div class="mt-8">
           <div class="flex items-center space-x-1">
-            <p>Closest country: {formatKm(closest())}</p>
+            <p>Closest country: {formatKm(props.guesses.closest)}</p>
             <Toggle
               setToggle={setShowingKm}
               toggleProp={isShowingKm}

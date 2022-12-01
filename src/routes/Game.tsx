@@ -11,6 +11,7 @@ import {
   Show,
   Suspense,
 } from "solid-js";
+import { createStore } from "solid-js/store";
 import Guesser from "../components/Guesser";
 import List from "../components/List";
 import data from "../data/country_data.json";
@@ -22,11 +23,27 @@ import { polygonDistance } from "../util/distance";
 
 // const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
-type Props = {
+type OuterProps = {
   setShowStats: Setter<boolean>;
 };
 
-export default function (props: Props) {
+export default function Outer(props: OuterProps) {
+  const [ans] = createResource(getAnswer);
+  return (
+    <Show when={ans()} keyed>
+      {(ans) => {
+        return <Inner setShowStats={props.setShowStats} ans={ans} />;
+      }}
+    </Show>
+  );
+}
+
+type Props = {
+  setShowStats: Setter<boolean>;
+  ans: Country;
+};
+
+function Inner(props: Props) {
   // Signals
   const context = getContext();
   const [pov, setPov] = createSignal<Coords | null>(null);
@@ -34,26 +51,39 @@ export default function (props: Props) {
   const lastWin = dayjs(context.storedStats().lastWin);
   const [win, setWin] = createSignal(lastWin.isSame(dayjs(), "date"));
 
-  const countries = data["features"] as unknown as Country[];
-  const [ans] = createResource(getAnswer);
-
-  const restoredGuesses = createMemo(() => {
-    console.log("Recalculating restored guesses");
-    return context.storedGuesses().countries.map((countryName, idx) => {
+  const restoredGuesses = context
+    .storedGuesses()
+    .countries.map((countryName) => {
       const country = getCountry(countryName);
-      const answer = ans();
-      if (answer) {
-        const proximity = polygonDistance(country, answer);
-        country["proximity"] = proximity;
-      }
+      const proximity = polygonDistance(country, props.ans);
+      country["proximity"] = proximity;
       return country;
     });
+
+  const [guesses, setGuesses] = createStore({
+    list: restoredGuesses,
+    get length() {
+      return this.list.length;
+    },
+    get closest() {
+      const distances = this.list
+        .map((guess) => guess.proximity ?? 0)
+        .sort((a, z) => a - z);
+      return distances[0];
+    },
+    get sorted() {
+      return [...this.list].sort((a: Country, z: Country) => {
+        const proximityA = a.proximity ?? 0;
+        const proximityZ = z.proximity ?? 0;
+        return proximityA - proximityZ;
+      });
+    },
   });
 
   // Effects
   createEffect(() => {
-    const winningGuess = restoredGuesses().find(
-      (c) => c.properties.NAME === ans()?.properties.NAME
+    const winningGuess = guesses.list.find(
+      (c) => c.properties.NAME === props.ans.properties.NAME
     );
     if (winningGuess) setWin(true);
   });
@@ -103,8 +133,10 @@ export default function (props: Props) {
     })
   );
 
-  function updateLocalStorage(newCountry: Country) {
+  function addNewGuess(newCountry: Country) {
     const countryName = newCountry.properties.NAME;
+
+    setGuesses("list", (prev) => [...prev, newCountry]);
     context.storeGuesses((prev) => {
       return { ...prev, countries: [...prev.countries, countryName] };
     });
@@ -112,24 +144,23 @@ export default function (props: Props) {
 
   return (
     <div>
-      <Show when={ans()} keyed>
-        {(ans) => {
-          return (
-            <>
-              <Guesser
-                addGuess={updateLocalStorage}
-                guesses={restoredGuesses}
-                win={win}
-                ans={ans}
-              />
-              {/* <Suspense fallback={<p>Loading...</p>}>
+      <Guesser
+        addGuess={addNewGuess}
+        guesses={guesses}
+        win={win}
+        ans={props.ans}
+      />
+      {/* <Suspense fallback={<p>Loading...</p>}>
                 <GameGlobe guesses={restoredGuesses} pov={pov} ans={ans} />
               </Suspense> */}
-              <List guesses={restoredGuesses} setPov={setPov} ans={ans} />
-            </>
-          );
-        }}
-      </Show>
+      <List guesses={guesses} setPov={setPov} ans={props.ans} />
     </div>
   );
 }
+
+export type GuessStore = {
+  list: Country[];
+  readonly sorted: Country[];
+  readonly length: number;
+  readonly closest: number;
+};

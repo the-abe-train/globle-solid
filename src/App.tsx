@@ -4,8 +4,7 @@ import { getContext } from "./Context";
 import "./background.css";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
-import { resources, translatePage } from "./i18n";
-import i18next from "i18next";
+import { translatePage } from "./i18n";
 
 const Home = lazy(() => import("./routes/Home"));
 const Settings = lazy(() => import("./routes/Settings"));

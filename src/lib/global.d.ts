@@ -39,13 +39,6 @@ declare global {
     z: number;
   };
 
-  type GuessStore = {
-    cities: City[];
-    readonly sortedGuesses: City[];
-    readonly numGuesses: number;
-    readonly closest: number;
-  };
-
   type Stats = {
     gamesWon: number;
     lastWin: string;

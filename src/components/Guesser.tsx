@@ -3,9 +3,10 @@ import rawAnswerData from "../data/country_data.json";
 import Fuse from "fuse.js";
 import { getContext } from "../Context";
 import { polygonDistance } from "../util/distance";
+import { GuessStore } from "../routes/Game";
 
 type Props = {
-  guesses: Accessor<Country[]>;
+  guesses: GuessStore;
   addGuess: (newGuess: Country) => void;
   win: Accessor<boolean>;
   ans: Country;
@@ -14,8 +15,8 @@ type Props = {
 export default function (props: Props) {
   const context = getContext();
 
-  const isFirstGuess = () => props.guesses().length === 0;
-  const isSecondGuess = () => props.guesses().length === 1;
+  const isFirstGuess = () => props.guesses.length === 0;
+  const isSecondGuess = () => props.guesses.length === 1;
   const mountMsg = () =>
     isFirstGuess()
       ? "Enter the name of any country to make your first guess!"
@@ -64,7 +65,7 @@ export default function (props: Props) {
     const topScore = topAnswer.score ?? 1;
     const { NAME } = topAnswer.item.properties;
     if (topScore < 0.025) {
-      const existingGuess = props.guesses().find((guess) => {
+      const existingGuess = props.guesses.list.find((guess) => {
         return NAME === guess.properties.NAME;
       });
       if (existingGuess) {
@@ -89,12 +90,13 @@ export default function (props: Props) {
     const newCountry = findCountry(guess);
     if (!newCountry) return;
 
+    const distance = polygonDistance(newCountry, props.ans);
+    newCountry["proximity"] = distance;
     props.addGuess(newCountry);
 
     if (newCountry.properties.NAME === props.ans.properties.NAME) return;
-    if (props.guesses().length <= 1) return setMsg(mountMsg);
-    const lastGuess = props.guesses()[props.guesses().length - 2];
-    const distance = polygonDistance(newCountry, props.ans);
+    if (props.guesses.length <= 1) return setMsg(mountMsg);
+    const lastGuess = props.guesses.list[props.guesses.length - 2];
     const lastDistance = lastGuess.proximity ?? 0;
     const direction = distance < lastDistance ? "warmer!" : "cooler.";
     setMsg(`${newCountry.properties.NAME} is ${direction}`);
