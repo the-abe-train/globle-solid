@@ -1,6 +1,6 @@
 export const English: Messages = {
   name: "English",
-  helpTitle: "How to play",
+  helpTitle: "How to Play",
   help1: `Every day, there is a new Mystery Country. Your goal is to guess which country it is using the fewest number of guesses. Each incorrect guess
   will appear on the globe with a colour indicating how close it is to the
   Mystery Country. The <b>hotter</b> the colour, the closer you are to the answer.`,

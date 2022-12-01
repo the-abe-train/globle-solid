@@ -19,22 +19,21 @@ export default function () {
         How to Play
       </h2>
       <p data-i18n="help1">
-        Every day, there is a Mystery Capital City. Your goal is to guess which
-        capital it is using the fewest number of guesses. Each incorrect guess
+        Every day, there is a new Mystery Country. Your goal is to guess which
+        country it is using the fewest number of guesses. Each incorrect guess
         will appear on the globe with a colour indicating how close it is to the
-        Mystery Capital. Every additional guess will create a colourful arc to
-        help you further. The <b style={{ color: maxColour }}>hotter</b> the
+        Mystery Country. The <b style={{ color: maxColour }}>hotter</b> the
         colour, the closer you are to the answer.
       </p>
       <p data-i18n="help2">
-        For example, if the Mystery Capital is Cairo, then your path of guesses
-        might look like the following:
+        For example, if the Mystery Country is <b>Japan</b>, then the following
+        countries would appear with these colours if guessed:
       </p>
       <div class="mr-10 sm:mr-16">
         <Preview />
       </div>
       <p data-i18n="help3">
-        A new Mystery Capital will be available every day!
+        A new Mystery Country will be available every day!
       </p>
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <NavGlobe />

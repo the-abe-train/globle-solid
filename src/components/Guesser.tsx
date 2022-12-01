@@ -51,14 +51,15 @@ export default function (props: Props) {
         "properties.NAME",
         "properties.ADMIN",
         "properties.NAME_SORT",
-        "properties.ABBREV",
+        // "properties.ABBREV",
       ],
       distance: 0,
       includeScore: true,
       getFn: (obj) => {
         const { ABBREV, NAME, ADMIN, NAME_SORT } = obj.properties;
         const abbrev = NAME.includes(" ") ? ABBREV.replace(/\./g, "") : "";
-        return [NAME, ADMIN, NAME_SORT, abbrev];
+        const nameSort = NAME.includes(" ") ? NAME_SORT.replace(/\./g, "") : "";
+        return [NAME, ADMIN, nameSort, abbrev];
       },
     });
   });
@@ -74,7 +75,7 @@ export default function (props: Props) {
     const topAnswer = results[0];
     const topScore = topAnswer.score ?? 1;
     const { NAME } = topAnswer.item.properties;
-    if (topScore < 0.02) {
+    if (topScore < 0.001) {
       const existingGuess = props.guesses.list.find((guess) => {
         return NAME === guess.properties.NAME;
       });
@@ -128,7 +129,7 @@ export default function (props: Props) {
           text-gray-700 dark:bg-slate-200 dark:text-gray-900
           focus:outline-none focus:shadow-outline disabled:bg-slate-400
           disabled:border-slate-400"
-          placeholder="Enter city name here."
+          placeholder="Enter country name here."
           autocomplete="off"
           disabled={props.win() || !props.ans}
           data-cy="guesser"

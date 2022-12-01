@@ -10,12 +10,12 @@ import {
 import { UAParser } from "ua-parser-js";
 import { globeImg } from "../../util/globe";
 import { getContext } from "../../Context";
-import { GuessStore } from "../../routes/Game";
 import { findCentre } from "../../util/geometry";
 import { getColour } from "../../util/colour";
 import { formatName } from "../../util/text";
 import dayjs from "dayjs";
 import { unwrap } from "solid-js/store";
+import { GuessStore } from "../../util/stores";
 
 type Props = {
   guesses: GuessStore;
@@ -101,7 +101,7 @@ export default function (props: Props) {
     const end = dayjs();
   });
 
-  // When player clicks on a city name, turn to it
+  // When player clicks on a country name, turn to it
   createEffect(() => {
     const newPov = props.pov();
     if (newPov) turnGlobe(newPov);

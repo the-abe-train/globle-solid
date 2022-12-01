@@ -10,7 +10,6 @@ import {
   Show,
   Suspense,
 } from "solid-js";
-import { createStore } from "solid-js/store";
 import Guesser from "../components/Guesser";
 import List from "../components/List";
 import { getAnswer } from "../util/encryption";
@@ -18,11 +17,7 @@ import { emojiString } from "../util/colour";
 import { getContext } from "../Context";
 import { getCountry } from "../util/data";
 import { polygonDistance } from "../util/geometry";
-import { getColour } from "../util/colour";
-import { formatName } from "../util/text";
 import { translatePage } from "../i18n";
-import { createPracticeAns } from "../util/practice";
-import { useLocation } from "@solidjs/router";
 import { createGuessStore } from "../util/stores";
 
 const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
@@ -50,24 +45,29 @@ type Props = {
 function Inner(props: Props) {
   // Signals
   const context = getContext();
-  // const { locale } = getContext().locale();
   const [pov, setPov] = createSignal<Coords | null>(null);
 
   const lastWin = dayjs(context.storedStats().lastWin);
   const [win, setWin] = createSignal(lastWin.isSame(dayjs(), "date"));
 
-  const restoredGuesses = context
-    .storedGuesses()
-    .countries.map((countryName) => {
-      const country = getCountry(countryName);
-      const proximity = polygonDistance(country, props.ans);
-      country["proximity"] = proximity;
-      return country;
-    });
+  console.log(context.storedGuesses());
+  const restoredGuesses = () => {
+    const oldGuesses = context.storedGuesses();
+    if (dayjs(oldGuesses.expiration).isAfter(dayjs())) {
+      return oldGuesses.countries.map((countryName) => {
+        const country = getCountry(countryName);
+        const proximity = polygonDistance(country, props.ans);
+        country["proximity"] = proximity;
+        return country;
+      });
+    }
+    return [];
+  };
 
-  // const isDark = context.theme().isDark;
-  // const locale = context.locale().locale;
-  const { guesses, setGuesses } = createGuessStore(restoredGuesses, props.ans);
+  const { guesses, setGuesses } = createGuessStore(
+    restoredGuesses(),
+    props.ans
+  );
 
   // Effects
   createEffect(() => {
@@ -104,7 +104,7 @@ function Inner(props: Props) {
             : context.storedStats().maxStreak;
         const usedGuesses = [
           ...context.storedStats().usedGuesses,
-          context.storedGuesses().countries.length,
+          guesses.length,
         ];
         const emojiGuesses = emojiString(guesses.list, props.ans);
         const newStats = {

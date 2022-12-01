@@ -1,5 +1,10 @@
 node_modules
 dist
+client_secret.json
 # Local Netlify folder
 .netlify
 .env
+cypress.env.json
+cypress/screenshots/
+cypress/videos/
+answers_old.json

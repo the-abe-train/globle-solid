@@ -10,24 +10,6 @@ declare global {
 
   type Unit = "km" | "miles";
 
-  type City = {
-    id: number;
-    city: string;
-    city_ascii: string;
-    lat: number;
-    lng: number;
-    country: string;
-    iso2: string;
-    iso3: string;
-    admin_name: string;
-    capital: "admin" | "primary" | "minor" | null;
-    population: number;
-    is_territory: boolean;
-    continent: Continent;
-    guessable: boolean;
-    rank: number;
-  };
-
   type Coords = {
     lat: number;
     lng: number;

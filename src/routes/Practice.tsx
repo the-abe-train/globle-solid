@@ -24,7 +24,7 @@ export default function () {
   // Effects
   createEffect(() => {
     const winningGuess = guesses.list.find(
-      (city) => city.properties.NAME === ans().properties.NAME
+      (c) => c.properties.NAME === ans().properties.NAME
     );
     if (winningGuess) {
       setWin(true);

@@ -38,6 +38,7 @@ export default function (props: Props) {
     const avgGuesses =
       Math.round((sumGuesses / usedGuesses.length) * 100) / 100;
     const showAvgGuesses = usedGuesses.length === 0 ? "--" : avgGuesses;
+    console.log(usedGuesses);
     const todaysGuesses = wonToday()
       ? usedGuesses[usedGuesses.length - 1]
       : "--";
