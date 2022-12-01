@@ -44,19 +44,29 @@ export default function (props: Props) {
   let formRef: HTMLFormElement;
 
   // Search indexes
-  // TODO usa should work, not uganda lol. UK and Ukraine too.
   const answerIndex = createMemo(() => {
     const answers = rawAnswerData["features"] as unknown as Country[];
     return new Fuse(answers, {
-      keys: ["properties.ABBREV", "properties.NAME", "properties.ADMIN"],
-      distance: 1,
+      keys: [
+        "properties.NAME",
+        "properties.ADMIN",
+        "properties.NAME_SORT",
+        "properties.ABBREV",
+      ],
+      distance: 0,
       includeScore: true,
+      getFn: (obj) => {
+        const { ABBREV, NAME, ADMIN, NAME_SORT } = obj.properties;
+        const abbrev = NAME.includes(" ") ? ABBREV.replace(/\./g, "") : "";
+        return [NAME, ADMIN, NAME_SORT, abbrev];
+      },
     });
   });
 
   function findCountry(newGuess: string) {
     const searchPhrase = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
     const results = answerIndex().search(searchPhrase);
+    console.log(results);
     if (results.length === 0) {
       setMsg(`"${newGuess}" not found in database.`);
       return;
@@ -64,7 +74,7 @@ export default function (props: Props) {
     const topAnswer = results[0];
     const topScore = topAnswer.score ?? 1;
     const { NAME } = topAnswer.item.properties;
-    if (topScore < 0.025) {
+    if (topScore < 0.02) {
       const existingGuess = props.guesses.list.find((guess) => {
         return NAME === guess.properties.NAME;
       });
@@ -122,6 +132,7 @@ export default function (props: Props) {
           autocomplete="off"
           disabled={props.win() || !props.ans}
           data-cy="guesser"
+          minLength={2}
           required
         />
         <button

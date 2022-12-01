@@ -49,9 +49,9 @@ function calcProximity(points1: number[][], points2: number[][]) {
 export function polygonDistance(country1: Country, country2: Country) {
   // console.log("Country 1:", country1.properties.NAME);
   // console.log("Country 2", country2.properties.NAME);
-  console.log(
-    `calculating distance between ${country1.properties.NAME} and ${country2.properties.NAME}`
-  );
+  // console.log(
+  //   `calculating distance between ${country1.properties.NAME} and ${country2.properties.NAME}`
+  // );
   const name1 = country1.properties.NAME;
   const name2 = country2.properties.NAME;
   if (name1 === "South Africa" && name2 === "Lesotho") return 0;
