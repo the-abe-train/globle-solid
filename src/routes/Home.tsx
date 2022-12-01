@@ -1,10 +1,10 @@
-import { onMount, Suspense } from "solid-js";
+import { lazy, onMount, Suspense } from "solid-js";
 import { translatePage } from "../i18n";
-// import Preview from "../components/Preview";
+import Preview from "../components/Preview";
 // import { maxColour } from "../util/geometry";
 
 // import NavGlobe from "../components/globes/NavGlobe";
-// const NavGlobe = lazy(() => import("../components/globes/NavGlobe"));
+const NavGlobe = lazy(() => import("../components/globes/NavGlobe"));
 
 export default function () {
   const maxColour = "#D30000";
@@ -30,19 +30,21 @@ export default function () {
         For example, if the Mystery Capital is Cairo, then your path of guesses
         might look like the following:
       </p>
-      <div class="mr-10 sm:mr-16">{/* <Preview /> */}</div>
+      <div class="mr-10 sm:mr-16">
+        <Preview />
+      </div>
       <p data-i18n="help3">
         A new Mystery Capital will be available every day!
       </p>
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
-        {/* <NavGlobe /> */}
+        <NavGlobe />
       </Suspense>
       <p>
         Or{" "}
-        <a class="underline" href="https://globle-game.com">
+        <a class="underline" href="https://globle-capitals.com">
           click here
         </a>{" "}
-        to play the <i>Globle</i> with countries!
+        to play the <i>Globle</i> with capital cities!
       </p>
     </div>
   );

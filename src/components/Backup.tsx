@@ -64,7 +64,6 @@ export default function () {
     }
   }
 
-  console.log("client id", import.meta.env.VITE_GOOGLE_CLIENT_ID);
   createEffect(() => {
     if (!isConnected() && google) {
       google.accounts.id.initialize({
