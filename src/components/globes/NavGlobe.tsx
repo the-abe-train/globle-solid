@@ -1,10 +1,10 @@
 import Globe from "globe.gl";
-import { createEffect, createSignal, on, onCleanup, onMount } from "solid-js";
+import { onCleanup, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import dayImg from "../../images/earth-day-min.webp";
-import nightImg from "../../images/earth-night-min.webp";
+
 import UAParser from "ua-parser-js";
 import { getContext } from "../../Context";
+import { globeMinImg } from "../../util/globe";
 
 export default function () {
   const context = getContext();
@@ -14,12 +14,11 @@ export default function () {
   const parser = new UAParser();
   const isMobile = parser.getDevice().type === "mobile";
   const navigate = useNavigate();
-  const globeImg = () => (context.theme().isDark ? nightImg : dayImg);
 
   onMount(() => {
     if (globeRef) {
       globe
-        .globeImageUrl(globeImg())
+        .globeImageUrl(globeMinImg())
         .backgroundColor("#00000000")
         .enablePointerInteraction(false)
         .showAtmosphere(false)
@@ -33,10 +32,6 @@ export default function () {
       setTimeout(() => globe.resumeAnimation(), 1000);
     }
   });
-
-  // createEffect(() => {
-  //   globe.globeImageUrl(globeImg());
-  // });
 
   onCleanup(() => globe._destructor());
 

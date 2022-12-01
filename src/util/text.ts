@@ -1,5 +1,5 @@
 import { getContext } from "../Context";
-import { Locale } from "../i18n";
+import { langNameMap, Locale } from "../i18n";
 
 export function formatKm(m: number) {
   const BIN = 10;
@@ -14,4 +14,15 @@ export function formatKm(m: number) {
   const format = (num: number) =>
     num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return `${format(rounded)}`;
+}
+
+export function formatName(country: Country) {
+  const { locale } = getContext().locale();
+  const { NAME_LEN, ABBREV, NAME } = country.properties;
+  let name = NAME_LEN >= 10 ? ABBREV : NAME;
+  const langName = langNameMap[locale];
+  if (locale !== "en-CA") {
+    name = country.properties[langName];
+  }
+  return name;
 }

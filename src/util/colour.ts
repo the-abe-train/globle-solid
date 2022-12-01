@@ -12,7 +12,7 @@ import {
   interpolateOrRd,
   scaleSequentialSqrt,
 } from "d3";
-import { polygonDistance } from "./distance";
+import { polygonDistance } from "./geometry";
 
 const GREEN_SQUARE = "🟩";
 const ORANGE_SQUARE = "🟧";

@@ -2,7 +2,7 @@ import { Accessor, createEffect, createMemo, createSignal } from "solid-js";
 import rawAnswerData from "../data/country_data.json";
 import Fuse from "fuse.js";
 import { getContext } from "../Context";
-import { polygonDistance } from "../util/distance";
+import { polygonDistance } from "../util/geometry";
 import { GuessStore } from "../routes/Game";
 
 type Props = {
@@ -44,7 +44,7 @@ export default function (props: Props) {
   let formRef: HTMLFormElement;
 
   // Search indexes
-  // TODO usa should work, not uganda lol
+  // TODO usa should work, not uganda lol. UK and Ukraine too.
   const answerIndex = createMemo(() => {
     const answers = rawAnswerData["features"] as unknown as Country[];
     return new Fuse(answers, {

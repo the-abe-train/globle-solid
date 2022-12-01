@@ -1,5 +1,4 @@
 import {
-  Accessor,
   createEffect,
   createMemo,
   createSignal,
@@ -12,7 +11,7 @@ import {
 import { getContext } from "../Context";
 import { langNameMap } from "../i18n";
 import { GuessStore } from "../routes/Game";
-import { findCentre } from "../util/distance";
+import { findCentre } from "../util/geometry";
 import { formatKm } from "../util/text";
 import Toggle from "./Toggle";
 
@@ -83,7 +82,6 @@ export default function (props: Props) {
             const { NAME_LEN, ABBREV, NAME, FLAG } = country.properties;
             const flag = (FLAG || "").toLocaleLowerCase();
             let name = NAME_LEN >= 10 ? ABBREV : NAME;
-
             if (context.locale().locale !== "en-CA") {
               name = country.properties[langName];
             }

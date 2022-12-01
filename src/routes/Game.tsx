@@ -19,7 +19,10 @@ import { getAnswer } from "../util/encryption";
 // import { emojiString } from "../util/emojis";
 import { getContext } from "../Context";
 import { getCountry } from "../util/data";
-import { polygonDistance } from "../util/distance";
+import { polygonDistance } from "../util/geometry";
+import GameGlobe from "../components/globes/GameGlobe";
+import { getColour } from "../util/colour";
+import { formatName } from "../util/text";
 
 // const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
@@ -76,6 +79,20 @@ function Inner(props: Props) {
         const proximityA = a.proximity ?? 0;
         const proximityZ = z.proximity ?? 0;
         return proximityA - proximityZ;
+      });
+    },
+    get polygons() {
+      const labelBg = context.theme().isDark ? "#F3E2F1" : "#FEFCE8";
+      return this.list.map((country) => {
+        const output = {
+          geometry: country?.geometry,
+          colour: getColour(country, props.ans),
+          label: `<p
+          class="text-black py-1 px-2 text-center font-bold bg-yellow-50"
+          style="background-color: ${labelBg};"
+          >${formatName(country)}</p>`,
+        };
+        return output;
       });
     },
   });
@@ -150,17 +167,32 @@ function Inner(props: Props) {
         win={win}
         ans={props.ans}
       />
-      {/* <Suspense fallback={<p>Loading...</p>}>
-                <GameGlobe guesses={restoredGuesses} pov={pov} ans={ans} />
-              </Suspense> */}
+      <Suspense fallback={<p>Loading...</p>}>
+        <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
+      </Suspense>
       <List guesses={guesses} setPov={setPov} ans={props.ans} />
     </div>
   );
 }
 
+type Polygon = {
+  geometry:
+    | {
+        type: "Polygon";
+        coordinates: number[][][];
+      }
+    | {
+        type: "MultiPolygon";
+        coordinates: number[][][][];
+      };
+  colour: string;
+  label: string;
+};
+
 export type GuessStore = {
   list: Country[];
   readonly sorted: Country[];
+  readonly polygons: Polygon[];
   readonly length: number;
   readonly closest: number;
 };
