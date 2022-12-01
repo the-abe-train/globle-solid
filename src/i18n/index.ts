@@ -48,6 +48,7 @@ export async function translatePage() {
   }
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const attr = el.getAttribute("data-i18n") ?? "";
+    console.log(attr);
     const defaultValue = el.innerHTML;
     el.innerHTML = i18next.t(attr, defaultValue);
   });

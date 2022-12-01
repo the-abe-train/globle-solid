@@ -9,6 +9,7 @@ import { translatePage } from "./i18n";
 const Home = lazy(() => import("./routes/Home"));
 const Settings = lazy(() => import("./routes/Settings"));
 const Game = lazy(() => import("./routes/Game"));
+const FAQ = lazy(() => import("./routes/Faq"));
 
 const App: Component = () => {
   const { theme } = getContext();
@@ -28,6 +29,7 @@ const App: Component = () => {
         <Routes>
           <Route path="/" component={Home} />
           <Route path="/settings" component={Settings} />
+          <Route path="/faq" component={FAQ} />
           <Route path="/game" element={<Game setShowStats={setShowStats} />} />
         </Routes>
         <Footer />
