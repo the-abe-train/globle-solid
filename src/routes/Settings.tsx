@@ -6,6 +6,7 @@ import { getContext } from "../Context";
 import { useNavigate } from "@solidjs/router";
 import SelectMenu from "../components/SelectMenu";
 import { languages, translatePage } from "../i18n";
+import NavGlobe from "../components/globes/NavGlobe";
 // const NavGlobe = lazy(() => import("../components/globes/NavGlobe"));
 
 export default function () {
@@ -57,8 +58,10 @@ export default function () {
       >
         <span class="font-medium text-base">Play practice game</span>
       </button>
-      {/* <Backup /> */}
-      <Suspense fallback={<p>Loading...</p>}>{/* <NavGlobe /> */}</Suspense>
+      <Backup />
+      <Suspense fallback={<p>Loading...</p>}>
+        <NavGlobe />
+      </Suspense>
     </div>
   );
 }

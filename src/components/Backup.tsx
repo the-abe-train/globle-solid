@@ -64,11 +64,11 @@ export default function () {
     }
   }
 
+  console.log("client id", import.meta.env.VITE_GOOGLE_CLIENT_ID);
   createEffect(() => {
     if (!isConnected() && google) {
       google.accounts.id.initialize({
-        client_id:
-          "197638666704-ta3tn996fsubrmog0nmkrekp0u7nslq7.apps.googleusercontent.com",
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
         callback: handleCredentialResponse,
         auto_select: true,
       });
