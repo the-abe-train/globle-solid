@@ -13,6 +13,7 @@ const Home = lazy(() => import("./routes/Home"));
 const Settings = lazy(() => import("./routes/Settings"));
 const Game = lazy(() => import("./routes/Game"));
 const FAQ = lazy(() => import("./routes/Faq"));
+const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 
 const App: Component = () => {
   const { theme } = getContext();
@@ -38,6 +39,7 @@ const App: Component = () => {
           <Route path="/practice" component={Practice} />
           <Route path="/settings" component={Settings} />
           <Route path="/faq" component={FAQ} />
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
         </Routes>
         <Footer />
       </main>
