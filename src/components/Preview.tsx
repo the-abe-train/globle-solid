@@ -1,9 +1,8 @@
 import { createSignal, For, onCleanup } from "solid-js";
-import invariant from "tiny-invariant";
 import UAParser from "ua-parser-js";
 import outlines from "../data/country_outlines.json";
 import { getColour } from "../util/colour";
-import rawCountryData from "../data/country_data.json";
+import { getCountry } from "../util/data";
 
 export default function () {
   const [count, setCount] = createSignal(1);
@@ -16,12 +15,6 @@ export default function () {
   }, 1000);
   onCleanup(() => clearInterval(timer));
 
-  const getCountry = (name: string) => {
-    const db = rawCountryData["features"] as unknown as Country[];
-    const country = db.find((c) => c.properties.NAME === name);
-    invariant(country, "An error exists in the country data.");
-    return country;
-  };
   const japan = getCountry("Japan");
   const colouredOutlines = () =>
     outlines.map((outline) => {

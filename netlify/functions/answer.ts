@@ -1,5 +1,5 @@
 import { Handler } from "@netlify/functions";
-import data from "../../src/data/answers.json";
+import rawAnswerData from "../../src/data/country_data.json";
 import crypto from "crypto-js";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -28,17 +28,15 @@ const handler: Handler = async (event) => {
     const dayCode = parseInt(dayjs.tz(today, "Etc/UTC").format("X"));
     if (!dayCode) throw "Parameter error";
     console.log(dayCode);
-    const cities = data.filter(
-      ({ capital }) => capital === "primary"
-    ) as City[];
-    const key = generateKey(cities, dayCode);
-    const city = cities[key];
-    console.log("city", city);
-    const answer = encrypt(JSON.stringify(city));
+    const countries = rawAnswerData["features"] as unknown as Country[];
+    const key = generateKey(countries, dayCode);
+    const country = countries[key];
+    console.log("country", country.properties.NAME);
+    const answer = encrypt(JSON.stringify(country));
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: "Mystery city retrieved.",
+        message: "Mystery country retrieved.",
         answer,
       }),
     };

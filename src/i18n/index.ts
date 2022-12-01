@@ -19,6 +19,18 @@ export const resources = {
 
 export type Locale = keyof typeof langMap;
 
+export const langNameMap: Record<Locale, LanguageName> = {
+  // "pt-BR": "NAME_PT",
+  // "es-MX": "NAME_ES",
+  "en-CA": "NAME_EN",
+  "fr-FR": "NAME_FR",
+  // "de-DE": "NAME_DE",
+  // "hu-HU": "NAME_HU",
+  // "pl-PL": "NAME_PL",
+  // "it-IT": "NAME_IT",
+  // "sv-SE": "NAME_SV",
+};
+
 export async function translatePage() {
   const context = getContext();
   const { locale } = context.locale();

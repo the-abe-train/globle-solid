@@ -78,6 +78,34 @@ declare global {
     SortByGuesses: string;
     SortByDistance: string;
   };
+
+  type LanguageName =
+    | "NAME_AR"
+    | "NAME_BN"
+    | "NAME_DE"
+    | "NAME_EN"
+    | "NAME_ES"
+    | "NAME_FA"
+    | "NAME_FR"
+    | "NAME_EL"
+    | "NAME_HE"
+    | "NAME_HI"
+    | "NAME_HU"
+    | "NAME_ID"
+    | "NAME_IT"
+    | "NAME_JA"
+    | "NAME_KO"
+    | "NAME_NL"
+    | "NAME_PL"
+    | "NAME_PT"
+    | "NAME_RU"
+    | "NAME_SV"
+    | "NAME_TR"
+    | "NAME_UK"
+    | "NAME_UR"
+    | "NAME_VI"
+    | "NAME_ZH"
+    | "NAME_ZHT";
 }
 
 export {};

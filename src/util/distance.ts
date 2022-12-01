@@ -49,6 +49,9 @@ function calcProximity(points1: number[][], points2: number[][]) {
 export function polygonDistance(country1: Country, country2: Country) {
   // console.log("Country 1:", country1.properties.NAME);
   // console.log("Country 2", country2.properties.NAME);
+  console.log(
+    `calculating distance between ${country1.properties.NAME} and ${country2.properties.NAME}`
+  );
   const name1 = country1.properties.NAME;
   const name2 = country2.properties.NAME;
   if (name1 === "South Africa" && name2 === "Lesotho") return 0;
@@ -60,4 +63,30 @@ export function polygonDistance(country1: Country, country2: Country) {
   const points1 = polygonPoints(country1);
   const points2 = polygonPoints(country2);
   return calcProximity(points1, points2);
+}
+
+export function altitudeFunction(area: number) {
+  // This function may seem arbitrary but I made it with a spreadsheet
+  // and it made sense there.
+  if (area >= 10) {
+    return 1.5;
+  }
+  return 1 / (-2.55 * area + 26);
+}
+
+export function findCentre(country: Country) {
+  const { bbox } = country;
+  const [lng1, lat1, lng2, lat2] = bbox;
+  const latitude = (lat1 + lat2) / 2;
+  const longitude = (lng1 + lng2) / 2;
+  const path = [
+    new geometry.LatLng(lat1, lng1),
+    new geometry.LatLng(lat1, lng2),
+    new geometry.LatLng(lat2, lng2),
+    new geometry.LatLng(lat2, lng1),
+  ];
+  const area = geometry.computeArea(path);
+  const areaOoM = Math.log10(area);
+  const altitude = altitudeFunction(areaOoM);
+  return { lat: latitude, lng: longitude, altitude };
 }

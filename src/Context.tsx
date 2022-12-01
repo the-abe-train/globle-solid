@@ -44,7 +44,7 @@ export const makeContext = (mode: "Stored" | "Static") => {
       emojiGuesses: "",
     },
     guesses: {
-      cities: [] as string[],
+      countries: [] as string[],
       expiration: dayjs().endOf("day").toDate(),
     },
     distanceUnit: { unit: "km" as Unit },
