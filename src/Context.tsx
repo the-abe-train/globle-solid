@@ -8,6 +8,7 @@ import {
   useContext,
 } from "solid-js";
 import { Locale } from "./i18n";
+import { ColourScheme } from "./util/colour";
 
 function getStorageValue<T extends object>(key: string, defaultValue?: T) {
   const saved = localStorage.getItem(key);
@@ -51,6 +52,7 @@ export const makeContext = (mode: "Stored" | "Static") => {
     distanceUnit: { unit: "km" as Unit },
     token: { google: "" },
     locale: { locale: "en-CA" as Locale },
+    colours: { colours: "Default" as ColourScheme },
   };
 
   type Keys = keyof typeof initial;
@@ -74,6 +76,7 @@ export const makeContext = (mode: "Stored" | "Static") => {
   const [token, setToken] = create("token");
   const [distanceUnit, setDistanceUnit] = create("distanceUnit");
   const [locale, setLocale] = create("locale");
+  const [colours, setColours] = create("colours");
 
   return {
     theme,
@@ -92,6 +95,8 @@ export const makeContext = (mode: "Stored" | "Static") => {
     setToken,
     locale,
     setLocale,
+    colours,
+    setColours,
   };
 };
 

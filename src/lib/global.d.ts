@@ -1,13 +1,4 @@
 declare global {
-  type Continent =
-    | "Asia"
-    | "Europe"
-    | "Africa"
-    | "North America"
-    | "South America"
-    | "Oceania"
-    | "None";
-
   type Unit = "km" | "miles";
 
   type Coords = {

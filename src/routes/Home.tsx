@@ -1,13 +1,9 @@
 import { lazy, onMount, Suspense } from "solid-js";
 import { translatePage } from "../i18n";
 import Preview from "../components/Preview";
-// import { maxColour } from "../util/geometry";
-
-// import NavGlobe from "../components/globes/NavGlobe";
 const NavGlobe = lazy(() => import("../components/globes/NavGlobe"));
 
 export default function () {
-  const maxColour = "#D30000";
   onMount(translatePage);
 
   return (
@@ -18,12 +14,13 @@ export default function () {
       >
         How to Play
       </h2>
-      <p data-i18n="help1">
+      {/* <p data-i18n="help1"> */}
+      <p>
         Every day, there is a new Mystery Country. Your goal is to guess which
         country it is using the fewest number of guesses. Each incorrect guess
         will appear on the globe with a colour indicating how close it is to the
-        Mystery Country. The <b style={{ color: maxColour }}>hotter</b> the
-        colour, the closer you are to the answer.
+        Mystery Country. The <b data-stylize="max-colour">hotter</b> the colour,
+        the closer you are to the answer.
       </p>
       <p data-i18n="help2">
         For example, if the Mystery Country is <b>Japan</b>, then the following

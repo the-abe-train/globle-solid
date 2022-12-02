@@ -1,11 +1,14 @@
 import i18next from "i18next";
 import { createSignal, For, onCleanup } from "solid-js";
 import UAParser from "ua-parser-js";
+import { getContext } from "../Context";
 import outlines from "../data/country_outlines.json";
 import { getColour } from "../util/colour";
 import { getCountry } from "../util/data";
 
 export default function () {
+  const { isDark } = getContext().theme();
+  const { colours } = getContext().colours();
   const [count, setCount] = createSignal(1);
   const parser = new UAParser();
   const isMobile = parser.getDevice().type === "mobile";
@@ -20,7 +23,7 @@ export default function () {
   const colouredOutlines = () =>
     outlines.map((outline) => {
       const country = getCountry(outline.name);
-      const colour = getColour(country, japan);
+      const colour = getColour(country, japan, isDark, colours);
       return { ...outline, colour };
     });
 

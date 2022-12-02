@@ -1,25 +1,22 @@
 import i18next from "i18next";
 import { getContext } from "../Context";
+import { getMaxColour } from "../util/colour";
 import { English } from "./en-CA";
 import { French } from "./fr-FR";
 
-const langMap = {
-  "en-CA": "English",
-  "fr-FR": "Français",
+export const langMap1 = {
+  English: "en-CA",
+  Français: "fr-FR",
 };
-
-export const languages = Object.keys(langMap).map((locale) => {
-  return { name: langMap[locale as Locale], value: locale };
-});
 
 export const resources = {
   fr: { translation: French },
   en: { translation: English },
 };
 
-export type Locale = keyof typeof langMap;
+export type Locale = keyof typeof langMap1;
 
-export const langNameMap: Record<Locale, LanguageName> = {
+export const langMap2 = {
   // "pt-BR": "NAME_PT",
   // "es-MX": "NAME_ES",
   "en-CA": "NAME_EN",
@@ -33,9 +30,9 @@ export const langNameMap: Record<Locale, LanguageName> = {
 
 export async function translatePage() {
   const context = getContext();
+  const { isDark } = context.theme();
+  const { colours } = context.colours();
   const { locale } = context.locale();
-  // if (locale === "en-CA") return;
-  const maxColour = "#D30000";
   if (!i18next.isInitialized) {
     await i18next.init({
       fallbackLng: "en",
@@ -51,7 +48,7 @@ export async function translatePage() {
     const defaultValue = el.innerHTML;
     el.innerHTML = i18next.t(attr, defaultValue);
   });
-  document.querySelectorAll("b").forEach((el) => {
-    el.classList.add(`text-[${maxColour}]`);
+  document.querySelectorAll<HTMLElement>("[data-stylize]").forEach((el) => {
+    el.style.color = getMaxColour(colours, isDark);
   });
 }

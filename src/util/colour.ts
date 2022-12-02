@@ -1,10 +1,3 @@
-// import { scaleSequentialSqrt } from "d3-scale";
-// import {
-//   interpolateBuPu,
-//   interpolateOrRd,
-//   interpolateGreys,
-//   interpolateTurbo,
-// } from "d3-scale-chromatic";
 import {
   interpolateGreys,
   interpolateTurbo,
@@ -22,33 +15,40 @@ const YELLOW_SQUARE = "🟨";
 
 const MAX_DISTANCE = 15_000_000;
 
+export const getColourScheme = (isDark: boolean) => {
+  return {
+    Default: isDark ? interpolateBuPu : interpolateOrRd,
+    Reds: interpolateOrRd,
+    Blues: interpolateBuPu,
+    Rainbow: interpolateTurbo,
+    Grayscale: interpolateGreys,
+  };
+};
+
+export type ColourScheme = keyof ReturnType<typeof getColourScheme>;
+
 export const getColour = (
   guess: Country,
-  answer: Country
-  // nightMode: boolean,
-  // highContrast: boolean,
-  // prideMode: boolean
+  answer: Country,
+  isDark: boolean,
+  colours: ColourScheme
 ) => {
-  if (guess.properties?.TYPE === "Territory") {
-    // if (highContrast) return "white";
-    return "#BBBBBB";
-  }
+  if (guess.properties?.TYPE === "Territory") return "#BBBBBB";
   if (guess.properties.NAME === answer.properties.NAME) return "green";
   if (guess.proximity == null) {
     guess["proximity"] = polygonDistance(guess, answer);
   }
-  // const gradient = highContrast
-  //   ? interpolateGreys
-  //   : prideMode
-  //   ? interpolateTurbo
-  //   : nightMode
-  //   ? interpolateBuPu
-  //   : interpolateOrRd;
-  const gradient = interpolateOrRd;
+  const gradient = getColourScheme(isDark)[colours];
   const colorScale = scaleSequentialSqrt(gradient).domain([MAX_DISTANCE, 0]);
   const colour = colorScale(guess.proximity);
   return colour;
 };
+
+export function getMaxColour(colours: ColourScheme, isDark: boolean) {
+  const gradient = getColourScheme(isDark)[colours];
+  const maxColour = gradient(0.8);
+  return maxColour;
+}
 
 const getColourEmoji = (guess: Country, answer: Country) => {
   if (guess.properties.NAME === answer.properties.NAME) return GREEN_SQUARE;

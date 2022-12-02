@@ -28,6 +28,8 @@ export default function (props: Props) {
   const context = getContext();
   const { locale } = getContext().locale();
   const { labelsOn } = getContext().labelsOn();
+  const { isDark } = getContext().theme();
+  const { colours } = getContext().colours();
 
   // Refs
   let globeRef: HTMLDivElement | undefined;
@@ -35,7 +37,7 @@ export default function (props: Props) {
 
   // Signals
   const [isLoaded, setIsLoaded] = createSignal(false);
-  const labelBg = context.theme().isDark ? "#F3E2F1" : "#FEFCE8";
+  const labelBg = isDark ? "#F3E2F1" : "#FEFCE8";
 
   // function generateLabel
 
@@ -101,7 +103,9 @@ export default function (props: Props) {
 
         .onPolygonClick((p, e, c) => turnGlobe(c))
         .polygonsData(unwrap(props.guesses.list))
-        .polygonCapColor((c) => getColour(c as Country, props.ans))
+        .polygonCapColor((c) =>
+          getColour(c as Country, props.ans, isDark, colours)
+        )
         .polygonAltitude(0.025)
         .polygonSideColor(() => "black")
         .polygonLabel((c) =>

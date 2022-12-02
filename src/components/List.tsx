@@ -9,7 +9,7 @@ import {
   Switch,
 } from "solid-js";
 import { getContext } from "../Context";
-import { langNameMap } from "../i18n";
+import { langMap2 } from "../i18n";
 // import { GuessStore } from "../routes/Game";
 import { findCentre } from "../util/geometry";
 import { GuessStore } from "../util/stores";
@@ -26,7 +26,7 @@ export default function (props: Props) {
   const context = getContext();
   const [isSortedByDistance, toggleSortByDistance] = createSignal(true);
 
-  const langName = langNameMap[context.locale().locale];
+  const langName = langMap2[context.locale().locale];
 
   const sortedGuesses = createMemo(() => {
     return isSortedByDistance() ? props.guesses.sorted : props.guesses.list;

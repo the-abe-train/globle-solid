@@ -5,9 +5,10 @@ import { getContext } from "../Context";
 // import { createPracticeAns } from "../util/practice";
 import { useNavigate } from "@solidjs/router";
 import SelectMenu from "../components/SelectMenu";
-import { languages, translatePage } from "../i18n";
+import { langMap1, translatePage } from "../i18n";
 import NavGlobe from "../components/globes/NavGlobe";
 import { createPracticeAns } from "../util/practice";
+import { getColourScheme } from "../util/colour";
 // const NavGlobe = lazy(() => import("../components/globes/NavGlobe"));
 
 export default function () {
@@ -27,6 +28,13 @@ export default function () {
   createEffect(() => {
     context?.setLocale({ locale: locale() });
     translatePage();
+  });
+
+  const currentColours = context.colours().colours;
+  const [colours, setColours] = createSignal(currentColours);
+  createEffect(() => {
+    console.log(colours());
+    context?.setColours({ colours: colours() });
   });
 
   function enterPracticeMode() {
@@ -54,7 +62,13 @@ export default function () {
           name="Language"
           choice={locale}
           choose={setLocale}
-          list={languages}
+          list={langMap1}
+        />
+        <SelectMenu
+          name="Colour set"
+          choice={colours}
+          choose={setColours}
+          list={getColourScheme(isDark())}
         />
       </div>
       <button

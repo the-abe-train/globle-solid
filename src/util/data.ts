@@ -12,3 +12,9 @@ export const getCountry = (name: string) => {
   invariant(country, "An error exists in the country data.");
   return country;
 };
+
+// export function mapToList<T>(map: Record<string, T>) {
+//   return Object.keys(map).map((name) => {
+//     return { name: map[locale as T], name };
+//   });
+// }
