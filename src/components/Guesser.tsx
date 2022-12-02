@@ -4,6 +4,8 @@ import Fuse from "fuse.js";
 import { getContext } from "../Context";
 import { polygonDistance } from "../util/geometry";
 import { GuessStore } from "../util/stores";
+import i18next from "i18next";
+import { langMap1, langMap2 } from "../i18n";
 
 type Props = {
   guesses: GuessStore;
@@ -14,14 +16,21 @@ type Props = {
 
 export default function (props: Props) {
   const context = getContext();
+  const locale = context.locale().locale;
 
   const isFirstGuess = () => props.guesses.length === 0;
   const isSecondGuess = () => props.guesses.length === 1;
   const mountMsg = () =>
     isFirstGuess()
-      ? "Enter the name of any country to make your first guess!"
+      ? i18next.t(
+          "Game3",
+          "Enter the name of any country to make your first guess!"
+        )
       : isSecondGuess()
-      ? "Enter your next guess!"
+      ? i18next.t(
+          "Game4",
+          "Drag, tap, and zoom in on the globe to help you find your next guess.`"
+        )
       : "";
 
   const [msg, setMsg] = createSignal(mountMsg());
@@ -46,26 +55,33 @@ export default function (props: Props) {
   // Search indexes
   const answerIndex = createMemo(() => {
     const answers = rawAnswerData["features"] as unknown as Country[];
+
+    const keys = [
+      "properties.NAME",
+      "properties.ADMIN",
+      "properties.NAME_SORT",
+    ];
+    const langKey = langMap2[locale];
+    if (locale !== "English") {
+      keys.push(`properties.${langKey}`);
+    }
+    console.table(keys);
     return new Fuse(answers, {
-      keys: [
-        "properties.NAME",
-        "properties.ADMIN",
-        "properties.NAME_SORT",
-        // "properties.ABBREV",
-      ],
+      keys,
       distance: 0,
       includeScore: true,
       getFn: (obj) => {
         const { ABBREV, NAME, ADMIN, NAME_SORT } = obj.properties;
+        const langName = obj.properties[langKey] as string;
         const abbrev = NAME.includes(" ") ? ABBREV.replace(/\./g, "") : "";
         const nameSort = NAME.includes(" ") ? NAME_SORT.replace(/\./g, "") : "";
-        return [NAME, ADMIN, nameSort, abbrev];
+        return [NAME, ADMIN, nameSort, abbrev, langName];
       },
     });
   });
 
   function findCountry(newGuess: string) {
-    const searchPhrase = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    const searchPhrase = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
     const results = answerIndex().search(searchPhrase);
     console.log(results);
     if (results.length === 0) {
@@ -74,18 +90,21 @@ export default function (props: Props) {
     }
     const topAnswer = results[0];
     const topScore = topAnswer.score ?? 1;
-    const { NAME } = topAnswer.item.properties;
+    const name =
+      topAnswer.item.properties[
+        locale === "English" ? "NAME" : langMap2[locale]
+      ];
     if (topScore < 0.001) {
       const existingGuess = props.guesses.list.find((guess) => {
-        return NAME === guess.properties.NAME;
+        return topAnswer.item.properties.NAME === guess.properties.NAME;
       });
       if (existingGuess) {
-        setMsg(`Already guessed ${existingGuess.properties.NAME}.`);
+        setMsg(`Already guessed ${name}.`);
         return;
       }
       return topAnswer.item;
     } else if (topScore < 0.5) {
-      setMsg(`Did you mean ${NAME}?`);
+      setMsg(`Did you mean ${name}?`);
       return;
     } else {
       setMsg(`"${newGuess}" not found in database.`);
@@ -101,12 +120,13 @@ export default function (props: Props) {
     const newCountry = findCountry(guess);
     if (!newCountry) return;
 
-    const name = newCountry.properties.NAME;
+    const name =
+      newCountry.properties[locale === "English" ? "NAME" : langMap2[locale]];
     const distance = polygonDistance(newCountry, props.ans);
     newCountry["proximity"] = distance;
     props.addGuess(newCountry);
 
-    if (name === props.ans.properties.NAME) return;
+    if (newCountry.properties.NAME === props.ans.properties.NAME) return;
     if (distance === 0) return setMsg(`${name} is adjacent to the answer!`);
     if (props.guesses.length <= 1) return setMsg(mountMsg);
     const lastGuess = props.guesses.list[props.guesses.length - 2];
@@ -129,7 +149,7 @@ export default function (props: Props) {
           text-gray-700 dark:bg-slate-200 dark:text-gray-900
           focus:outline-none focus:shadow-outline disabled:bg-slate-400
           disabled:border-slate-400"
-          placeholder="Enter country name here."
+          placeholder={i18next.t("Game1", "Enter country name here.") ?? ""}
           autocomplete="off"
           disabled={props.win() || !props.ans}
           data-cy="guesser"

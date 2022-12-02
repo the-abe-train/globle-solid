@@ -1,6 +1,6 @@
 import { createStore } from "solid-js/store";
 import { getContext } from "../Context";
-import { Locale } from "../i18n";
+import { Language } from "../i18n";
 import { getColour } from "./colour";
 import { formatName } from "./text";
 

@@ -5,6 +5,7 @@ import { useNavigate } from "@solidjs/router";
 import UAParser from "ua-parser-js";
 import { getContext } from "../../Context";
 import { globeMinImg } from "../../util/globe";
+import { translatePage } from "../../i18n";
 
 export default function () {
   const context = getContext();
@@ -16,6 +17,7 @@ export default function () {
   const navigate = useNavigate();
 
   onMount(() => {
+    translatePage();
     if (globeRef) {
       globe
         .globeImageUrl(globeMinImg())
@@ -41,7 +43,7 @@ export default function () {
       onClick={() => navigate("/game")}
     >
       <div ref={globeRef!} class="w-fit mx-auto my-2" />
-      <b>{isMobile ? "Tap" : "Click"} the globe to play!</b>
+      <b data-i18n="Aux1">{isMobile ? "Tap" : "Click"} the globe to play!</b>
     </div>
   );
 }

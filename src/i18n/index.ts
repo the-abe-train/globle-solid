@@ -14,19 +14,20 @@ export const resources = {
   en: { translation: English },
 };
 
-export type Locale = keyof typeof langMap1;
+export type Language = keyof typeof langMap1;
 
 export const langMap2 = {
   // "pt-BR": "NAME_PT",
   // "es-MX": "NAME_ES",
-  "en-CA": "NAME_EN",
-  "fr-FR": "NAME_FR",
+  English: "NAME_EN",
+  Français: "NAME_FR",
   // "de-DE": "NAME_DE",
   // "hu-HU": "NAME_HU",
   // "pl-PL": "NAME_PL",
   // "it-IT": "NAME_IT",
   // "sv-SE": "NAME_SV",
-};
+} as Record<Language, keyof Country["properties"]>;
+// } as Record<Language, string>;
 
 export async function translatePage() {
   const context = getContext();
@@ -37,11 +38,11 @@ export async function translatePage() {
     await i18next.init({
       fallbackLng: "en",
       debug: true,
-      lng: locale,
+      lng: langMap1[locale],
       resources,
     });
   } else {
-    await i18next.changeLanguage(locale);
+    await i18next.changeLanguage(langMap1[locale]);
   }
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const attr = el.getAttribute("data-i18n") ?? "";

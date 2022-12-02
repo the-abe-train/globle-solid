@@ -14,8 +14,7 @@ export default function () {
       >
         How to Play
       </h2>
-      {/* <p data-i18n="help1"> */}
-      <p>
+      <p data-i18n="help1">
         Every day, there is a new Mystery Country. Your goal is to guess which
         country it is using the fewest number of guesses. Each incorrect guess
         will appear on the globe with a colour indicating how close it is to the
@@ -35,7 +34,7 @@ export default function () {
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <NavGlobe />
       </Suspense>
-      <p>
+      <p data-i18n="help4">
         Or{" "}
         <a class="underline" href="https://globle-capitals.com">
           click here

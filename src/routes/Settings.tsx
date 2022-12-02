@@ -62,13 +62,13 @@ export default function () {
           name="Language"
           choice={locale}
           choose={setLocale}
-          list={langMap1}
+          list={Object.keys(langMap1)}
         />
         <SelectMenu
           name="Colour set"
           choice={colours}
           choose={setColours}
-          list={getColourScheme(isDark())}
+          list={Object.keys(getColourScheme(isDark()))}
         />
       </div>
       <button

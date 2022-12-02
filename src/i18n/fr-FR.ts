@@ -1,18 +1,19 @@
-export const French: Messages = {
+export const French = {
   name: "Français",
   helpTitle: "Comment jouer",
   help1: `Chaque jour, il y a un nouveau pays mystère. Votre but est de deviner 
   le pays mystère avec le moins d'essais possible. Chaque tentative apparaîtra sur 
   le globe avec une couleur indiquant la distance avec le pays mystère. Plus la couleur 
-  est <b>chaude</b>, plus vous êtes proche de la réponse.`,
+  est <b data-stylize="max-colour">chaude</b>, plus vous êtes proche de la réponse.`,
   help2: `Par exemple, si le pays mystère est <b>Japon</b>, les pays suivant apparaitront 
   avec ces couleurs:`,
   help3: `Un nouveau pays mystère sera disponible chaque jour!`,
+  help4: `<a class="underline" href="https://globle-capitals.com">Cliquez ici</a> pour jouer au Globle avec les capitales!`,
   France: "France",
   Nepal: "Népal",
   Mongolia: "Mongolie",
   "South Korea": "Corée du Sud",
-  Aux1: `<b>["Cliquez sur", "Touchez"]</b> le globe pour jouer!`,
+  Aux1: `Cliquez sur le globe pour jouer!`,
   Aux2: "Vous avez une question?",
   Aux3: "Consultez la FAQ",
   Footer1: "Auteur: The Abe Train",
@@ -39,7 +40,7 @@ export const French: Messages = {
   Game2: "Entrer",
   Game3:
     "Entrez le nom de n'importe quel pays pour faire votre première tentative.",
-  Game4: `Vous pouvez faire glisser le globe, <span>["cliquer", "appuyer"]</span> dessus ou effectuer un zoom pour vous aider à trouver votre prochaine tentative.`,
+  Game4: `Vous pouvez faire glisser le globe, appuyer dessus ou effectuer un zoom pour vous aider à trouver votre prochaine tentative.`,
   Game5: "Tentative invalide",
   Game6: "Pays déjà tenté",
   Game7: "Le pays mystère est: {answer}!",

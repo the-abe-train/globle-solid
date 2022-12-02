@@ -83,8 +83,8 @@ export default function (props: Props) {
             const { NAME_LEN, ABBREV, NAME, FLAG } = country.properties;
             const flag = (FLAG || "").toLocaleLowerCase();
             let name = NAME_LEN >= 10 ? ABBREV : NAME;
-            if (context.locale().locale !== "en-CA") {
-              name = country.properties[langName];
+            if (context.locale().locale !== "English") {
+              name = country.properties[langName] as string;
             }
             return (
               <li>
