@@ -1,5 +1,6 @@
 import { getContext } from "../Context";
 import { langMap2, Language } from "../i18n";
+import { isTerritory } from "../lib/assertions";
 
 export function formatKm(m: number) {
   const BIN = 10;
@@ -20,9 +21,9 @@ export function formatName(country: Country, locale: Language) {
   // const { locale } = getContext().locale();
   const { NAME_LEN, ABBREV, NAME } = country.properties;
   let name = NAME;
-  if (locale !== "en-CA") {
+  if (locale !== "English" && !isTerritory(country)) {
     const langName = langMap2[locale];
-    name = country.properties[langName];
+    name = (country.properties[langName] as string) ?? NAME;
   }
   if (NAME_LEN >= 10) name = ABBREV;
   return name;

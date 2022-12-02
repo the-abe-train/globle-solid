@@ -14,7 +14,6 @@ import { getContext } from "../../Context";
 import { findCentre } from "../../util/geometry";
 import { getColour } from "../../util/colour";
 import { formatKm, formatName } from "../../util/text";
-import dayjs from "dayjs";
 import { unwrap } from "solid-js/store";
 import { GuessStore } from "../../util/stores";
 
@@ -43,7 +42,7 @@ export default function (props: Props) {
 
   const labels = createMemo(() => {
     if (!labelsOn) return [];
-    return props.guesses.list.map((c) => {
+    return props.guesses.countries.map((c) => {
       const { lat, lng } = findCentre(c);
       return {
         lat,
@@ -96,17 +95,13 @@ export default function (props: Props) {
 
         .htmlElementsData(labels())
         .htmlElement("element")
-        // .htmlElement(          (c) => <p
-        // class="text-black py-1 px-2 text-center font-bold bg-yellow-50"
-        // style="background-color: ${labelBg};"
-        // >${formatName(c as Country, locale)}</p>)
 
         .onPolygonClick((p, e, c) => turnGlobe(c))
-        .polygonsData(unwrap(props.guesses.list))
+        .polygonsData(unwrap(props.guesses.places))
         .polygonCapColor((c) =>
           getColour(c as Country, props.ans, isDark, colours)
         )
-        .polygonAltitude(0.025)
+        .polygonAltitude(0.015)
         .polygonSideColor(() => "black")
         .polygonLabel((c) =>
           !labelsOn
@@ -131,13 +126,13 @@ export default function (props: Props) {
   // When there's a new guess, turn globe to that point
   createEffect(() => {
     if (props.guesses.length > 0) {
-      const newestGuess = props.guesses.list[props.guesses.length - 1];
+      const newestGuess = props.guesses.countries[props.guesses.length - 1];
       const newPoint = findCentre(newestGuess);
       turnGlobe(newPoint);
-      // const ps = props.guesses.list.map((p) => createPolygon(p, props.ans));
-      globe.polygonsData(unwrap(props.guesses.list)).htmlElementsData(labels());
+      globe
+        .polygonsData(unwrap(props.guesses.places))
+        .htmlElementsData(labels());
     }
-    const end = dayjs();
   });
 
   // When player clicks on a country name, turn to it

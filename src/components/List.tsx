@@ -29,23 +29,10 @@ export default function (props: Props) {
   const langName = langMap2[context.locale().locale];
 
   const sortedGuesses = createMemo(() => {
-    return isSortedByDistance() ? props.guesses.sorted : props.guesses.list;
+    return isSortedByDistance()
+      ? props.guesses.sorted
+      : props.guesses.countries;
   });
-
-  // function proxSort(a: Country, z: Country) {
-  //   const proximityA = a.proximity ?? 0;
-  //   const proximityZ = z.proximity ?? 0;
-  //   return proximityA - proximityZ;
-  // }
-
-  // const sortedGuesses = () => {
-  //   if (isSortedByDistance()) {
-  //     const guesses = [...props.guesses];
-  //     return guesses.sort(proxSort);
-  //   } else {
-  //     return props.guesses;
-  //   }
-  // };
 
   const isAlreadyShowingKm = context.distanceUnit().unit === "km";
   const [isShowingKm, setShowingKm] = createSignal(isAlreadyShowingKm);

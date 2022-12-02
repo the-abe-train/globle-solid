@@ -5,7 +5,7 @@ describe("Play a practice game", () => {
     });
 
     cy.visit("/practice");
-    cy.contains("any country").should("exist");
+    cy.contains("practice game").should("exist");
 
     cy.get('[data-cy="guesser"]').type("canada{enter}");
     cy.contains("next guess").should("exist");

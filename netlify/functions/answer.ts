@@ -28,7 +28,7 @@ const handler: Handler = async (event) => {
     const dayCode = parseInt(dayjs.tz(today, "Etc/UTC").format("X"));
     if (!dayCode) throw "Parameter error";
     console.log(dayCode);
-    const countries = rawAnswerData["features"] as unknown as Country[];
+    const countries = rawAnswerData["features"] as Country[];
     const key = generateKey(countries, dayCode);
     const country = countries[key];
     console.log("country", country.properties.NAME);

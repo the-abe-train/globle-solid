@@ -15,7 +15,7 @@ import List from "../components/List";
 import { getAnswer } from "../util/encryption";
 import { emojiString } from "../util/colour";
 import { getContext } from "../Context";
-import { getCountry } from "../util/data";
+import { getCountry, getTerritories } from "../util/data";
 import { polygonDistance } from "../util/geometry";
 import { translatePage } from "../i18n";
 import { createGuessStore } from "../util/stores";
@@ -54,12 +54,14 @@ function Inner(props: Props) {
   const restoredGuesses = () => {
     const oldGuesses = context.storedGuesses();
     if (dayjs(oldGuesses.expiration).isAfter(dayjs())) {
-      return oldGuesses.countries.map((countryName) => {
+      const countries = oldGuesses.countries.map((countryName) => {
         const country = getCountry(countryName);
         const proximity = polygonDistance(country, props.ans);
         country["proximity"] = proximity;
         return country;
       });
+      const territories = countries.flatMap((c) => getTerritories(c));
+      return [...countries, ...territories];
     }
     return [];
   };
@@ -71,7 +73,7 @@ function Inner(props: Props) {
 
   // Effects
   createEffect(() => {
-    const winningGuess = guesses.list.find(
+    const winningGuess = guesses.countries.find(
       (c) => c.properties.NAME === props.ans.properties.NAME
     );
     if (winningGuess) setWin(true);
@@ -106,7 +108,7 @@ function Inner(props: Props) {
           ...context.storedStats().usedGuesses,
           guesses.length,
         ];
-        const emojiGuesses = emojiString(guesses.list, props.ans);
+        const emojiGuesses = emojiString(guesses.countries, props.ans);
         const newStats = {
           lastWin: today.toString(),
           gamesWon,
@@ -123,10 +125,11 @@ function Inner(props: Props) {
     })
   );
 
-  function addNewGuess(newCountry: Country) {
-    const countryName = newCountry.properties.NAME;
-
-    setGuesses("list", (prev) => [...prev, newCountry]);
+  // TODO add territories here instead of in the globe
+  function addNewGuess(newGuess: Country) {
+    const territories = getTerritories(newGuess);
+    setGuesses("places", (prev) => [...prev, newGuess, ...territories]);
+    const countryName = newGuess.properties.NAME;
     context.storeGuesses((prev) => {
       return { ...prev, countries: [...prev.countries, countryName] };
     });

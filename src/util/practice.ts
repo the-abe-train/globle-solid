@@ -1,7 +1,7 @@
 import rawAnswerData from "../../src/data/country_data.json";
 
 export function createPracticeAns() {
-  const countries = rawAnswerData["features"] as unknown as Country[];
+  const countries = rawAnswerData["features"] as Country[];
   const practiceAnswer =
     countries[Math.floor(Math.random() * countries.length)];
   localStorage.setItem("practice", JSON.stringify(practiceAnswer));
@@ -16,5 +16,6 @@ export function getPracticeAns() {
   } else {
     ans = createPracticeAns();
   }
+  console.log({ ans });
   return ans;
 }

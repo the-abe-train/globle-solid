@@ -1,30 +1,72 @@
-import { createEffect, createSignal, lazy, Show, Suspense } from "solid-js";
+import {
+  Accessor,
+  createEffect,
+  createSignal,
+  lazy,
+  Setter,
+  Show,
+  Suspense,
+} from "solid-js";
 import Guesser from "../components/Guesser";
 import List from "../components/List";
 import { createPracticeAns, getPracticeAns } from "../util/practice";
 import Prompt from "../components/Prompt";
-import { A, useNavigate } from "@solidjs/router";
+import { useNavigate } from "@solidjs/router";
 import { createGuessStore } from "../util/stores";
+import { getTerritories } from "../util/data";
 
 const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
-export default function () {
+export default function Outer() {
+  const [ans, setAns] = createSignal(getPracticeAns());
+
+  return (
+    <Show when={ans()} keyed fallback={<p data-i18n="Loading">Loading...</p>}>
+      {(ans) => {
+        return <Inner ans={ans} setAns={setAns} />;
+      }}
+    </Show>
+  );
+}
+
+type InnerProps = {
+  ans: Country;
+  setAns: Setter<Country>;
+};
+
+function Inner(props: InnerProps) {
   const navigate = useNavigate();
   // Signals
   const [pov, setPov] = createSignal<Coords | null>(null);
   const [win, setWin] = createSignal(false);
   const [showPrompt, setShowPrompt] = createSignal(false);
-  const [ans, setAns] = createSignal(getPracticeAns());
-  const [showGlobe, setShowGlobe] = createSignal(true);
 
-  // Stores
-  // const [guesses, setGuesses] = createSignal<Country[]>([]);
-  const { guesses, setGuesses } = createGuessStore([], ans());
+  console.log("Answer:", props.ans);
+
+  const { guesses, setGuesses } = createGuessStore([], props.ans);
+
+  // CLEANUP GUESSES ON UNMOUNT?
+
+  // New game
+  function newGame() {
+    setWin(false);
+    props.setAns(createPracticeAns());
+  }
+
+  function addGuess(newGuess: Country) {
+    const territories = getTerritories(newGuess);
+    setGuesses("places", (prev) => [...prev, newGuess, ...territories]);
+    return;
+  }
+
+  function revealAnswer() {
+    addGuess(props.ans);
+  }
 
   // Effects
   createEffect(() => {
-    const winningGuess = guesses.list.find(
-      (c) => c.properties.NAME === ans().properties.NAME
+    const winningGuess = guesses.countries.find(
+      (c) => c.properties.NAME === props.ans.properties.NAME
     );
     if (winningGuess) {
       setWin(true);
@@ -32,34 +74,21 @@ export default function () {
     }
   });
 
-  // New game
-  function newGame() {
-    setGuesses("list", []);
-    setWin(false);
-    setShowGlobe(false);
-    setAns(createPracticeAns());
-    setTimeout(() => setShowGlobe(true), 2000);
-  }
-
-  function addGuess(newGuess: Country) {
-    setGuesses("list", (prev) => [...prev, newGuess]);
-    return;
-  }
-
-  function revealAnswer() {
-    addGuess(ans());
-  }
-
   return (
     <div>
-      <Show when={showGlobe()} keyed fallback={<p>Loading...</p>}>
-        <p class="italic">You are playing a practice game.</p>
-        <Guesser addGuess={addGuess} guesses={guesses} win={win} ans={ans()} />
-        <Suspense fallback={<p>Loading...</p>}>
-          <GameGlobe guesses={guesses} pov={pov} ans={ans()} />
-        </Suspense>
-      </Show>
-      <List guesses={guesses} setPov={setPov} ans={ans()} />
+      {/* <Show when={showGlobe()} keyed fallback={<p>Loading...</p>}> */}
+      <p class="italic">You are playing a practice game.</p>
+      <Guesser
+        addGuess={addGuess}
+        guesses={guesses}
+        win={win}
+        ans={props.ans}
+      />
+      <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
+        <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
+      </Suspense>
+      {/* </Show> */}
+      <List guesses={guesses} setPov={setPov} ans={props.ans} />
       <Show
         when={!win()}
         fallback={

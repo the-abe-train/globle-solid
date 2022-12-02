@@ -58,6 +58,7 @@ export default function () {
                       fill={outline.colour}
                       d={outline.path}
                       stroke="black"
+                      stroke-width={5}
                     />
                   </g>
                 </svg>
