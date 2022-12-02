@@ -35,6 +35,7 @@ export function useLocalStorage<T extends Record<string, any>>(
 export const makeContext = (mode: "Stored" | "Static") => {
   const initial = {
     theme: { isDark: false },
+    labels: { labelsOn: false },
     statistics: {
       gamesWon: 0,
       lastWin: "1970-01-01",
@@ -67,6 +68,7 @@ export const makeContext = (mode: "Stored" | "Static") => {
   }
 
   const [theme, setTheme] = create("theme");
+  const [labelsOn, setLabelsOn] = create("labels");
   const [storedStats, storeStats] = create("statistics");
   const [storedGuesses, storeGuesses] = create("guesses");
   const [token, setToken] = create("token");
@@ -76,6 +78,8 @@ export const makeContext = (mode: "Stored" | "Static") => {
   return {
     theme,
     setTheme,
+    labelsOn,
+    setLabelsOn,
     storedStats,
     storeStats,
     storedGuesses,

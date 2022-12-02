@@ -18,6 +18,10 @@ export default function () {
   const [isDark, setDark] = createSignal(isAlreadyDark);
   createEffect(() => context?.setTheme({ isDark: isDark() }));
 
+  const labelsAlreadyOn = context.labelsOn().labelsOn;
+  const [labelsOn, setLabelsOn] = createSignal(labelsAlreadyOn);
+  createEffect(() => context?.setLabelsOn({ labelsOn: labelsOn() }));
+
   const currentLocale = context.locale().locale;
   const [locale, setLocale] = createSignal(currentLocale);
   createEffect(() => {
@@ -40,6 +44,12 @@ export default function () {
       </h2>
       <div class="max-w-xs mx-auto space-y-3">
         <Toggle setToggle={setDark} toggleProp={isDark} on="Night" off="Day" />
+        <Toggle
+          setToggle={setLabelsOn}
+          toggleProp={labelsOn}
+          on="Labels on"
+          off="Labels off"
+        />
         <SelectMenu
           name="Language"
           choice={locale}
