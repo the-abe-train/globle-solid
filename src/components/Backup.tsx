@@ -161,8 +161,10 @@ export default function () {
   }
 
   return (
-    <div class="space-y-4">
-      <h3 class="text-2xl font-extrabold font-header">Stats Backup</h3>
+    <div class="space-y-4 my-4">
+      <h2 class="text-center text-2xl my-5 font-extrabold font-header">
+        Stats Backup
+      </h2>
       <Show
         when={isConnected()}
         fallback={

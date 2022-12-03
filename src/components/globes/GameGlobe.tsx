@@ -16,6 +16,7 @@ import { getColour } from "../../util/colour";
 import { formatKm, formatName } from "../../util/text";
 import { unwrap } from "solid-js/store";
 import { GuessStore } from "../../util/stores";
+import { translatePage } from "../../i18n";
 
 type Props = {
   guesses: GuessStore;
@@ -81,6 +82,7 @@ export default function (props: Props) {
 
   // Effects
   onMount(() => {
+    translatePage();
     if (globeRef) {
       globe
         .globeImageUrl(globeImg())

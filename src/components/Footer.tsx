@@ -24,7 +24,7 @@ export default function Footer() {
         </a>
       </span>
       <p>
-        <span data-i18n="Aux2">Have a question?</span>{" "}
+        <span data-i18n="Aux2">Have a question?</span> <br class="sm:hidden" />
         <A
           href="/faq"
           class="underline"

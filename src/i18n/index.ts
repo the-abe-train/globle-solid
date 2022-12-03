@@ -1,4 +1,5 @@
-import i18next from "i18next";
+import i18next, { Resource } from "i18next";
+import UAParser from "ua-parser-js";
 import { getContext } from "../Context";
 import { getMaxColour } from "../util/colour";
 import { English } from "./en-CA";
@@ -9,7 +10,7 @@ export const langMap1 = {
   Français: "fr-FR",
 };
 
-export const resources = {
+export const resources: Resource = {
   fr: { translation: French },
   en: { translation: English },
 };
@@ -29,6 +30,17 @@ export const langMap2 = {
 } as Record<Language, keyof Country["properties"]>;
 // } as Record<Language, string>;
 
+export function translate(key: string, defaultValue: string) {
+  const parser = new UAParser();
+  const isMobile = parser.getDevice().type === "mobile";
+  const Click = isMobile ? i18next.t("Tap") : i18next.t("Click");
+  return i18next.t(key, {
+    Click,
+    click: Click && Click.toLowerCase(),
+    defaultValue,
+  });
+}
+
 export async function translatePage() {
   const context = getContext();
   const { isDark } = context.theme();
@@ -47,7 +59,7 @@ export async function translatePage() {
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const attr = el.getAttribute("data-i18n") ?? "";
     const defaultValue = el.innerHTML;
-    el.innerHTML = i18next.t(attr, defaultValue);
+    el.innerHTML = translate(attr, defaultValue);
   });
   document.querySelectorAll<HTMLElement>("[data-stylize]").forEach((el) => {
     el.style.color = getMaxColour(colours, isDark);

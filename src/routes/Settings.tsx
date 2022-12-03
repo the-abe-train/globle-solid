@@ -1,15 +1,13 @@
-import { createEffect, createSignal, lazy, onMount, Suspense } from "solid-js";
+import { createEffect, createSignal, Suspense } from "solid-js";
 import Backup from "../components/Backup";
 import Toggle from "../components/Toggle";
 import { getContext } from "../Context";
-// import { createPracticeAns } from "../util/practice";
 import { useNavigate } from "@solidjs/router";
 import SelectMenu from "../components/SelectMenu";
-import { langMap1, translatePage } from "../i18n";
+import { langMap1, translate, translatePage } from "../i18n";
 import NavGlobe from "../components/globes/NavGlobe";
 import { createPracticeAns } from "../util/practice";
 import { getColourScheme } from "../util/colour";
-// const NavGlobe = lazy(() => import("../components/globes/NavGlobe"));
 
 export default function () {
   const context = getContext();
@@ -33,7 +31,6 @@ export default function () {
   const currentColours = context.colours().colours;
   const [colours, setColours] = createSignal(currentColours);
   createEffect(() => {
-    console.log(colours());
     context?.setColours({ colours: colours() });
   });
 
@@ -43,45 +40,54 @@ export default function () {
   }
 
   return (
-    <div class="py-4 space-y-8">
-      <h2
-        class="text-3xl text-center font-header font-extrabold"
-        data-i18n="SettingsTitle"
-      >
-        Settings
-      </h2>
-      <div class="max-w-xs mx-auto space-y-3">
-        <Toggle setToggle={setDark} toggleProp={isDark} on="Night" off="Day" />
-        <Toggle
-          setToggle={setLabelsOn}
-          toggleProp={labelsOn}
-          on="Labels on"
-          off="Labels off"
-        />
-        <SelectMenu
-          name="Language"
-          choice={locale}
-          choose={setLocale}
-          list={Object.keys(langMap1)}
-        />
-        <SelectMenu
-          name="Colour set"
-          choice={colours}
-          choose={setColours}
-          list={Object.keys(getColourScheme(isDark()))}
-        />
-      </div>
-      <button
-        onClick={enterPracticeMode}
-        data-cy="practice-link"
-        class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900
+    <div class="space-y-10">
+      <div class="space-y-5">
+        <h2
+          class="text-center text-2xl my-5 font-extrabold font-header"
+          data-i18n="SettingsTitle"
+        >
+          Settings
+        </h2>
+        <div class="max-w-xs mx-auto space-y-3">
+          <Toggle
+            setToggle={setDark}
+            toggleProp={isDark}
+            on={translate("Settings2", "Night")}
+            off={translate("Settings1", "Day")}
+          />
+          <Toggle
+            setToggle={setLabelsOn}
+            toggleProp={labelsOn}
+            on={translate("Settings13", "Labels on")}
+            off={translate("Settings14", "Labels off")}
+          />
+          <SelectMenu
+            name={translate("Settings7", "Language")}
+            choice={locale}
+            choose={setLocale}
+            list={Object.keys(langMap1)}
+          />
+          <SelectMenu
+            name={translate("Settings12", "Colours")}
+            choice={colours}
+            choose={setColours}
+            list={Object.keys(getColourScheme(isDark()))}
+          />
+        </div>
+        <button
+          onClick={enterPracticeMode}
+          data-cy="practice-link"
+          class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900
          dark:hover:bg-purple-900 disabled:bg-blue-900  text-white 
         focus:ring-4 focus:ring-blue-300 rounded-lg text-sm
         px-4 py-2.5 text-center items-center
         justify-center self-center mx-auto block"
-      >
-        <span class="font-medium text-base">Play practice game</span>
-      </button>
+        >
+          <span class="font-medium text-base" data-i18n="Settings9">
+            Play practice game
+          </span>
+        </button>
+      </div>
       <Backup />
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <NavGlobe />

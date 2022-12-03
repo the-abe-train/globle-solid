@@ -170,6 +170,7 @@ globle-capitals.com
           dark:text-red-500 dark:border-red-500 dark:disabled:border-red-400
           dark:hover:bg-red-500 dark:hover:text-black"
           onClick={promptResetStats}
+          data-i18n="Stats8"
         >
           Reset
         </button>
@@ -181,6 +182,7 @@ globle-capitals.com
           justify-around sm:flex-grow sm:mx-10"
           onClick={copyToClipboard}
           disabled={!wonToday()}
+          data-i18n="Stats9"
         >
           Share
         </button>

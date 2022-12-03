@@ -1,8 +1,9 @@
 import {
-  Accessor,
   createEffect,
   createSignal,
   lazy,
+  onCleanup,
+  onMount,
   Setter,
   Show,
   Suspense,
@@ -14,11 +15,13 @@ import Prompt from "../components/Prompt";
 import { useNavigate } from "@solidjs/router";
 import { createGuessStore } from "../util/stores";
 import { getTerritories } from "../util/data";
+import { translate, translatePage } from "../i18n";
 
 const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
 export default function Outer() {
   const [ans, setAns] = createSignal(getPracticeAns());
+  onMount(translatePage);
 
   return (
     <Show when={ans()} keyed fallback={<p data-i18n="Loading">Loading...</p>}>
@@ -45,7 +48,9 @@ function Inner(props: InnerProps) {
 
   const { guesses, setGuesses } = createGuessStore([], props.ans);
 
-  // CLEANUP GUESSES ON UNMOUNT?
+  // Lifecycle
+  onMount(translatePage);
+  onCleanup(() => setGuesses("places", []));
 
   // New game
   function newGame() {
@@ -76,8 +81,9 @@ function Inner(props: InnerProps) {
 
   return (
     <div>
-      {/* <Show when={showGlobe()} keyed fallback={<p>Loading...</p>}> */}
-      <p class="italic">You are playing a practice game.</p>
+      <p class="italic" data-i18n="PracticeMode">
+        You are playing a practice game.
+      </p>
       <Guesser
         addGuess={addGuess}
         guesses={guesses}
@@ -87,7 +93,6 @@ function Inner(props: InnerProps) {
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
       </Suspense>
-      {/* </Show> */}
       <List guesses={guesses} setPov={setPov} ans={props.ans} />
       <Show
         when={!win()}
@@ -98,6 +103,7 @@ function Inner(props: InnerProps) {
              focus:ring-4 focus:ring-blue-300 rounded-lg text-sm
              px-4 py-2.5 text-center w-max"
             onClick={newGame}
+            data-i18n="Game14"
           >
             Play again
           </button>
@@ -109,13 +115,14 @@ function Inner(props: InnerProps) {
              focus:ring-4 focus:ring-blue-300 rounded-lg text-sm
              px-4 py-2.5 text-center w-max"
           onClick={revealAnswer}
+          data-i18n="Game15"
         >
           Reveal answer
         </button>
       </Show>
       <Prompt
         promptType="Choice"
-        text="Play again?"
+        text={translate("Game14", "Play again") + "?"}
         showPrompt={showPrompt}
         setShowPrompt={setShowPrompt}
         yes={newGame}

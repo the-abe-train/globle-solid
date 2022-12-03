@@ -1,4 +1,5 @@
 import { Accessor, createSignal, onMount, Setter, Show } from "solid-js";
+import { translatePage } from "../i18n";
 import Modal from "./Modal";
 
 type Choice = {
@@ -42,6 +43,7 @@ export function Prompt(props: Props) {
     if (props.promptType === "Message") {
       setTimeout(() => props.setShowPrompt(false), 2000);
     }
+    translatePage();
   });
 
   return (
@@ -54,6 +56,7 @@ export function Prompt(props: Props) {
             text-base font-medium hover:bg-red-900 disabled:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-300"
             onClick={runYes}
             data-cy="yes-btn"
+            data-i18n="Yes"
           >
             Yes
           </button>
@@ -62,6 +65,7 @@ export function Prompt(props: Props) {
             text-base font-medium hover:bg-blue-900 disabled:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
             onClick={runNo}
             data-cy="no-btn"
+            data-i18n="No"
           >
             No
           </button>

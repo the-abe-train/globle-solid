@@ -5,8 +5,7 @@ import Fuse from "fuse.js";
 import { getContext } from "../Context";
 import { polygonDistance } from "../util/geometry";
 import { GuessStore } from "../util/stores";
-import i18next from "i18next";
-import { langMap2 } from "../i18n";
+import { langMap2, translate } from "../i18n";
 import { isTerritory } from "../lib/assertions";
 import { unwrap } from "solid-js/store";
 
@@ -23,12 +22,12 @@ export default function (props: Props) {
   const mountMsg = () => {
     console.log("Guesses", unwrap(props.guesses));
     if (props.guesses.length === 0) {
-      return i18next.t(
+      return translate(
         "Game3",
         "Enter the name of any country to make your first guess!"
       );
     } else if (props.guesses.length === 1) {
-      return i18next.t(
+      return translate(
         "Game4",
         "Drag, tap, and zoom in on the globe to help you find your next guess.`"
       );
@@ -45,9 +44,12 @@ export default function (props: Props) {
   };
 
   createEffect(() => {
-    if (props.win() && props.ans.properties.NAME) {
-      setMsg(`The Mystery Country is ${props.ans.properties.NAME}!`);
-    } else if (props.win() && !props.ans.properties.NAME) {
+    const langKey = langMap2[locale];
+    const { properties } = props.ans;
+    const name = langKey ? (properties[langKey] as string) : properties.NAME;
+    if (props.win() && name) {
+      setMsg(`${translate("Game7", "The Mystery Country is:")} ${name}!`);
+    } else if (props.win()) {
       setMsg("You win!");
     }
   });
@@ -111,7 +113,11 @@ export default function (props: Props) {
         return topAnswer.item.properties.NAME === guess.properties.NAME;
       });
       if (existingGuess) {
-        setMsg(`Already guessed ${name}.`);
+        if (locale === "English") {
+          setMsg(`Already guessed ${name}.`);
+        } else {
+          setMsg(translate("Game6", "Already guessed"));
+        }
         return;
       }
       return topAnswer.item;
@@ -143,8 +149,11 @@ export default function (props: Props) {
     if (props.guesses.length <= 1) return setMsg(mountMsg);
     const lastGuess = props.guesses.countries[props.guesses.length - 2];
     const lastDistance = lastGuess.proximity ?? 0;
-    const direction = distance < lastDistance ? "warmer!" : "cooler.";
-    setMsg(`${name} is ${direction}`);
+    if (locale === "English") {
+      setMsg(`${name} ${distance < lastDistance ? "is warmer" : "is cooler"}`);
+    } else {
+      setMsg("");
+    }
   }
 
   return (
@@ -161,7 +170,7 @@ export default function (props: Props) {
           text-gray-700 dark:bg-slate-200 dark:text-gray-900
           focus:outline-none focus:shadow-outline disabled:bg-slate-400
           disabled:border-slate-400"
-          placeholder={i18next.t("Game1", "Enter country name here.") ?? ""}
+          placeholder={translate("Game1", "Enter country name here.") ?? ""}
           autocomplete="off"
           disabled={props.win() || !props.ans}
           data-cy="guesser"

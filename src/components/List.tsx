@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import {
   createEffect,
   createMemo,
@@ -9,8 +10,7 @@ import {
   Switch,
 } from "solid-js";
 import { getContext } from "../Context";
-import { langMap2 } from "../i18n";
-// import { GuessStore } from "../routes/Game";
+import { langMap2, translatePage } from "../i18n";
 import { findCentre } from "../util/geometry";
 import { GuessStore } from "../util/stores";
 import { formatKm } from "../util/text";
@@ -36,29 +36,26 @@ export default function (props: Props) {
 
   const isAlreadyShowingKm = context.distanceUnit().unit === "km";
   const [isShowingKm, setShowingKm] = createSignal(isAlreadyShowingKm);
-  createEffect(() =>
-    context.setDistanceUnit({ unit: isShowingKm() ? "km" : "miles" })
-  );
 
-  // const closest = () => {
-  //   if (props.guesses.length === 0) return 0;
-  //   const distances = props.guesses
-  //     .map((guess) => guess.proximity ?? 0)
-  //     .sort((a, z) => a - z);
-  //   return distances[0];
-  // };
+  createEffect(() => {
+    if (props.guesses.length > 0) {
+      translatePage();
+    }
+    console.log(isSortedByDistance());
+    context.setDistanceUnit({ unit: isShowingKm() ? "km" : "miles" });
+  });
 
   return (
     <div class="py-8 dark:text-white z-30 mb-16">
       <Switch fallback={<p>Guesses will appear here.</p>}>
         <Match when={props.guesses.length < 1}>
-          <p>Guesses will appear here.</p>
+          <p data-i18n="Game9">Guesses will appear here.</p>
         </Match>
         <Match when={isSortedByDistance()}>
-          <p>Closest</p>
+          <p>{i18next.t("Game12", "Closest")}</p>
         </Match>
         <Match when={!isSortedByDistance()}>
-          <p>Guessed</p>
+          <p>{i18next.t("Game13", "Guessed first")}</p>
         </Match>
       </Switch>
       <ul
@@ -90,7 +87,10 @@ export default function (props: Props) {
       <Show when={props.guesses.length > 0}>
         <div class="mt-8">
           <div class="flex items-center space-x-1">
-            <p>Closest country: {formatKm(props.guesses.closest)}</p>
+            <p>
+              <span data-i18n="Game8">Closest border</span>:{" "}
+              {formatKm(props.guesses.closest)}
+            </p>
             <Toggle
               setToggle={setShowingKm}
               toggleProp={isShowingKm}
@@ -106,10 +106,14 @@ export default function (props: Props) {
             >
               <Switch>
                 <Match when={isSortedByDistance()}>
-                  <span class="text-md underline">Sort by guesses</span>
+                  <span class="text-md underline" data-i18n="SortByGuesses">
+                    Sort by guesses
+                  </span>
                 </Match>
                 <Match when={!isSortedByDistance()}>
-                  <span class="text-md underline">Sort by distance</span>
+                  <span class="text-md underline" data-i18n="SortByDistance">
+                    Sort by distance
+                  </span>
                 </Match>
               </Switch>
             </button>

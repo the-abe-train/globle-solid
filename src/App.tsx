@@ -15,10 +15,10 @@ const Game = lazy(() => import("./routes/Game"));
 const FAQ = lazy(() => import("./routes/Faq"));
 const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 
-// TODO add territories
-// TODO generate a shuffle key with bun
-// TODO guesser should tell you when you've guessed a territory
+// TODO answer function should only send NAME, not entire country
 // TODO add the rest of the languages and make sure all text is translated
+// TODO add snack ads
+// TODO langauges test spec
 // TODO move hosting to Netlify
 // TODO add code to solid branch on original site and merge it (can this be
 // A/B tested in Netlify?)

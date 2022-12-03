@@ -7,9 +7,9 @@ export default function () {
   onMount(translatePage);
 
   return (
-    <div class="my-2 space-y-5">
+    <div class="space-y-5">
       <h2
-        class="text-center text-2xl my-5 font-extrabold font-header "
+        class="text-center text-2xl my-5 font-extrabold font-header"
         data-i18n="helpTitle"
       >
         How to Play
