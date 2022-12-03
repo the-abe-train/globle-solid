@@ -48,7 +48,9 @@ export default function (props: Props) {
     const { properties } = props.ans;
     const name = langKey ? (properties[langKey] as string) : properties.NAME;
     if (props.win() && name) {
-      setMsg(`${translate("Game7", "The Mystery Country is:")} ${name}!`);
+      setMsg(
+        translate("Game7", `The Mystery Country is ${name}!`, { answer: name })
+      );
     } else if (props.win()) {
       setMsg("You win!");
     }

@@ -3,23 +3,26 @@ import UAParser from "ua-parser-js";
 import { getContext } from "../Context";
 import { getMaxColour } from "../util/colour";
 import { English } from "./en-CA";
+import { Spanish } from "./es-MX";
 import { French } from "./fr-FR";
 
 export const langMap1 = {
   English: "en-CA",
   Français: "fr-FR",
+  Español: "es-MX",
 };
 
 export const resources: Resource = {
   fr: { translation: French },
   en: { translation: English },
+  es: { translation: Spanish },
 };
 
 export type Language = keyof typeof langMap1;
 
 export const langMap2 = {
   // "pt-BR": "NAME_PT",
-  // "es-MX": "NAME_ES",
+  Español: "NAME_ES",
   English: "NAME_EN",
   Français: "NAME_FR",
   // "de-DE": "NAME_DE",
@@ -30,15 +33,21 @@ export const langMap2 = {
 } as Record<Language, keyof Country["properties"]>;
 // } as Record<Language, string>;
 
-export function translate(key: string, defaultValue: string) {
+export function translate(
+  key: string,
+  defaultValue: string,
+  interpolation?: Record<string, string>
+) {
   const parser = new UAParser();
   const isMobile = parser.getDevice().type === "mobile";
   const Click = isMobile ? i18next.t("Tap") : i18next.t("Click");
-  return i18next.t(key, {
+  const options = {
     Click,
     click: Click && Click.toLowerCase(),
     defaultValue,
-  });
+    ...interpolation,
+  };
+  return i18next.t(key, options);
 }
 
 export async function translatePage() {
@@ -49,7 +58,7 @@ export async function translatePage() {
   if (!i18next.isInitialized) {
     await i18next.init({
       fallbackLng: "en",
-      debug: true,
+      // debug: true,
       lng: langMap1[locale],
       resources,
     });

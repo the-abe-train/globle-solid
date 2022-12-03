@@ -52,23 +52,29 @@ export default function () {
           <Toggle
             setToggle={setDark}
             toggleProp={isDark}
-            on={translate("Settings2", "Night")}
-            off={translate("Settings1", "Day")}
+            values={{
+              on: { default: "Night", i18n: "Settings2" },
+              off: { default: "Day", i18n: "Settings1" },
+            }}
           />
           <Toggle
             setToggle={setLabelsOn}
             toggleProp={labelsOn}
-            on={translate("Settings13", "Labels on")}
-            off={translate("Settings14", "Labels off")}
+            values={{
+              on: { default: "Labels on", i18n: "Settings13" },
+              off: { default: "Labels off", i18n: "Settings14" },
+            }}
           />
           <SelectMenu
-            name={translate("Settings7", "Language")}
+            name="Language"
+            i18n="Settings7"
             choice={locale}
             choose={setLocale}
             list={Object.keys(langMap1)}
           />
           <SelectMenu
             name={translate("Settings12", "Colours")}
+            i18n="Settings12"
             choice={colours}
             choose={setColours}
             list={Object.keys(getColourScheme(isDark()))}

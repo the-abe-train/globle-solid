@@ -16,6 +16,5 @@ export function getPracticeAns() {
   } else {
     ans = createPracticeAns();
   }
-  console.log({ ans });
   return ans;
 }

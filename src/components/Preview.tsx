@@ -24,6 +24,7 @@ export default function () {
     outlines.map((outline) => {
       const country = getCountry(outline.name);
       const colour = getColour(country, japan, isDark, colours);
+      console.log(outline.name, colour);
       return { ...outline, colour };
     });
 

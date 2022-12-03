@@ -5,6 +5,7 @@ import {
   interpolateOrRd,
   scaleSequentialSqrt,
 } from "d3";
+import { isTerritory } from "../lib/assertions";
 import { polygonDistance } from "./geometry";
 
 const GREEN_SQUARE = "🟩";
@@ -28,16 +29,14 @@ export const getColourScheme = (isDark: boolean) => {
 export type ColourScheme = keyof ReturnType<typeof getColourScheme>;
 
 export const getColour = (
-  guess: Country,
+  guess: Country | Territory,
   answer: Country,
   isDark: boolean,
   colours: ColourScheme
 ) => {
-  if (guess.properties?.TYPE === "Territory") return "#BBBBBB";
+  if (isTerritory(guess)) return "#BBBBBB";
   if (guess.properties.NAME === answer.properties.NAME) return "green";
-  if (guess.proximity == null) {
-    guess["proximity"] = polygonDistance(guess, answer);
-  }
+  guess["proximity"] = polygonDistance(guess, answer);
   const gradient = getColourScheme(isDark)[colours];
   const colorScale = scaleSequentialSqrt(gradient).domain([MAX_DISTANCE, 0]);
   const colour = colorScale(guess.proximity);

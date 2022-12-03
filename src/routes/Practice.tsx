@@ -44,8 +44,6 @@ function Inner(props: InnerProps) {
   const [win, setWin] = createSignal(false);
   const [showPrompt, setShowPrompt] = createSignal(false);
 
-  console.log("Answer:", props.ans);
-
   const { guesses, setGuesses } = createGuessStore([], props.ans);
 
   // Lifecycle

@@ -45,7 +45,7 @@ export const French = {
   Game4: `Vous pouvez faire glisser le globe, {{click}} dessus ou effectuer un zoom pour vous aider à trouver votre prochaine tentative.`,
   Game5: "Tentative invalide",
   Game6: "Pays déjà tenté.",
-  Game7: "Le pays mystère est:",
+  Game7: "Le pays mystère est {{answer}}!",
   Game8: "Frontière la plus proche",
   Game9: "Vos tentative apparaîtront ici.",
   Game10: " est plus loin.",

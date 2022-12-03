@@ -41,7 +41,7 @@ export default function (props: Props) {
     if (props.guesses.length > 0) {
       translatePage();
     }
-    console.log(isSortedByDistance());
+    isSortedByDistance();
     context.setDistanceUnit({ unit: isShowingKm() ? "km" : "miles" });
   });
 
@@ -94,8 +94,10 @@ export default function (props: Props) {
             <Toggle
               setToggle={setShowingKm}
               toggleProp={isShowingKm}
-              on="km"
-              off="miles"
+              values={{
+                on: { default: "km", i18n: "km" },
+                off: { default: "miles", i18n: "miles" },
+              }}
             />
           </div>
           <p>
