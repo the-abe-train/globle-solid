@@ -1,5 +1,6 @@
+import { createMemo } from "solid-js";
 import { getContext } from "../Context";
-import { langMap2, Language } from "../i18n";
+import { getLangKey, Locale } from "../i18n";
 import { isTerritory } from "../lib/assertions";
 
 export function formatKm(m: number) {
@@ -17,13 +18,12 @@ export function formatKm(m: number) {
   return `${format(rounded)}`;
 }
 
-export function formatName(country: Country, locale: Language) {
-  // const { locale } = getContext().locale();
+export function formatName(country: Country, locale: Locale) {
   const { NAME_LEN, ABBREV, NAME } = country.properties;
   let name = NAME;
-  if (locale !== "English" && !isTerritory(country)) {
-    const langName = langMap2[locale];
-    name = (country.properties[langName] as string) ?? NAME;
+  if (locale !== "en-CA" && !isTerritory(country)) {
+    const langKey = createMemo(getLangKey);
+    name = langKey();
   }
   if (NAME_LEN >= 10) name = ABBREV;
   return name;

@@ -24,7 +24,7 @@ export default function Toggle(props: Props) {
 
   return (
     <div
-      class="flex items-center justify-between space-x-4 min-w-[8rem]"
+      class="flex items-center justify-between space-x-2 sm:min-w-[8rem]"
       onKeyPress={(e) => keyPressToggle(e, props.setToggle)}
       onClick={() => props.setToggle((prev) => !prev)}
       tabIndex={0}

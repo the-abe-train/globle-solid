@@ -1,4 +1,4 @@
-export const Spanish = {
+export default {
   name: "Español",
   helpTitle: "Como jugar",
   help1: `Cada día habrá un País Secreto. Tu objetivo es adivinar el país secreto en el menor número de intentos posibles. Cada respuesta incorrrecta aparecerá en el globo con un color indicando que tan cerca se encuentra del País Secreto. Entre más <b>caliente</b> sea el color, más cerca estarás de la respuesta.`,
@@ -27,7 +27,7 @@ export const Spanish = {
   q5: "5. ¡Encontré el país secreto de hoy! ¿Cuando puedo jugar otra vez?",
   a5: "El pais secreto cambia y tus intentos se reajustan a la media noche de tu zona horaria.",
   q7: "6. Hace falta un país o una frontera es incorrecta. ¿Qué puedo hacer al respecto?",
-  a7: "La geografía puede ser un tema sensible, y las fronteras de algunos países pueden ser disputadas. Si tu crees que una corrección es necesaria, por favor de manera respetuosa plantea la cuestion con {GitHub} o enviame un MD en {Twitter}.",
+  a7: "La geografía puede ser un tema sensible, y las fronteras de algunos países pueden ser disputadas. Si tu crees que una corrección es necesaria, por favor de manera respetuosa plantea la cuestion con GitHub o enviame un MD en Twitter.",
   GameTitle: "Juego",
   Game1: "Ingresa el nombre del país aquí",
   Game2: "Ingresar",

@@ -4,7 +4,7 @@ import Toggle from "../components/Toggle";
 import { getContext } from "../Context";
 import { useNavigate } from "@solidjs/router";
 import SelectMenu from "../components/SelectMenu";
-import { langMap1, translate, translatePage } from "../i18n";
+import { langMap, translate, translatePage } from "../i18n";
 import NavGlobe from "../components/globes/NavGlobe";
 import { createPracticeAns } from "../util/practice";
 import { getColourScheme } from "../util/colour";
@@ -33,6 +33,16 @@ export default function () {
   createEffect(() => {
     context?.setColours({ colours: colours() });
   });
+  const schemesList = Object.entries(getColourScheme(isDark())).map(
+    ([key, value]) => {
+      return { name: key, value: key };
+    }
+  );
+  // const schemesList = Object.entries(getColourScheme(isDark())).map(
+  //   ([key, value]) => {
+  //     return { name: key, value };
+  //   }
+  // );
 
   function enterPracticeMode() {
     createPracticeAns();
@@ -70,14 +80,17 @@ export default function () {
             i18n="Settings7"
             choice={locale}
             choose={setLocale}
-            list={Object.keys(langMap1)}
+            list={langMap.map((lang) => ({
+              name: lang.name,
+              value: lang.locale,
+            }))}
           />
           <SelectMenu
             name={translate("Settings12", "Colours")}
             i18n="Settings12"
             choice={colours}
             choose={setColours}
-            list={Object.keys(getColourScheme(isDark()))}
+            list={schemesList}
           />
         </div>
         <button

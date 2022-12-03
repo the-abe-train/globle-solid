@@ -1,10 +1,12 @@
 import { Accessor, For, Setter } from "solid-js";
 
+type Option = { name: string; value: any };
+
 type Props = {
   name: string;
   choice: Accessor<string>;
   choose: Setter<string>;
-  list: string[];
+  list: Option[];
   i18n: string;
 };
 
@@ -31,9 +33,9 @@ export default function (props: Props) {
               class="py-2 px-4 text-sm text-gray-700 text-left
             hover:bg-gray-100 dark:hover:bg-gray-600 
             dark:hover:text-white bg-white"
-              value={item}
+              value={item.value}
             >
-              {item}
+              {item.name}
             </option>
           )}
         </For>

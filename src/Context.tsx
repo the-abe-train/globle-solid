@@ -7,7 +7,7 @@ import {
   Setter,
   useContext,
 } from "solid-js";
-import { Language } from "./i18n";
+import { Locale } from "./i18n";
 import { ColourScheme } from "./util/colour";
 
 function getStorageValue<T extends object>(key: string, defaultValue?: T) {
@@ -51,7 +51,7 @@ export const makeContext = (mode: "Stored" | "Static") => {
     },
     distanceUnit: { unit: "km" as Unit },
     token: { google: "" },
-    locale: { locale: "English" as Language },
+    locale: { locale: "en-CA" as Locale },
     colours: { colours: "Default" as ColourScheme },
   };
 

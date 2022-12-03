@@ -10,7 +10,7 @@ import {
   Switch,
 } from "solid-js";
 import { getContext } from "../Context";
-import { langMap2, translatePage } from "../i18n";
+import { getLangKey, translatePage } from "../i18n";
 import { findCentre } from "../util/geometry";
 import { GuessStore } from "../util/stores";
 import { formatKm } from "../util/text";
@@ -26,7 +26,7 @@ export default function (props: Props) {
   const context = getContext();
   const [isSortedByDistance, toggleSortByDistance] = createSignal(true);
 
-  const langName = langMap2[context.locale().locale];
+  const langKey = createMemo(getLangKey);
 
   const sortedGuesses = createMemo(() => {
     return isSortedByDistance()
@@ -67,8 +67,8 @@ export default function (props: Props) {
             const { NAME_LEN, ABBREV, NAME, FLAG } = country.properties;
             const flag = (FLAG || "").toLocaleLowerCase();
             let name = NAME_LEN >= 10 ? ABBREV : NAME;
-            if (context.locale().locale !== "English") {
-              name = country.properties[langName] as string;
+            if (context.locale().locale !== "en-CA") {
+              name = country.properties[langKey()] as string;
             }
             return (
               <li>

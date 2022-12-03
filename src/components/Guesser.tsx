@@ -5,7 +5,7 @@ import Fuse from "fuse.js";
 import { getContext } from "../Context";
 import { polygonDistance } from "../util/geometry";
 import { GuessStore } from "../util/stores";
-import { langMap2, translate } from "../i18n";
+import { getLangKey, translate } from "../i18n";
 import { isTerritory } from "../lib/assertions";
 import { unwrap } from "solid-js/store";
 
@@ -19,6 +19,7 @@ type Props = {
 export default function (props: Props) {
   const context = getContext();
   const locale = context.locale().locale;
+  const langKey = createMemo(getLangKey);
   const mountMsg = () => {
     console.log("Guesses", unwrap(props.guesses));
     if (props.guesses.length === 0) {
@@ -44,9 +45,8 @@ export default function (props: Props) {
   };
 
   createEffect(() => {
-    const langKey = langMap2[locale];
     const { properties } = props.ans;
-    const name = langKey ? (properties[langKey] as string) : properties.NAME;
+    const name = langKey ? (properties[langKey()] as string) : properties.NAME;
     if (props.win() && name) {
       setMsg(
         translate("Game7", `The Mystery Country is ${name}!`, { answer: name })
@@ -68,8 +68,7 @@ export default function (props: Props) {
       "properties.ADMIN",
       "properties.NAME_SORT",
     ];
-    const langKey = langMap2[locale];
-    if (locale !== "English") {
+    if (locale !== "en-CA") {
       keys.push(`properties.${langKey}`);
     }
     return new Fuse(places, {
@@ -79,7 +78,7 @@ export default function (props: Props) {
       getFn: (obj) => {
         let { ABBREV, NAME, ADMIN, NAME_SORT } = obj.properties;
         if (!isTerritory(obj)) {
-          NAME = obj.properties[langKey] as string;
+          NAME = obj.properties[langKey()] as string;
         }
         const abbrev =
           ABBREV && NAME.includes(" ") ? ABBREV.replace(/\./g, "") : "";
@@ -107,15 +106,13 @@ export default function (props: Props) {
     }
     const topScore = topAnswer.score ?? 1;
     const name =
-      topAnswer.item.properties[
-        locale === "English" ? "NAME" : langMap2[locale]
-      ];
+      topAnswer.item.properties[locale === "en-CA" ? "NAME" : langKey()];
     if (topScore < 0.001) {
       const existingGuess = props.guesses.countries.find((guess) => {
         return topAnswer.item.properties.NAME === guess.properties.NAME;
       });
       if (existingGuess) {
-        if (locale === "English") {
+        if (locale === "en-CA") {
           setMsg(`Already guessed ${name}.`);
         } else {
           setMsg(translate("Game6", "Already guessed"));
@@ -140,8 +137,7 @@ export default function (props: Props) {
     const newCountry = findCountry(guess);
     if (!newCountry) return;
 
-    const name =
-      newCountry.properties[locale === "English" ? "NAME" : langMap2[locale]];
+    const name = newCountry.properties[locale === "en-CA" ? "NAME" : langKey()];
     const distance = polygonDistance(newCountry, props.ans);
     newCountry["proximity"] = distance;
     props.addGuess(newCountry);
@@ -151,7 +147,7 @@ export default function (props: Props) {
     if (props.guesses.length <= 1) return setMsg(mountMsg);
     const lastGuess = props.guesses.countries[props.guesses.length - 2];
     const lastDistance = lastGuess.proximity ?? 0;
-    if (locale === "English") {
+    if (locale === "en-CA") {
       setMsg(`${name} ${distance < lastDistance ? "is warmer" : "is cooler"}`);
     } else {
       setMsg("");

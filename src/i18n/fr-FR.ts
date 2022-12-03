@@ -1,4 +1,4 @@
-export const French = {
+export default {
   name: "Français",
   helpTitle: "Comment jouer",
   help1: `Chaque jour, il y a un nouveau pays mystère. Votre but est de deviner 

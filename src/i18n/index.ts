@@ -3,35 +3,36 @@ import UAParser from "ua-parser-js";
 import { getContext } from "../Context";
 import { getMaxColour } from "../util/colour";
 import { English } from "./en-CA";
-import { Spanish } from "./es-MX";
-import { French } from "./fr-FR";
+import Spanish from "./es-MX";
+import French from "./fr-FR";
+import Portuguese from "./pt-BR";
 
-export const langMap1 = {
-  English: "en-CA",
-  Français: "fr-FR",
-  Español: "es-MX",
-};
+export const langMap = [
+  { locale: "en-CA", langKey: "NAME", resource: English, name: "English" },
+  { locale: "fr-FR", langKey: "NAME_FR", resource: French, name: "Français" },
+  { locale: "es-MX", langKey: "NAME_ES", resource: Spanish, name: "Español" },
+  {
+    locale: "pt-BR",
+    langKey: "NAME_PT",
+    resource: Portuguese,
+    name: "Português",
+  },
+] as const;
+console.log(langMap);
+export type Locale = typeof langMap[number]["locale"];
 
-export const resources: Resource = {
-  fr: { translation: French },
-  en: { translation: English },
-  es: { translation: Spanish },
-};
+export function getLangKey() {
+  const context = getContext();
+  const { locale } = context.locale();
+  const lang = langMap.find((lang) => lang.locale === locale);
+  return lang?.langKey ?? "NAME";
+}
 
-export type Language = keyof typeof langMap1;
-
-export const langMap2 = {
-  // "pt-BR": "NAME_PT",
-  Español: "NAME_ES",
-  English: "NAME_EN",
-  Français: "NAME_FR",
-  // "de-DE": "NAME_DE",
-  // "hu-HU": "NAME_HU",
-  // "pl-PL": "NAME_PL",
-  // "it-IT": "NAME_IT",
-  // "sv-SE": "NAME_SV",
-} as Record<Language, keyof Country["properties"]>;
-// } as Record<Language, string>;
+const resources = langMap.reduce((obj, lang) => {
+  obj[lang.locale] = { translation: lang.resource };
+  return obj;
+}, {} as Resource);
+console.log(resources);
 
 export function translate(
   key: string,
@@ -55,15 +56,19 @@ export async function translatePage() {
   const { isDark } = context.theme();
   const { colours } = context.colours();
   const { locale } = context.locale();
+
+  // i18next.getResource("fr")
+
   if (!i18next.isInitialized) {
     await i18next.init({
       fallbackLng: "en",
       // debug: true,
-      lng: langMap1[locale],
+      lng: locale,
       resources,
     });
   } else {
-    await i18next.changeLanguage(langMap1[locale]);
+    await i18next.changeLanguage(locale);
+    // console.table(i18next.languages);
   }
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const attr = el.getAttribute("data-i18n") ?? "";
