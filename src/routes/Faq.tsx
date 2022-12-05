@@ -82,7 +82,7 @@ export default function () {
       links: [
         {
           text: "GitHub",
-          link: "https://github.com/the-abe-train/globle-capitals",
+          link: "https://github.com/the-abe-train/globle",
         },
         { text: "Twitter", link: "https://twitter.com/theAbeTrain" },
       ],
@@ -92,7 +92,7 @@ export default function () {
       a: "Sometimes updates to the game don't reach everyone's browsers/devices at the same time. To fix this issue, you can get the latest code by doing a hard refresh (Ctrl + Shift + R on desktop, instructions vary for mobile devices).",
     },
     {
-      q: "Does Globle: Capitals have a privacy policy?",
+      q: "Does Globle have a privacy policy?",
       a: "The Privacy Policy can be found here.",
       links: [{ text: "here", link: "/privacy-policy" }],
     },

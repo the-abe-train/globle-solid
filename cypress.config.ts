@@ -14,6 +14,7 @@ export default defineConfig({
       googleClientId: process.env.GOOGLE_CLIENT_ID,
       googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
       myEmail: process.env.MY_EMAIL,
+      cryptoKey: process.env.CRYPTO_KEY,
     },
   },
 });

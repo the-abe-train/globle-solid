@@ -1,5 +1,16 @@
-import crypto from "crypto-js";
 import dayjs from "dayjs";
+import crypto from "crypto-js";
+import rawAnswerData from "../../src/data/country_data.json";
+// import { decrypt } from "../../src/util/encryption";
+
+function decrypt(encryptedAnsKey: string) {
+  const key = Cypress.env("cryptoKey");
+  const bytes = crypto.AES.decrypt(encryptedAnsKey, key);
+  const originalText = bytes.toString(crypto.enc.Utf8);
+  const answerKey = parseInt(originalText);
+  const answer = rawAnswerData["features"][answerKey] as Country;
+  return answer.properties.NAME;
+}
 
 describe("Test the answer fetching function", () => {
   it("plays today's game", () => {
@@ -12,12 +23,8 @@ describe("Test the answer fetching function", () => {
       .its("response.body")
       .then((body) => {
         const data = JSON.parse(body);
-        const bytes = crypto.AES.decrypt(data.answer, Cypress.env("KEY"));
-        const answerObj = JSON.parse(
-          bytes.toString(crypto.enc.Utf8)
-        ) as Country;
-        console.log(answerObj);
-        const answer = answerObj.properties.NAME;
+        const answer = decrypt(data.answer);
+        console.log(answer);
         cy.get('[data-cy="guesser"]').type(`${answer}{enter}`);
       });
 
@@ -28,11 +35,13 @@ describe("Test the answer fetching function", () => {
 describe("Tests with a fake answer", () => {
   beforeEach(() => {
     cy.visit("/");
-    // cy.intercept("GET", "/.netlify/functions/answer**", (req) => {
     cy.intercept("GET", "/answer**", (req) => {
+      const body = JSON.stringify({
+        answer: crypto.AES.encrypt("159", Cypress.env("cryptoKey")).toString(),
+      });
       req.reply({
         statusCode: 200,
-        fixture: "encrypted_madagascar.json",
+        body,
       });
     });
   });

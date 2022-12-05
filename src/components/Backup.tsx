@@ -21,14 +21,12 @@ export default function () {
     try {
       const endpoint = `${url}?token=${googleToken}`;
       const response = await fetch(endpoint);
-      console.table(response);
       if (response.status === 205) {
         context.setToken({ google: "" });
         return null;
       }
       if (response.status === 204) return null;
       const data = (await response.json()) as any;
-      console.table(data.document);
       return (data?.document as Stats) ?? null;
     } catch (e) {
       return null;

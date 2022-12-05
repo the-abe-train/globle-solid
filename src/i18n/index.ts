@@ -5,20 +5,26 @@ import { getMaxColour } from "../util/colour";
 import { English } from "./en-CA";
 import Spanish from "./es-MX";
 import French from "./fr-FR";
-import Portuguese from "./pt-BR";
+import Port from "./pt-BR";
+import German from "./de-DE";
+import Italian from "./it-IT";
+import Polish from "./pl-PL";
+import Swedish from "./sv-SE";
+import Hungarian from "./hu-HU";
+import Norwegian from "./no-NO";
 
 export const langMap = [
   { locale: "en-CA", langKey: "NAME", resource: English, name: "English" },
   { locale: "fr-FR", langKey: "NAME_FR", resource: French, name: "Français" },
   { locale: "es-MX", langKey: "NAME_ES", resource: Spanish, name: "Español" },
-  {
-    locale: "pt-BR",
-    langKey: "NAME_PT",
-    resource: Portuguese,
-    name: "Português",
-  },
+  { locale: "pt-BR", langKey: "NAME_PT", resource: Port, name: "Português" },
+  { locale: "de-DE", langKey: "NAME_DE", resource: German, name: "Deutsch" },
+  { locale: "hu-HU", langKey: "NAME_HU", resource: Hungarian, name: "Magyar" },
+  { locale: "it-IT", langKey: "NAME_IT", resource: Italian, name: "Italiano" },
+  { locale: "sv-SE", langKey: "NAME_SE", resource: Swedish, name: "Svenska" },
+  { locale: "pl-PL", langKey: "NAME_PL", resource: Polish, name: "Polski" },
+  { locale: "no-NO", langKey: "NAME_NO", resource: Norwegian, name: "Norsk" },
 ] as const;
-console.log(langMap);
 export type Locale = typeof langMap[number]["locale"];
 
 export function getLangKey() {
@@ -32,7 +38,6 @@ const resources = langMap.reduce((obj, lang) => {
   obj[lang.locale] = { translation: lang.resource };
   return obj;
 }, {} as Resource);
-console.log(resources);
 
 export function translate(
   key: string,

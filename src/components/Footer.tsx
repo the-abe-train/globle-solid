@@ -16,7 +16,7 @@ export default function Footer() {
           <Icon shape="twitter" size={14} />
         </a>
         <a
-          href="https://github.com/the-abe-train/globle-capitals"
+          href="https://github.com/the-abe-train/globle"
           aria-label="Github"
           class="inline"
         >

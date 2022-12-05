@@ -6,10 +6,12 @@ dayjs.extend(advancedFormat);
 
 const key = import.meta.env.VITE_CRYPTO_KEY;
 
-export function decrypt(encryptedText: string) {
-  const bytes = crypto.AES.decrypt(encryptedText, key);
+export function decrypt(encryptedAnsKey: string) {
+  const bytes = crypto.AES.decrypt(encryptedAnsKey, key);
   const originalText = bytes.toString(crypto.enc.Utf8);
-  return originalText;
+  const answerKey = parseInt(originalText);
+  const answer = rawAnswerData["features"][answerKey] as Country;
+  return answer;
 }
 
 export const getDayCode = () => dayjs().endOf("day").format("X");
@@ -24,8 +26,7 @@ export async function getAnswer() {
     if (response.status !== 200) throw "Server error";
     const data = (await response.json()) as { answer: string };
     const encryptedAnswer = data.answer;
-    const answerKey = parseInt(decrypt(encryptedAnswer));
-    const answer = rawAnswerData["features"][answerKey] as Country;
+    const answer = decrypt(encryptedAnswer);
     return answer;
   } catch (e) {
     console.error(e);

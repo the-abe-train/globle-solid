@@ -15,8 +15,6 @@ const Game = lazy(() => import("./routes/Game"));
 const FAQ = lazy(() => import("./routes/Faq"));
 const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 
-// TODO add Plurality link
-// TODO add the rest of the languages and make sure all text is translated
 // TODO add snack ads
 // TODO Settings test spec
 // TODO add code to solid branch on original site

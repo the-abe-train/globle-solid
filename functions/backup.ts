@@ -44,7 +44,6 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
     },
   });
   try {
-    console.log("Get request", { mongoResponse });
     const document = await mongoResponse.json();
     console.log(document);
     if (document) {
@@ -64,7 +63,6 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
 export const onRequestPut: PagesFunction<E> = async (context) => {
   const { request, env } = context;
   const reqBody = JSON.parse(await request.clone().text());
-  console.log(reqBody);
   const url = new URL(request.url);
   const tokenString = url.searchParams.get("token") || "";
   // invariant(tokenString, "No token submitted")
@@ -77,9 +75,6 @@ export const onRequestPut: PagesFunction<E> = async (context) => {
     );
   const stats = reqBody.stats as Stats;
   const parsedStats = convertStats(stats);
-  // const userId = await verify(tokenString);
-  // if (!userId) return { statusCode: 205 };
-  // console.log({ userId });
   const email = jwtDecode<Token>(tokenString).email;
   const data = {
     email,
@@ -96,7 +91,6 @@ export const onRequestPut: PagesFunction<E> = async (context) => {
     update: { $set: data },
     upsert: true,
   };
-  console.log({ body });
   const mongoResponse = await fetch(api, {
     method: "POST",
     body: JSON.stringify(body),
@@ -107,8 +101,6 @@ export const onRequestPut: PagesFunction<E> = async (context) => {
     },
   });
   try {
-    console.log({ mongoResponse });
-    console.log(JSON.stringify(mongoResponse.body));
     const document = await mongoResponse.json();
     console.log({ document });
     if (document) {
@@ -153,7 +145,6 @@ export const onRequestDelete: PagesFunction<E> = async (context) => {
     },
   });
   try {
-    console.log("Del request", { mongoResponse });
     const document = await mongoResponse.json();
     console.log({ document });
     if (document) {
@@ -173,40 +164,3 @@ export const onRequestDelete: PagesFunction<E> = async (context) => {
     { status: 400, statusText: "No document found" }
   );
 };
-
-// const handler: Handler = async (event, context) => {
-//   const MONGO_URL = process.env.MONGO_URL || "";
-//   const DATABASE_NAME = process.env.DATABASE_NAME || "";
-//   const client = new MongoClient(MONGO_URL);
-//   const db = client.db(DATABASE_NAME);
-
-//   try {
-//     switch (event.httpMethod) {
-//       case "PUT":
-//         return await put(event, db);
-//       case "GET":
-//         return await get(event, db);
-//       case "DELETE":
-//         return await del(event, db);
-//       default:
-//         return {
-//           statusCode: 500,
-//           body: JSON.stringify({
-//             message: "Internal server error",
-//           }),
-//         };
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     const message = "Internal server error";
-//     return {
-//       statusCode: 500,
-//       body: JSON.stringify({
-//         message,
-//         error,
-//       }),
-//     };
-//   }
-// };
-
-// export { handler };

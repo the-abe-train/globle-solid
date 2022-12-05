@@ -13,12 +13,11 @@ type Props = {
 export default function (props: Props) {
   return (
     <div class="flex items-center justify-between space-x-4 min-w-[8rem]">
-      <label for="location" data-i18n={props.i18n}>
+      <label for={props.name} data-i18n={props.i18n}>
         {props.name}
       </label>
       <select
-        id="location"
-        name="location"
+        name={props.name}
         class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900
          dark:hover:bg-purple-900 disabled:bg-blue-900  text-white 
         px-4 py-2.5 text-center inline-flex items-center min-w-[8rem]

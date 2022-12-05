@@ -16,9 +16,8 @@ export default function () {
           >
             Google Ad Manager
           </a>
-          . Excerpts from Snack Media's Privacy Policy that pertain to Globle:
-          Capitals are laid out below. To read the entire policy, check out
-          their website{" "}
+          . Excerpts from Snack Media's Privacy Policy that pertain to Globle
+          are laid out below. To read the entire policy, check out their website{" "}
           <a
             class="underline"
             href="https://www.snack-media.com/privacy-policy"
@@ -318,16 +317,16 @@ export default function () {
         <p>
           Globle may use the personal information that you have provided to
           contact you by any of the methods which you input. If you have
-          provided us with your email, you will be added to Globle: Capitals
-          newsletter database and you will receive content, news and additional
-          information about new services, features or products from the site
-          your signed up via in the Globle group and other sites within Globle
-          group. If you do not want to be contacted in this way then please
-          click where indicated when you are completing any of the online forms
-          where you initially input your personal details, by changing your
-          personal details on the [“personal details”] page when you are logged
-          on to the web site, or by contacting Globle via the contact page at
-          any time after submitting your personal details.
+          provided us with your email, you will be added to Globle newsletter
+          database and you will receive content, news and additional information
+          about new services, features or products from the site your signed up
+          via in the Globle group and other sites within Globle group. If you do
+          not want to be contacted in this way then please click where indicated
+          when you are completing any of the online forms where you initially
+          input your personal details, by changing your personal details on the
+          [“personal details”] page when you are logged on to the web site, or
+          by contacting Globle via the contact page at any time after submitting
+          your personal details.
         </p>
         <p>
           As the Internet is a global network, there may be instances when your
