@@ -38,6 +38,7 @@ describe("Test backup process", () => {
     cy.visit("/settings");
     cy.contains(Cypress.env("myEmail"));
 
+    cy.wait(1000);
     cy.contains("Restore from backup").click();
     cy.get('[data-cy="yes-btn"]').click();
 

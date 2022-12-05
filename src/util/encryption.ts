@@ -16,11 +16,12 @@ export const getDayCode = () => dayjs().endOf("day").format("X");
 
 export async function getAnswer() {
   const today = dayjs().format("YYYY-MM-DD");
-  const endpoint = `/.netlify/functions/answer?day=${today}`;
+  // const endpoint = `/.netlify/functions/answer?day=${today}`;
+  const endpoint = `/answer?day=${today}`;
   try {
-    const netlifyResponse = await fetch(endpoint);
-    if (netlifyResponse.status !== 200) throw "Server error";
-    const data = await netlifyResponse.json();
+    const response = await fetch(endpoint);
+    if (response.status !== 200) throw "Server error";
+    const data = (await response.json()) as any;
     const encryptedAnswer = data.answer;
     const answer = JSON.parse(decrypt(encryptedAnswer)) as Country;
     return answer;

@@ -3,7 +3,8 @@ import dayjs from "dayjs";
 
 describe("Test the answer fetching function", () => {
   it("plays today's game", () => {
-    cy.intercept("GET", "/.netlify/functions/answer**").as("answer");
+    cy.intercept("GET", "/answer**").as("answer");
+    // cy.intercept("GET", "/.netlify/functions/answer**").as("answer");
 
     cy.visit("/game");
 
@@ -27,7 +28,8 @@ describe("Test the answer fetching function", () => {
 describe("Tests with a fake answer", () => {
   beforeEach(() => {
     cy.visit("/");
-    cy.intercept("GET", "/.netlify/functions/answer**", (req) => {
+    // cy.intercept("GET", "/.netlify/functions/answer**", (req) => {
+    cy.intercept("GET", "/answer**", (req) => {
       req.reply({
         statusCode: 200,
         fixture: "encrypted_madagascar.json",
