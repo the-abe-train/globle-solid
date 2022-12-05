@@ -39,7 +39,7 @@ export default function () {
         <a class="underline" href="https://globle-capitals.com">
           click here
         </a>{" "}
-        to play the <i>Globle</i> with capital cities!
+        to play Globle with capital cities!
       </p>
     </div>
   );
