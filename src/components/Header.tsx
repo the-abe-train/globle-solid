@@ -26,7 +26,7 @@ export default function Header({ showStats, setShowStats }: Props) {
           data-cy="game-link"
         >
           <h1
-            class="text-2xl sm:text-3xl font-extrabold font-header w-min 
+            class="text-3xl font-extrabold font-header w-min 
           sm:w-max text-center"
           >
             GLOBLE
