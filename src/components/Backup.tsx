@@ -12,19 +12,23 @@ import Prompt from "../components/Prompt";
 import { getContext } from "../Context";
 
 export default function () {
+  // const url = "/.netlify/functions/backup";
+  const url = "/backup";
   const context = getContext();
   // Fetch backup
   async function fetchBackup() {
     const googleToken = context.token().google;
     try {
-      const endpoint = `/.netlify/functions/backup?token=${googleToken}`;
+      const endpoint = `${url}?token=${googleToken}`;
       const response = await fetch(endpoint);
+      console.table(response);
       if (response.status === 205) {
         context.setToken({ google: "" });
         return null;
       }
       if (response.status === 204) return null;
-      const data = await response.json();
+      const data = (await response.json()) as any;
+      console.table(data.document);
       return (data?.document as Stats) ?? null;
     } catch (e) {
       return null;
@@ -37,7 +41,6 @@ export default function () {
   const [promptText, setPromptText] = createSignal("");
   const [promptType, setPromptType] = createSignal<Prompt>("Choice");
   const [promptAction, setPromptAction] = createSignal(restoreBackup);
-  // const [backupStats, setBackupStats] = createSignal<Stats | null>(null);
   const [backupStats, { refetch }] = createResource(
     context.token().google,
     fetchBackup
@@ -84,11 +87,13 @@ export default function () {
         stats: context.storedStats(),
         token: context.token().google,
       });
-      const netlifyResponse = await fetch("/.netlify/functions/backup", {
+      const googleToken = context.token().google;
+      const endpoint = `${url}?token=${googleToken}`;
+      const netlifyResponse = await fetch(endpoint, {
         method: "PUT",
         body,
       });
-      const data = await netlifyResponse.json();
+      const data = (await netlifyResponse.json()) as any;
       const message = data.message;
       setPromptType("Message");
       setPromptText(message);
@@ -132,13 +137,11 @@ export default function () {
 
   async function deleteBackup() {
     try {
-      const endpoint = `/.netlify/functions/backup?token=${
-        context.token().google
-      }`;
+      const endpoint = `${url}?token=${context.token().google}`;
       const netlifyResponse = await fetch(endpoint, {
         method: "DELETE",
       });
-      const data = await netlifyResponse.json();
+      const data = (await netlifyResponse.json()) as any;
       setPromptType("Message");
       setPromptText(data.message);
       refetch();

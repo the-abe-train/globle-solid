@@ -1,4 +1,6 @@
 {
+  // "include": ["src/**/*", "cypres" "functions/**/*"],
+  // "exclude": ["functions/**/*"],
   "compilerOptions": {
     "strict": true,
     "target": "ESNext",
@@ -8,7 +10,8 @@
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "types": ["vite/client"],
+    // "types": ["vite/client"],
+    "types": ["vite/client", "@cloudflare/workers-types"],
     "noEmit": true,
     "isolatedModules": true,
     "resolveJsonModule": true

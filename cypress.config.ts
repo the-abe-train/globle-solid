@@ -8,7 +8,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    baseUrl: "http://localhost:8888",
+    baseUrl: "http://localhost:8788",
     env: {
       googleRefreshToken: process.env.GOOGLE_REFRESH_TOKEN,
       googleClientId: process.env.GOOGLE_CLIENT_ID,
