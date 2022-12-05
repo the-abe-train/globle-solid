@@ -1,10 +1,10 @@
 name = "my-worker-dev"
-type = "javascript"
 
 account_id = "<YOUR ACCOUNTID>"
 workers_dev = true
 
 node_compat = true
+compatibility_date = "2022-12-04"
 
 
 # Define top-level environment variables

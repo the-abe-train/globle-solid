@@ -1,9 +1,9 @@
-import rawAnswerData from "../src/data/country_data.json";
 import crypto from "crypto-js";
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import invariant from "tiny-invariant";
 dayjs.extend(advancedFormat);
 dayjs.extend(timezone);
 dayjs.extend(utc);
@@ -13,8 +13,8 @@ function encrypt(text: string, key: string) {
   return encyptedText;
 }
 
-function generateKey(list: any[], dayCode: number, shuffle: string) {
-  const key = Math.floor(dayCode / parseInt(shuffle)) % list.length;
+function generateKey(listLength: number, dayCode: number, shuffle: string) {
+  const key = Math.floor(dayCode / parseInt(shuffle)) % listLength;
   return key;
 }
 
@@ -28,15 +28,15 @@ const onRequest: PagesFunction<E> = async (context) => {
     const { request, env } = context;
     const url = new URL(request.url);
     const today = url.searchParams.get("day");
+    const listLength = parseInt(url.searchParams.get("list") ?? "");
+    invariant(listLength, "Invalid list length parameter");
     console.log({ today });
     const dayCode = parseInt(dayjs.tz(today, "Etc/UTC").format("X"));
     if (!dayCode) throw "Parameter error";
     console.log(dayCode);
-    const countries = rawAnswerData["features"] as Country[];
-    const key = generateKey(countries, dayCode, env.SHUFFLE_KEY);
-    const country = countries[key];
-    console.log("country", country.properties.NAME);
-    const answer = encrypt(JSON.stringify(country), env.CRYPTO_KEY);
+    const answerKey = generateKey(listLength, dayCode, env.SHUFFLE_KEY);
+    console.log("key", answerKey);
+    const answer = encrypt(`${answerKey}`, env.CRYPTO_KEY);
     return new Response(
       JSON.stringify({
         message: "Mystery country retrieved.",
