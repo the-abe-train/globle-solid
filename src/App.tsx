@@ -1,4 +1,11 @@
-import { Component, createSignal, lazy, onMount } from "solid-js";
+import {
+  Component,
+  createSignal,
+  lazy,
+  Match,
+  onMount,
+  Switch,
+} from "solid-js";
 import { Route, Routes } from "@solidjs/router";
 import { getContext } from "./Context";
 import "./background.css";
@@ -8,6 +15,8 @@ import { translatePage } from "./i18n";
 import Modal from "./components/Modal";
 import Statistics from "./components/Statistics";
 import Practice from "./routes/Practice";
+import UAParser from "ua-parser-js";
+import SnackAdUnit from "./components/SnackAdUnit";
 
 const Home = lazy(() => import("./routes/Home"));
 const Settings = lazy(() => import("./routes/Settings"));
@@ -16,16 +25,16 @@ const FAQ = lazy(() => import("./routes/Faq"));
 const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 
 // TODO add snack ads
-// TODO Settings test spec
-// TODO add code to solid branch on original site
 // TODO PWA
+// TODO add code to solid branch on original site?
 // TODO A/B tested in Netlify?
-// TODO merge
+// TODO merge?
 
 const App: Component = () => {
   const { theme } = getContext();
   const [showStats, setShowStats] = createSignal(false);
   onMount(translatePage);
+  const parser = new UAParser();
 
   return (
     <div
@@ -48,6 +57,17 @@ const App: Component = () => {
           <Route path="/faq" component={FAQ} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
         </Routes>
+        <Switch>
+          <Match when={parser.getDevice().type === "mobile"}>
+            <SnackAdUnit unitName="snack_mex1" siteId="2902" />
+          </Match>
+          <Match when={parser.getDevice().type === "tablet"}>
+            <SnackAdUnit unitName="snack_dex1" siteId="2902" />
+          </Match>
+          <Match when={parser.getDevice().type === "console"}>
+            <SnackAdUnit unitName="snack_dex1" siteId="2902" />
+          </Match>
+        </Switch>
         <Footer />
       </main>
       <div
