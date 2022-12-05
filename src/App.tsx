@@ -24,8 +24,6 @@ const Game = lazy(() => import("./routes/Game"));
 const FAQ = lazy(() => import("./routes/Faq"));
 const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 
-// TODO add snack ads
-// TODO PWA
 // TODO add code to solid branch on original site?
 // TODO A/B tested in Netlify?
 // TODO merge?
