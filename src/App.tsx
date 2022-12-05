@@ -15,7 +15,6 @@ const Game = lazy(() => import("./routes/Game"));
 const FAQ = lazy(() => import("./routes/Faq"));
 const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 
-// TODO answer function should only send NAME, not entire country
 // TODO add Plurality link
 // TODO add the rest of the languages and make sure all text is translated
 // TODO add snack ads
