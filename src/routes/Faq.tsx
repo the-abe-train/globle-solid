@@ -82,7 +82,7 @@ export default function () {
       links: [
         {
           text: "GitHub",
-          link: "https://github.com/the-abe-train/globle",
+          link: "https://github.com/the-abe-train/globle-solid",
         },
         { text: "Twitter", link: "https://twitter.com/theAbeTrain" },
       ],
