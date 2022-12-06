@@ -7,7 +7,6 @@ import { polygonDistance } from "../util/geometry";
 import { GuessStore } from "../util/stores";
 import { getLangKey, translate } from "../i18n";
 import { isTerritory } from "../lib/assertions";
-import { unwrap } from "solid-js/store";
 
 type Props = {
   guesses: GuessStore;
@@ -21,7 +20,6 @@ export default function (props: Props) {
   const locale = context.locale().locale;
   const langKey = createMemo(getLangKey);
   const mountMsg = () => {
-    console.log("Guesses", unwrap(props.guesses));
     if (props.guesses.length === 0) {
       return translate(
         "Game3",

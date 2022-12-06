@@ -76,8 +76,16 @@ export default function (props: Props) {
   }) {
     const controls = globe.controls() as any;
     controls.autoRotate = false;
-    const { lat, lng } = coords;
-    globe.pointOfView({ lat, lng }, 250);
+    // const { lat, lng } = coords;
+    const currentAlt = globe.pointOfView().altitude;
+    coords["altitude"] =
+      "altitude" in coords ? coords["altitude"] : Math.max(currentAlt, 0.05);
+    globe.pointOfView(coords, 250);
+  }
+
+  function overrideZoom() {
+    const controls = globe.controls() as any;
+    if (controls != null) controls.zoomSpeed = 1;
   }
 
   // Effects
@@ -113,7 +121,9 @@ export default function (props: Props) {
         >${formatName(c as Country, locale)}</p>`
             : ""
         )
-        .polygonStrokeColor(() => "black")(globeRef);
+        .polygonStrokeColor(() => "black")
+
+        .onZoom(overrideZoom)(globeRef);
 
       // Initial settings
       const controls = globe.controls() as any;

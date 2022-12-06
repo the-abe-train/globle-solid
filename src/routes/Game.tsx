@@ -50,7 +50,6 @@ function Inner(props: Props) {
   const lastWin = dayjs(context.storedStats().lastWin);
   const [win, setWin] = createSignal(lastWin.isSame(dayjs(), "date"));
 
-  console.log(context.storedGuesses());
   const restoredGuesses = () => {
     const oldGuesses = context.storedGuesses();
 
@@ -67,10 +66,7 @@ function Inner(props: Props) {
     return [];
   };
 
-  const { guesses, setGuesses } = createGuessStore(
-    restoredGuesses(),
-    props.ans
-  );
+  const { guesses, setGuesses } = createGuessStore(restoredGuesses());
 
   // Effects
   createEffect(() => {
@@ -126,7 +122,6 @@ function Inner(props: Props) {
     })
   );
 
-  // TODO add territories here instead of in the globe
   function addNewGuess(newGuess: Country) {
     const territories = getTerritories(newGuess);
     setGuesses("places", (prev) => [...prev, newGuess, ...territories]);

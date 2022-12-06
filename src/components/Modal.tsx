@@ -72,7 +72,7 @@ function Inner(props: ParentProps<Props>) {
       class="border-4 border-sky-300 dark:border-slate-700 bg-sky-100 
     dark:bg-slate-900 drop-shadow-xl 
     z-40 w-fit inset-x-0 mx-auto m py-6 px-6 rounded-md space-y-2 
-    absolute top-24
+    absolute top-20
     transition-opacity ease-in-out duration-500 opacity-0 
     "
       ref={innerRef!}

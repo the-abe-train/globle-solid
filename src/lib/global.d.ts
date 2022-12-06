@@ -99,6 +99,7 @@ declare global {
       NAME_VI: string;
       NAME_ZH: string;
       NAME_ZHT: string;
+      NAME_NO: string;
     };
     bbox: number[];
     geometry:

@@ -69,15 +69,17 @@ export const globeMinImg = () => {
 
 export function createPolygon(country: Country, ans: Country) {
   console.log("Creating polygon");
-  const { theme } = getContext();
-  const labelBg = theme().isDark ? "#F3E2F1" : "#FEFCE8";
+  const { isDark } = getContext().theme();
+  const { colours } = getContext().colours();
+  const { locale } = getContext().locale();
+  const labelBg = isDark ? "#F3E2F1" : "#FEFCE8";
   const output = {
     geometry: country?.geometry,
-    colour: getColour(country, ans),
+    colour: getColour(country, ans, isDark, colours),
     label: `<p
           class="text-black py-1 px-2 text-center font-bold bg-yellow-50"
           style="background-color: ${labelBg};"
-          >${formatName(country)}</p>`,
+          >${formatName(country, locale)}</p>`,
   };
   return output;
 }

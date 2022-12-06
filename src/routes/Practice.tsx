@@ -44,7 +44,7 @@ function Inner(props: InnerProps) {
   const [win, setWin] = createSignal(false);
   const [showPrompt, setShowPrompt] = createSignal(false);
 
-  const { guesses, setGuesses } = createGuessStore([], props.ans);
+  const { guesses, setGuesses } = createGuessStore([]);
 
   // Lifecycle
   onMount(translatePage);

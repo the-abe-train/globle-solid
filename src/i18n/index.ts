@@ -21,7 +21,7 @@ export const langMap = [
   { locale: "de-DE", langKey: "NAME_DE", resource: German, name: "Deutsch" },
   { locale: "hu-HU", langKey: "NAME_HU", resource: Hungarian, name: "Magyar" },
   { locale: "it-IT", langKey: "NAME_IT", resource: Italian, name: "Italiano" },
-  { locale: "sv-SE", langKey: "NAME_SE", resource: Swedish, name: "Svenska" },
+  { locale: "sv-SE", langKey: "NAME_SV", resource: Swedish, name: "Svenska" },
   { locale: "pl-PL", langKey: "NAME_PL", resource: Polish, name: "Polski" },
   { locale: "no-NO", langKey: "NAME_NO", resource: Norwegian, name: "Norsk" },
 ] as const;

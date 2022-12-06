@@ -1,21 +1,7 @@
 import { createStore } from "solid-js/store";
-import { getContext } from "../Context";
-import { Language } from "../i18n";
-import { getColour } from "./colour";
-import { formatName } from "./text";
-import rawTerritoriesData from "../data/territories.json";
-import { isCountry, isTerritory } from "../lib/assertions";
+import { isCountry } from "../lib/assertions";
 
-export function createGuessStore(
-  startList: (Country | Territory)[],
-  // isDark: boolean,
-  // locale: Locale,
-  ans: Country
-) {
-  const territoriesData = rawTerritoriesData["features"] as Territory[];
-  const context = getContext();
-  const isDark = context.theme().isDark;
-  const locale = context.locale().locale;
+export function createGuessStore(startList: (Country | Territory)[]) {
   const [guesses, setGuesses] = createStore({
     places: startList,
     get countries() {
@@ -37,14 +23,6 @@ export function createGuessStore(
         return proximityA - proximityZ;
       });
     },
-    // get polygons() {
-    //   const territories = this.list.flatMap((country) => {
-    //     return territoriesData.filter((territory) => {
-    //       return country.properties.NAME === territory.properties.SOVEREIGNT;
-    //     });
-    //   });
-    //   return [...territories, ...this.list];
-    // },
   });
   return { guesses: guesses as GuessStore, setGuesses };
 }
