@@ -53,7 +53,8 @@ function Inner(props: Props) {
   console.log(context.storedGuesses());
   const restoredGuesses = () => {
     const oldGuesses = context.storedGuesses();
-    if (dayjs(oldGuesses.expiration).isAfter(dayjs())) {
+
+    if (dayjs(oldGuesses.day).isAfter(dayjs())) {
       const countries = oldGuesses.countries.map((countryName) => {
         const country = getCountry(countryName);
         const proximity = polygonDistance(country, props.ans);
@@ -81,7 +82,7 @@ function Inner(props: Props) {
 
   onMount(() => {
     translatePage();
-    const expiration = dayjs(context.storedGuesses().expiration);
+    const expiration = dayjs(context.storedGuesses().day);
     if (dayjs().isAfter(expiration)) context.resetGuesses();
     if (win()) setTimeout(() => props.setShowStats(true), 3000);
   });

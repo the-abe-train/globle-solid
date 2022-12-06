@@ -24,8 +24,7 @@ const Game = lazy(() => import("./routes/Game"));
 const FAQ = lazy(() => import("./routes/Faq"));
 const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 
-// TODO local storage day vs expiration?
-// TODO page refresh "This site can’t be reached"
+// TODO page refresh "This site can’t be reached" (service worker related?)
 // TODO Check opengraph image tags for preview
 // TODO Check Carole's issue
 // TODO Make the 3D and black edges more subtle

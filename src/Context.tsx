@@ -47,7 +47,7 @@ export const makeContext = (mode: "Stored" | "Static") => {
     },
     guesses: {
       countries: [] as string[],
-      expiration: dayjs().endOf("day").toDate(),
+      day: dayjs().endOf("day").toDate(),
     },
     distanceUnit: { unit: "km" as Unit },
     token: { google: "" },

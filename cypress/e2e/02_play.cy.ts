@@ -51,7 +51,7 @@ describe("Tests with a fake answer", () => {
     cy.loadStats(yesterday);
     cy.fixture("fake_stats").then((oldStats) => {
       const guesses = oldStats["guesses"];
-      guesses["expiration"] = yesterday;
+      guesses["day"] = yesterday;
       window.localStorage.setItem("guesses", JSON.stringify(guesses));
     });
 
