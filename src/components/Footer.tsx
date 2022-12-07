@@ -15,13 +15,6 @@ export default function Footer() {
         >
           <Icon shape="twitter" size={14} />
         </a>
-        <a
-          href="https://github.com/the-abe-train/globle-solid"
-          aria-label="Github"
-          class="inline"
-        >
-          <Icon shape="github" size={14} />
-        </a>
       </span>
       <p>
         <span data-i18n="Aux2">Have a question?</span> <br class="sm:hidden" />

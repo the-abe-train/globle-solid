@@ -24,8 +24,7 @@ const Game = lazy(() => import("./routes/Game"));
 const FAQ = lazy(() => import("./routes/Faq"));
 const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 
-// TODO Check Carole's issue
-// TODO territories should have their colonists names in their labels
+// TODO no errors in settings page in console for no token
 // TODO page refresh "This site can’t be reached" (service worker related?)
 
 // TODO add code to solid branch on original site?

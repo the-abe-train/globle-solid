@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import crypto from "crypto-js";
 import rawAnswerData from "../../src/data/country_data.json";
-// import { decrypt } from "../../src/util/encryption";
 
 function decrypt(encryptedAnsKey: string) {
   const key = Cypress.env("cryptoKey");

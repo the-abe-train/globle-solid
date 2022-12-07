@@ -6,7 +6,7 @@ import { getContext } from "../Context";
 import { polygonDistance } from "../util/geometry";
 import { GuessStore } from "../util/stores";
 import { getLangKey, translate } from "../i18n";
-import { isTerritory } from "../lib/assertions";
+import { isTerritory } from "../util/data";
 
 type Props = {
   guesses: GuessStore;
@@ -90,7 +90,6 @@ export default function (props: Props) {
   function findCountry(newGuess: string) {
     const searchPhrase = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
     const results = answerIndex().search(searchPhrase);
-    // console.log(results);
     if (results.length === 0) {
       setMsg(`"${newGuess}" not found in database.`);
       return;

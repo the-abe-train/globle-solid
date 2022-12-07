@@ -39,7 +39,7 @@ export default function () {
 
   return (
     <div
-      class="w-fit mx-auto cursor-pointer text-center"
+      class="w-fit mx-auto cursor-pointer text-center py-4"
       onClick={() => navigate("/game")}
     >
       <div ref={globeRef!} class="w-fit mx-auto my-2" />

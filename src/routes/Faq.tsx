@@ -78,14 +78,8 @@ export default function () {
     },
     {
       q: "A country is missing or a border is incorrect. What can I do about it?",
-      a: "Geography can be a sensitive topic, and some countries' borders are disputed. If you believe a correction should be made, please politely raise an issue on GitHub or DM me on Twitter.",
-      links: [
-        {
-          text: "GitHub",
-          link: "https://github.com/the-abe-train/globle-solid",
-        },
-        { text: "Twitter", link: "https://twitter.com/theAbeTrain" },
-      ],
+      a: "Geography can be a sensitive topic, and some countries' borders are disputed. If you believe a correction should be made, please DM me on Twitter.",
+      links: [{ text: "Twitter", link: "https://twitter.com/theAbeTrain" }],
     },
     {
       q: "Why are my friend and I getting different mystery countries?",

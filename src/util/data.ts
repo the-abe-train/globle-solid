@@ -2,11 +2,6 @@ import invariant from "tiny-invariant";
 import rawCountryData from "../data/country_data.json";
 import rawTerritoriesData from "../data/territories.json";
 
-// export const countryList = () => {
-//   const features = rawCountryData['features'].map()
-
-// }
-
 export function getCountry(name: string) {
   const db = rawCountryData["features"] as Country[];
   const country = db.find((c) => c.properties.NAME === name);
@@ -22,8 +17,23 @@ export function getTerritories(country: Country) {
   return territories;
 }
 
-// export function mapToList<T>(map: Record<string, T>) {
-//   return Object.keys(map).map((name) => {
-//     return { name: map[locale as T], name };
-//   });
-// }
+type Obj = {
+  properties: any;
+};
+
+export const isTerritory = (x: Country | Territory): x is Territory =>
+  typeof x.properties.SOVEREIGNT === "string";
+
+export const isCountry = (x: Obj): x is Country => "CONTINENT" in x.properties;
+
+export function closest(countries: Country[]) {
+  // console.log("This", this);
+  console.log(countries);
+  const distances = [...countries]
+    .map((guess) => {
+      const proximity = console.log(guess.properties.NAME, guess.proximity);
+      return guess.proximity ?? 50;
+    })
+    .sort((a, z) => a - z);
+  return distances[0];
+}

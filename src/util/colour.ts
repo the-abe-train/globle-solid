@@ -5,7 +5,7 @@ import {
   interpolateOrRd,
   scaleSequentialSqrt,
 } from "d3";
-import { isTerritory } from "../lib/assertions";
+import { isTerritory } from "../util/data";
 import { polygonDistance } from "./geometry";
 
 const GREEN_SQUARE = "🟩";

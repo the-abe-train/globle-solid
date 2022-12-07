@@ -13,9 +13,10 @@ import List from "../components/List";
 import { createPracticeAns, getPracticeAns } from "../util/practice";
 import Prompt from "../components/Prompt";
 import { useNavigate } from "@solidjs/router";
-import { createGuessStore } from "../util/stores";
-import { getTerritories } from "../util/data";
+import { createGuessStore, GuessStore } from "../util/stores";
+import { getCountry, getTerritories, isCountry } from "../util/data";
 import { translate, translatePage } from "../i18n";
+import { createStore, unwrap } from "solid-js/store";
 
 const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
@@ -44,11 +45,15 @@ function Inner(props: InnerProps) {
   const [win, setWin] = createSignal(false);
   const [showPrompt, setShowPrompt] = createSignal(false);
 
+  createEffect(() => {
+    console.log(unwrap(guesses));
+  });
+
   const { guesses, setGuesses } = createGuessStore([]);
 
   // Lifecycle
   onMount(translatePage);
-  onCleanup(() => setGuesses("places", []));
+  // onCleanup(() => setGuesses("closest", 12));
 
   // New game
   function newGame() {
@@ -57,8 +62,12 @@ function Inner(props: InnerProps) {
   }
 
   function addGuess(newGuess: Country) {
+    console.log(guesses.countries);
     const territories = getTerritories(newGuess);
+    console.log("proximity", newGuess.proximity);
     setGuesses("places", (prev) => [...prev, newGuess, ...territories]);
+    // setGuesses("places", 0, "proximity", 5);
+    console.log(guesses);
     return;
   }
 

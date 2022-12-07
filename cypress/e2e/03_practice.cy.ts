@@ -1,3 +1,6 @@
+import crypto from "crypto-js";
+import rawAnswerData from "../../src/data/country_data.json";
+
 describe("Play a practice game", () => {
   it("plays the game in practice mode", () => {
     cy.fixture("madagascar").then((madagascar) => {
