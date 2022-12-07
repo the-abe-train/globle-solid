@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer
       class="pt-8 pb-4 text-xs flex items-end justify-between w-full 
-    flex-grow mb-12"
+    flex-grow mb-16"
     >
       <span class="space-x-1 flex">
         <a href="https://the-abe-train.com" data-i18n="Footer1">
