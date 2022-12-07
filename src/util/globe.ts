@@ -68,7 +68,7 @@ export const globeMinImg = () => {
 };
 
 export function createPolygon(country: Country, ans: Country) {
-  console.log("Creating polygon");
+  // console.log("Creating polygon");
   const { isDark } = getContext().theme();
   const { colours } = getContext().colours();
   const { locale } = getContext().locale();

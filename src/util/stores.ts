@@ -2,8 +2,6 @@ import { createStore, unwrap } from "solid-js/store";
 import { getCountry, isCountry } from "./data";
 
 export function createGuessStore(startList: (Country | Territory)[]) {
-  const thailand = getCountry("Thailand");
-  console.log("Thailand prox:", thailand.proximity);
   const [guesses, setGuesses] = createStore({
     places: startList,
     get countries() {
@@ -28,7 +26,7 @@ export function createGuessStore(startList: (Country | Territory)[]) {
       });
     },
   });
-  console.log(guesses.places);
+  // console.log(guesses.places);
   return { guesses: guesses as GuessStore, setGuesses };
 }
 

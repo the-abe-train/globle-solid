@@ -45,9 +45,9 @@ function Inner(props: InnerProps) {
   const [win, setWin] = createSignal(false);
   const [showPrompt, setShowPrompt] = createSignal(false);
 
-  createEffect(() => {
-    console.log(unwrap(guesses));
-  });
+  // createEffect(() => {
+  //   console.log(unwrap(guesses));
+  // });
 
   const { guesses, setGuesses } = createGuessStore([]);
 
@@ -62,12 +62,9 @@ function Inner(props: InnerProps) {
   }
 
   function addGuess(newGuess: Country) {
-    console.log(guesses.countries);
     const territories = getTerritories(newGuess);
-    console.log("proximity", newGuess.proximity);
+    // console.log("proximity", newGuess.proximity);
     setGuesses("places", (prev) => [...prev, newGuess, ...territories]);
-    // setGuesses("places", 0, "proximity", 5);
-    console.log(guesses);
     return;
   }
 

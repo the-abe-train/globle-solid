@@ -28,10 +28,10 @@ export const isCountry = (x: Obj): x is Country => "CONTINENT" in x.properties;
 
 export function closest(countries: Country[]) {
   // console.log("This", this);
-  console.log(countries);
+  // console.log(countries);
   const distances = [...countries]
     .map((guess) => {
-      const proximity = console.log(guess.properties.NAME, guess.proximity);
+      // const proximity = console.log(guess.properties.NAME, guess.proximity);
       return guess.proximity ?? 50;
     })
     .sort((a, z) => a - z);
