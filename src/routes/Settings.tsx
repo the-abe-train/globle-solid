@@ -50,8 +50,8 @@ export default function () {
     navigate("/practice");
   }
 
+  // Load backup
   const [showBackup, setShowBackup] = createSignal(false);
-
   onMount(() => {
     const googleScript = document.getElementById("google-signin-script");
     if (window.google) {

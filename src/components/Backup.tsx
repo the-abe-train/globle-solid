@@ -8,6 +8,7 @@ import {
   Show,
   Switch,
 } from "solid-js";
+import invariant from "tiny-invariant";
 import Prompt from "../components/Prompt";
 import { getContext } from "../Context";
 
@@ -18,6 +19,7 @@ export default function () {
   // Fetch backup
   async function fetchBackup() {
     const googleToken = context.token().google;
+    if (!googleToken) return null;
     try {
       const endpoint = `${url}?token=${googleToken}`;
       const response = await fetch(endpoint);
@@ -86,6 +88,7 @@ export default function () {
         token: context.token().google,
       });
       const googleToken = context.token().google;
+      invariant(googleToken, "No token found in context.");
       const endpoint = `${url}?token=${googleToken}`;
       const netlifyResponse = await fetch(endpoint, {
         method: "PUT",
@@ -135,7 +138,9 @@ export default function () {
 
   async function deleteBackup() {
     try {
-      const endpoint = `${url}?token=${context.token().google}`;
+      const googleToken = context.token().google;
+      invariant(googleToken, "No token found in context.");
+      const endpoint = `${url}?token=${googleToken}`;
       const netlifyResponse = await fetch(endpoint, {
         method: "DELETE",
       });
