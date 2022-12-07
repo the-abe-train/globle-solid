@@ -34,8 +34,12 @@ const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 const App: Component = () => {
   const { theme } = getContext();
   const [showStats, setShowStats] = createSignal(false);
-  onMount(translatePage);
-  const parser = new UAParser();
+  const [deviceType, setDeviceType] = createSignal("");
+  onMount(() => {
+    translatePage();
+    const parser = new UAParser();
+    setDeviceType(parser.getDevice().type ?? "");
+  });
 
   return (
     <div
@@ -59,13 +63,13 @@ const App: Component = () => {
           <Route path="/privacy-policy" component={PrivacyPolicy} />
         </Routes>
         <Switch>
-          <Match when={parser.getDevice().type === "mobile"}>
+          <Match when={deviceType() === "mobile"}>
             <SnackAdUnit unitName="snack_mex1" siteId="2902" />
           </Match>
-          <Match when={parser.getDevice().type === "tablet"}>
+          <Match when={deviceType() === "tablet"}>
             <SnackAdUnit unitName="snack_dex1" siteId="2902" />
           </Match>
-          <Match when={parser.getDevice().type === "console"}>
+          <Match when={deviceType() === "console"}>
             <SnackAdUnit unitName="snack_dex1" siteId="2902" />
           </Match>
         </Switch>
