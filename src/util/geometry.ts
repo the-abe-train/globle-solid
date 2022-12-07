@@ -9,17 +9,27 @@ function pointToCoordinates(point: Array<number>) {
   return coord;
 }
 
+function samplePoints(points: number[][]) {
+  // If the polygon is too big, reduce the number of points used in calculation
+  if (points.length > 500) {
+    return points.filter((_, idx) => {
+      return idx % 2 === 0;
+    });
+  }
+  return points;
+}
+
 function polygonPoints(country: Country) {
   const { geometry } = country;
   switch (geometry.type) {
     case "Polygon":
-      return geometry.coordinates[0];
+      return samplePoints(geometry.coordinates[0]);
     case "MultiPolygon":
       let points: number[][] = [];
       for (const polygon of geometry.coordinates) {
         points = [...points, ...polygon[0]];
       }
-      return points;
+      return samplePoints(points);
     default:
       throw new Error("Country data error");
   }
