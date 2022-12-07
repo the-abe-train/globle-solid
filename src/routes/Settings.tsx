@@ -53,8 +53,8 @@ export default function () {
   const [showBackup, setShowBackup] = createSignal(false);
 
   onMount(() => {
-    console.log("Google obj", google);
-    if (typeof google !== "undefined") {
+    console.log("Google obj", window.google);
+    if (typeof window.google !== "undefined") {
       setShowBackup(true);
     }
   });
