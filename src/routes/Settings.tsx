@@ -8,6 +8,7 @@ import { langMap, translate, translatePage } from "../i18n";
 import NavGlobe from "../components/globes/NavGlobe";
 import { createPracticeAns } from "../util/practice";
 import { getColourScheme } from "../util/colour";
+import dayjs from "dayjs";
 
 export default function () {
   const context = getContext();
@@ -47,6 +48,13 @@ export default function () {
   function enterPracticeMode() {
     createPracticeAns();
     navigate("/practice");
+  }
+
+  const [showBackup, setShowBackup] = createSignal(false);
+
+  console.log("Google obj", google);
+  if (typeof google !== "undefined") {
+    setShowBackup(true);
   }
 
   return (
@@ -107,7 +115,7 @@ export default function () {
           </span>
         </button>
       </div>
-      <Show when={google}>
+      <Show when={showBackup()}>
         <Backup />
       </Show>
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
