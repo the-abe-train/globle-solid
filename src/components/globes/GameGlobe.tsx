@@ -63,7 +63,6 @@ export default function (props: Props) {
     });
   });
 
-  // Context params
   const parser = new UAParser();
   const device = parser.getDevice();
   const size = device.type === "mobile" ? 320 : 600; // px on one side
