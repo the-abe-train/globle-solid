@@ -1,4 +1,4 @@
-import { createEffect, createSignal, Suspense } from "solid-js";
+import { createEffect, createSignal, Show, Suspense } from "solid-js";
 import Backup from "../components/Backup";
 import Toggle from "../components/Toggle";
 import { getContext } from "../Context";
@@ -107,7 +107,9 @@ export default function () {
           </span>
         </button>
       </div>
-      <Backup />
+      <Show when={google}>
+        <Backup />
+      </Show>
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <NavGlobe />
       </Suspense>
