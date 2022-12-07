@@ -1,4 +1,4 @@
-import { createEffect, createSignal, Show, Suspense } from "solid-js";
+import { createEffect, createSignal, onMount, Show, Suspense } from "solid-js";
 import Backup from "../components/Backup";
 import Toggle from "../components/Toggle";
 import { getContext } from "../Context";
@@ -52,10 +52,12 @@ export default function () {
 
   const [showBackup, setShowBackup] = createSignal(false);
 
-  console.log("Google obj", google);
-  if (typeof google !== "undefined") {
-    setShowBackup(true);
-  }
+  onMount(() => {
+    console.log("Google obj", google);
+    if (typeof google !== "undefined") {
+      setShowBackup(true);
+    }
+  });
 
   return (
     <div class="space-y-10">
