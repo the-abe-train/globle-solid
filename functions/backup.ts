@@ -106,6 +106,7 @@ export const onRequestPut: PagesFunction<E> = async (context) => {
     if (document) {
       return new Response(
         JSON.stringify({
+          message: "Backup saved!",
           document,
         })
       );
@@ -151,6 +152,7 @@ export const onRequestDelete: PagesFunction<E> = async (context) => {
       return new Response(
         JSON.stringify({
           document,
+          message: "Backup deleted.",
         })
       );
     }
