@@ -69,7 +69,7 @@ const App: Component = () => {
           <Match when={deviceType() === "tablet"}>
             <SnackAdUnit unitName="snack_dex1" siteId="2902" />
           </Match>
-          <Match when={deviceType() === "console"}>
+          <Match when={!deviceType()}>
             <SnackAdUnit unitName="snack_dex1" siteId="2902" />
           </Match>
         </Switch>
