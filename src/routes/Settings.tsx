@@ -53,9 +53,13 @@ export default function () {
   const [showBackup, setShowBackup] = createSignal(false);
 
   onMount(() => {
-    console.log("Google obj", window.google);
-    if (typeof window.google !== "undefined") {
+    const googleScript = document.getElementById("google-signin-script");
+    if (window.google) {
       setShowBackup(true);
+    } else {
+      googleScript?.addEventListener("load", () => {
+        setShowBackup(true);
+      });
     }
   });
 
@@ -117,7 +121,7 @@ export default function () {
           </span>
         </button>
       </div>
-      <Show when={showBackup()}>
+      <Show when={showBackup()} fallback={<p>Unable to load backup.</p>}>
         <Backup />
       </Show>
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
