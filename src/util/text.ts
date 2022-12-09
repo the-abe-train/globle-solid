@@ -24,8 +24,8 @@ export function formatName(country: Country, locale: Locale): string {
   const territory = isTerritory(country);
   let name = NAME;
   if (locale !== "en-CA" && !territory) {
-    const langKey = createMemo(getLangKey);
-    name = langKey();
+    const langKey = createMemo(() => getLangKey(locale));
+    name = country.properties[langKey()];
   }
   if (NAME_LEN >= 10) name = ABBREV;
   if (territory) {

@@ -27,10 +27,10 @@ export const langMap = [
 ] as const;
 export type Locale = typeof langMap[number]["locale"];
 
-export function getLangKey() {
-  const context = getContext();
-  const { locale } = context.locale();
+export function getLangKey(locale: Locale) {
+  console.log(locale);
   const lang = langMap.find((lang) => lang.locale === locale);
+  console.log(lang);
   return lang?.langKey ?? "NAME";
 }
 

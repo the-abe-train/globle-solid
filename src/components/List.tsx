@@ -25,9 +25,10 @@ type Props = {
 
 export default function (props: Props) {
   const context = getContext();
-  const [isSortedByDistance, toggleSortByDistance] = createSignal(true);
+  const locale = context.locale().locale;
+  const langKey = createMemo(() => getLangKey(locale));
 
-  const langKey = createMemo(getLangKey);
+  const [isSortedByDistance, toggleSortByDistance] = createSignal(true);
 
   const sortedGuesses = createMemo(() => {
     return isSortedByDistance()

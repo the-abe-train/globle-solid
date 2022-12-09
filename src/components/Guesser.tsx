@@ -18,7 +18,7 @@ type Props = {
 export default function (props: Props) {
   const context = getContext();
   const locale = context.locale().locale;
-  const langKey = createMemo(getLangKey);
+  const langKey = createMemo(() => getLangKey(locale));
   const mountMsg = () => {
     if (props.guesses.length === 0) {
       return translate(
