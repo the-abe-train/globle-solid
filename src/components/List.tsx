@@ -11,7 +11,6 @@ import {
 } from "solid-js";
 import { getContext } from "../Context";
 import { getLangKey, translatePage } from "../i18n";
-import { closest } from "../util/data";
 import { findCentre } from "../util/geometry";
 import { GuessStore } from "../util/stores";
 import { formatKm } from "../util/text";

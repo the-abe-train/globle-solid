@@ -68,6 +68,7 @@ export default function (props: Props) {
   const size = device.type === "mobile" ? 320 : 600; // px on one side
 
   // Turn globe on click
+  // TODO if turning from click, don't use alt from arguments!
   function turnGlobe(coords: {
     lat?: number;
     lng?: number;
@@ -79,6 +80,7 @@ export default function (props: Props) {
     const currentAlt = globe.pointOfView().altitude;
     coords["altitude"] =
       "altitude" in coords ? coords["altitude"] : Math.max(currentAlt, 0.05);
+    // coords["altitude"] = Math.max(currentAlt, 0.05);
     globe.pointOfView(coords, 250);
   }
 
@@ -105,7 +107,7 @@ export default function (props: Props) {
         .htmlElementsData(labels())
         .htmlElement("element")
 
-        .onPolygonClick((p, e, c) => turnGlobe(c))
+        .onPolygonClick((p, e, { lat, lng }) => turnGlobe({ lat, lng }))
         .polygonsData(unwrap(props.guesses.places))
         .polygonCapColor((c) =>
           getColour(c as Country, props.ans, isDark, colours)
@@ -146,7 +148,7 @@ export default function (props: Props) {
     }
   });
 
-  // When player clicks on a country name, turn to it
+  // When player clicks on a country name in the List, turn to it
   createEffect(() => {
     const newPov = props.pov();
     if (newPov) turnGlobe(newPov);
