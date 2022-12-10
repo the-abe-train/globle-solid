@@ -7,6 +7,7 @@ import { polygonDistance } from "../util/geometry";
 import { GuessStore } from "../util/stores";
 import { getLangKey, translate } from "../i18n";
 import { isTerritory } from "../util/data";
+import alternateNames from "../data/alternate_names.json";
 
 type Props = {
   guesses: GuessStore;
@@ -87,8 +88,17 @@ export default function (props: Props) {
     });
   });
 
+  function findAltName(guess: string) {
+    const alts = alternateNames[locale];
+    const map = alts.find((pair) => pair.alternative === guess);
+    if (map) {
+      return map["real"];
+    }
+  }
+
   function findCountry(newGuess: string) {
-    const searchPhrase = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
+    const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
+    const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
     const results = answerIndex().search(searchPhrase);
     if (results.length === 0) {
       setMsg(`"${newGuess}" not found in database.`);

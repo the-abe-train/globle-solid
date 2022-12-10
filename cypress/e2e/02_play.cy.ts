@@ -87,6 +87,10 @@ describe("Tests with a fake answer", () => {
     cy.get('[data-cy="guesser"]').type("uae{enter}");
     cy.contains("United Arab Emirates is warmer").should("exist");
 
+    // Alternate name
+    cy.get('[data-cy="guesser"]').type("burma{enter}");
+    cy.contains("Myanmar is cooler").should("exist");
+
     // Toggle distance unit
     cy.contains("3,940").should("exist");
     cy.contains("km").should("exist");
@@ -107,7 +111,7 @@ describe("Tests with a fake answer", () => {
     cy.contains("Statistics").should("exist");
     cy.get('[data-cy="games-won"]').should("contain", 5);
     cy.get('[data-cy="current-streak"]').should("contain", 3);
-    cy.get(`[data-cy="today's-guesses"]`).should("contain", 4);
+    cy.get(`[data-cy="today's-guesses"]`).should("contain", 5);
 
     // Check that the stats remain when you leave and come back
     cy.visit("/");
