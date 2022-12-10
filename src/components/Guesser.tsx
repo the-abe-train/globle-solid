@@ -98,7 +98,8 @@ export default function (props: Props) {
 
   function findCountry(newGuess: string) {
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
-    const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
+    // const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
+    const searchPhrase = cleanedGuess;
     const results = answerIndex().search(searchPhrase);
     if (results.length === 0) {
       setMsg(`"${newGuess}" not found in database.`);
