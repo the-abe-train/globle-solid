@@ -4,6 +4,7 @@ import { defineConfig } from "cypress";
 require("dotenv").config();
 
 export default defineConfig({
+  projectId: "j6ify9",
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here

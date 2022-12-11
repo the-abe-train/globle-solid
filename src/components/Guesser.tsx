@@ -115,7 +115,7 @@ export default function (props: Props) {
     const topScore = topAnswer.score ?? 1;
     const name =
       topAnswer.item.properties[locale === "en-CA" ? "NAME" : langKey()];
-    if (topScore < 0.001) {
+    if (topScore < 0.0001) {
       const existingGuess = props.guesses.countries.find((guess) => {
         return topAnswer.item.properties.NAME === guess.properties.NAME;
       });
@@ -128,7 +128,7 @@ export default function (props: Props) {
         return;
       }
       return topAnswer.item;
-    } else if (topScore < 0.5) {
+    } else if (topScore < 0.05) {
       setMsg(`Did you mean ${name}?`);
       return;
     } else {
