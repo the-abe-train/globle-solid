@@ -114,7 +114,7 @@ export default function (props: Props) {
     }
     const topScore = topAnswer.score ?? 1;
     const name =
-      topAnswer.item.properties[locale === "en-CA" ? "NAME" : langKey()];
+      topAnswer.item.properties[locale === "en-CA" ? "ADMIN" : langKey()];
     if (topScore < 0.0001) {
       const existingGuess = props.guesses.countries.find((guess) => {
         return topAnswer.item.properties.NAME === guess.properties.NAME;
