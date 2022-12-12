@@ -6,24 +6,23 @@ import earthDayNoBg from "../images/earth-day-no-bg.webp";
 import earthNightNoBg from "../images/earth-night-no-bg.webp";
 import earthDaySafari from "../images/safari-14-earth-day.jpg";
 import earthNightSafari from "../images/safari-14-earth-night.jpg";
-import earthDayMin from "../images/earth-day-min.webp";
-import earthNightMin from "../images/earth-night-min.webp";
+import earthDayMin from "../images/earth-day-min.jpg";
+import earthNightMin from "../images/earth-night-min.jpg";
 
 import { getContext } from "../Context";
 import { getColour } from "./colour";
 import { formatName } from "./text";
 
+function isSafari() {
+  const parser = new UAParser();
+  const browser = parser.getBrowser();
+  return browser.name === "Safari";
+}
+
 export const globeImg = () => {
   const { theme } = getContext();
   const isDark = theme().isDark;
-  const parser = new UAParser();
-  const browser = parser.getBrowser();
-
-  const isSafari = browser.name === "Safari";
-  const version = parseInt(browser.version || "0");
-
-  // const time = nightMode ? "night" : "day";
-  if (isSafari && version < 14) {
+  if (isSafari()) {
     if (isDark) {
       return earthNightSafari;
     } else {
@@ -41,13 +40,8 @@ export const globeImg = () => {
 export const globePreviewImg = () => {
   const { theme } = getContext();
   const isDark = theme().isDark;
-  const parser = new UAParser();
-  const browser = parser.getBrowser();
 
-  const isSafari = browser.name === "Safari";
-  const version = parseInt(browser.version || "0");
-
-  if (isSafari && version < 14) {
+  if (isSafari()) {
     if (isDark) {
       return earthNightSafari;
     } else {
