@@ -9,6 +9,7 @@ import {
   Show,
   Switch,
 } from "solid-js";
+import { unwrap } from "solid-js/store";
 import { getContext } from "../Context";
 import { getLangKey, translatePage } from "../i18n";
 import { findCentre } from "../util/geometry";
@@ -29,10 +30,24 @@ export default function (props: Props) {
 
   const [isSortedByDistance, toggleSortByDistance] = createSignal(true);
 
+  function isAnswer(c: Country) {
+    return c.properties.NAME === props.ans.properties.NAME;
+  }
+
   const sortedGuesses = createMemo(() => {
-    return isSortedByDistance()
-      ? props.guesses.sorted
-      : props.guesses.countries;
+    const list = isSortedByDistance()
+      ? unwrap([...props.guesses.sorted])
+      : unwrap([...props.guesses.countries]);
+    const ans = list.find(isAnswer);
+    if (ans) {
+      console.log("Answer in list");
+      return list.sort((a, z) => {
+        if (isAnswer(a)) return -1;
+        if (isAnswer(z)) return 1;
+        return 0;
+      });
+    }
+    return list;
   });
 
   const isAlreadyShowingKm = context.distanceUnit().unit === "km";
