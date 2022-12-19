@@ -40,10 +40,14 @@ export default function (props: Props) {
       : unwrap([...props.guesses.countries]);
     const ans = list.find(isAnswer);
     if (ans) {
-      console.log("Answer in list");
       return list.sort((a, z) => {
-        if (isAnswer(a)) return -1;
-        if (isAnswer(z)) return 1;
+        if (isSortedByDistance()) {
+          if (isAnswer(a)) return -1;
+          if (isAnswer(z)) return 1;
+        } else {
+          if (isAnswer(a)) return 1;
+          if (isAnswer(z)) return -1;
+        }
         return 0;
       });
     }

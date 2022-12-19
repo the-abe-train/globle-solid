@@ -24,13 +24,6 @@ const Game = lazy(() => import("./routes/Game"));
 const FAQ = lazy(() => import("./routes/Faq"));
 const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 
-// TODO no errors in settings page in console for no token
-// TODO page refresh "This site can’t be reached" (service worker related?)
-
-// TODO add code to solid branch on original site?
-// TODO A/B tested in Netlify?
-// TODO merge?
-
 const App: Component = () => {
   const { theme } = getContext();
   const [showStats, setShowStats] = createSignal(false);
@@ -79,17 +72,17 @@ const App: Component = () => {
         classList={{ night: theme().isDark }}
         class="absolute top-0 bottom-0 left-0 right-0 block z-0 h-full 
         pointer-events-none sky"
-      ></div>
+      />
       <div
         classList={{ empty: theme().isDark }}
         class="absolute top-0 bottom-0 left-0 right-0 block z-10 pointer-events-none
         clouds"
-      ></div>
+      />
       <div
         classList={{ empty: !theme().isDark }}
         class="absolute top-0 bottom-0 left-0 right-0 block z-10 pointer-events-none
         stars"
-      ></div>
+      />
     </div>
   );
 };

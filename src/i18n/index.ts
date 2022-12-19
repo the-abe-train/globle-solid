@@ -1,4 +1,4 @@
-import i18next, { Resource } from "i18next";
+import i18next, { Resource, TOptions } from "i18next";
 import UAParser from "ua-parser-js";
 import { getContext } from "../Context";
 import { getMaxColour } from "../util/colour";
@@ -46,9 +46,11 @@ export function translate(
   const isMobile = parser.getDevice().type === "mobile";
   const Click = isMobile ? i18next.t("Tap") : i18next.t("Click");
   const options = {
+    defaultValue,
     Click,
     click: Click && Click.toLowerCase(),
-    defaultValue,
+    "Côte d'Ivoire": "Côte test",
+    interpolation: { escapeValue: false },
     ...interpolation,
   };
   return i18next.t(key, options);

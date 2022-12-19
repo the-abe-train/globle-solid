@@ -48,7 +48,10 @@ export default function (props: Props) {
     const name = langKey ? (properties[langKey()] as string) : properties.NAME;
     if (props.win() && name) {
       setMsg(
-        translate("Game7", `The Mystery Country is ${name}!`, { answer: name })
+        translate("Game7", `The Mystery Country is ${name}!`, {
+          answer: name,
+        })
+        // `The Mystery Country is ${name}!`
       );
     } else if (props.win()) {
       setMsg("You win!");
@@ -83,7 +86,7 @@ export default function (props: Props) {
           ABBREV && NAME.includes(" ") ? ABBREV.replace(/\./g, "") : "";
         const nameSort =
           NAME_SORT && NAME.includes(" ") ? NAME_SORT.replace(/\./g, "") : "";
-        return [NAME, ADMIN, nameSort, abbrev];
+        return [NAME, ADMIN, nameSort, ABBREV, abbrev];
       },
     });
   });
@@ -101,6 +104,7 @@ export default function (props: Props) {
     // const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
     const searchPhrase = cleanedGuess;
     const results = answerIndex().search(searchPhrase);
+    // console.log({ results });
     if (results.length === 0) {
       setMsg(`"${newGuess}" not found in database.`);
       return;
