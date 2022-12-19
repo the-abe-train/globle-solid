@@ -101,7 +101,7 @@ export default function (props: Props) {
     console.log(alts);
     const map = alts.find((pair) => {
       console.log(pair, guess);
-      return pair.alternative === guess;
+      return pair.alternative === guess.toLowerCase();
     });
     if (map) {
       console.log("Alt found:", map);
