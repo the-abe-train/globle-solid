@@ -108,7 +108,7 @@ export default function (props: Props) {
   function findCountry(newGuess: string) {
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
 
-    if (buggyNames.includes(cleanedGuess)) {
+    if (buggyNames.includes(cleanedGuess.toLowerCase())) {
       setMsg(`"${newGuess}" not found in database.`);
       return;
     }
