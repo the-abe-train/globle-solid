@@ -96,9 +96,12 @@ export default function (props: Props) {
   });
 
   function findAltName(guess: string) {
+    console.log("Trying to find alt name");
     const alts = alternateNames[locale];
+    console.log(alts);
     const map = alts.find((pair) => pair.alternative === guess);
     if (map) {
+      console.log("Alt found:", map);
       return map["real"];
     }
   }
