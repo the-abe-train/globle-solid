@@ -14,7 +14,6 @@ function decrypt(encryptedAnsKey: string) {
 describe("Test the answer fetching function", () => {
   it("plays today's game", () => {
     cy.intercept("GET", "/answer**").as("answer");
-    // cy.intercept("GET", "/.netlify/functions/answer**").as("answer");
 
     cy.visit("/game");
 
@@ -88,8 +87,8 @@ describe("Tests with a fake answer", () => {
     cy.contains("United Arab Emirates is warmer").should("exist");
 
     // Alternate name
-    // cy.get('[data-cy="guesser"]').type("burma{enter}");
-    // cy.contains("Myanmar is cooler").should("exist");
+    cy.get('[data-cy="guesser"]').type("burma{enter}");
+    cy.contains("Myanmar is cooler").should("exist");
 
     // Toggle distance unit
     cy.contains("3,940").should("exist");
@@ -113,8 +112,8 @@ describe("Tests with a fake answer", () => {
     cy.contains("Statistics").should("exist");
     cy.get('[data-cy="games-won"]').should("contain", 5);
     cy.get('[data-cy="current-streak"]').should("contain", 3);
-    // cy.get(`[data-cy="today's-guesses"]`).should("contain", 5);
-    cy.get(`[data-cy="today's-guesses"]`).should("contain", 4);
+    cy.get(`[data-cy="today's-guesses"]`).should("contain", 5);
+    // cy.get(`[data-cy="today's-guesses"]`).should("contain", 4);
 
     // Check that the stats remain when you leave and come back
     cy.visit("/");

@@ -8,6 +8,7 @@ import { GuessStore } from "../util/stores";
 import { getLangKey, translate } from "../i18n";
 import { isTerritory } from "../util/data";
 import alternateNames from "../data/alternate_names.json";
+import buggyNames from "../data/buggy_names.json";
 
 type Props = {
   guesses: GuessStore;
@@ -101,10 +102,17 @@ export default function (props: Props) {
 
   function findCountry(newGuess: string) {
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
-    // const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
-    const searchPhrase = cleanedGuess;
+
+    if (buggyNames.includes(cleanedGuess)) {
+      setMsg(`"${newGuess}" not found in database.`);
+      return;
+    }
+
+    const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
+    // const searchPhrase = cleanedGuess;
+
     const results = answerIndex().search(searchPhrase);
-    // console.log({ results });
+    console.log({ results });
     if (results.length === 0) {
       setMsg(`"${newGuess}" not found in database.`);
       return;
