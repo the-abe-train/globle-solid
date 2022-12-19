@@ -1,20 +1,20 @@
 import dayjs from "dayjs";
-import crypto from "crypto-js";
 import rawAnswerData from "../../src/data/country_data.json";
-
-function decrypt(encryptedAnsKey: string) {
-  const key = Cypress.env("cryptoKey");
-  const bytes = crypto.AES.decrypt(encryptedAnsKey, key);
-  const originalText = bytes.toString(crypto.enc.Utf8);
-  const answerKey = parseInt(originalText);
-  const answer = rawAnswerData["features"][answerKey] as Country;
-  return answer.properties.NAME;
-}
 
 describe("Test the answer fetching function", () => {
   it("plays today's game", () => {
+    const crypto = require("crypto-js");
+
+    function decrypt(encryptedAnsKey: string) {
+      const key = Cypress.env("cryptoKey");
+      const bytes = crypto.AES.decrypt(encryptedAnsKey, key);
+      const originalText = bytes.toString(crypto.enc.Utf8);
+      const answerKey = parseInt(originalText);
+      const answer = rawAnswerData["features"][answerKey] as Country;
+      return answer.properties.NAME;
+    }
+
     cy.intercept("GET", "/answer**").as("answer");
-    // cy.intercept("GET", "/.netlify/functions/answer**").as("answer");
 
     cy.visit("/game");
 
@@ -35,6 +35,7 @@ describe("Tests with a fake answer", () => {
   beforeEach(() => {
     cy.visit("/");
     cy.intercept("GET", "/answer**", (req) => {
+      const crypto = require("crypto-js");
       const body = JSON.stringify({
         answer: crypto.AES.encrypt("159", Cypress.env("cryptoKey")).toString(),
       });
@@ -80,27 +81,27 @@ describe("Tests with a fake answer", () => {
     cy.contains("next guess").should("exist");
 
     // Close enough guess
-    cy.get('[data-cy="guesser"]').type("norwey{enter}");
-    cy.contains("Norway is cooler").should("exist");
+    cy.get('[data-cy="guesser"]').type("saudi{enter}");
+    cy.contains("Saudi Arabia is warmer").should("exist");
 
     // Correct abbreviation
     cy.get('[data-cy="guesser"]').type("uae{enter}");
-    cy.contains("United Arab Emirates is warmer").should("exist");
+    cy.contains("United Arab Emirates is cooler").should("exist");
 
     // Alternate name
-    // cy.get('[data-cy="guesser"]').type("burma{enter}");
-    // cy.contains("Myanmar is cooler").should("exist");
+    cy.get('[data-cy="guesser"]').type("burma{enter}");
+    cy.contains("Myanmar is cooler").should("exist");
 
     // Toggle distance unit
-    cy.contains("3,940").should("exist");
+    cy.contains("3,270").should("exist");
     cy.contains("km").should("exist");
     cy.contains("miles").should("not.exist");
     cy.get('[data-cy="toggle-km-miles"]').click();
-    cy.contains("2,450").should("exist");
+    cy.contains("2,030").should("exist");
     cy.contains("miles").should("exist");
 
     // Testing the sorted list
-    cy.get("li").eq(0).should("contain.text", "U.A.E.");
+    cy.get("li").eq(0).should("contain.text", "Saud.");
     cy.get('[data-cy="change-sort"]').click();
     cy.get("li").eq(0).should("contain.text", "Turkey");
 
@@ -113,13 +114,13 @@ describe("Tests with a fake answer", () => {
     cy.contains("Statistics").should("exist");
     cy.get('[data-cy="games-won"]').should("contain", 5);
     cy.get('[data-cy="current-streak"]').should("contain", 3);
-    // cy.get(`[data-cy="today's-guesses"]`).should("contain", 5);
-    cy.get(`[data-cy="today's-guesses"]`).should("contain", 4);
+    cy.get(`[data-cy="today's-guesses"]`).should("contain", 5);
+    // cy.get(`[data-cy="today's-guesses"]`).should("contain", 4);
 
     // Check that the stats remain when you leave and come back
     cy.visit("/");
     cy.visit("/game");
-    cy.contains("Norway").should("exist");
+    cy.contains("Turkey").should("exist");
   });
 
   it("breaks a streak", () => {

@@ -8,6 +8,7 @@ import { GuessStore } from "../util/stores";
 import { getLangKey, translate } from "../i18n";
 import { isTerritory } from "../util/data";
 import alternateNames from "../data/alternate_names.json";
+import buggyNames from "../data/buggy_names.json";
 
 type Props = {
   guesses: GuessStore;
@@ -15,6 +16,9 @@ type Props = {
   win: Accessor<boolean>;
   ans: Country;
 };
+
+const CORRECT_THRESHHOLD = 0.000001;
+const APPROX_THRESHHOLD = 0.05;
 
 export default function (props: Props) {
   const context = getContext();
@@ -93,7 +97,9 @@ export default function (props: Props) {
 
   function findAltName(guess: string) {
     const alts = alternateNames[locale];
-    const map = alts.find((pair) => pair.alternative === guess);
+    const map = alts.find((pair) => {
+      return pair.alternative === guess.toLowerCase();
+    });
     if (map) {
       return map["real"];
     }
@@ -101,8 +107,15 @@ export default function (props: Props) {
 
   function findCountry(newGuess: string) {
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
-    // const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
-    const searchPhrase = cleanedGuess;
+
+    if (buggyNames.includes(cleanedGuess)) {
+      setMsg(`"${newGuess}" not found in database.`);
+      return;
+    }
+
+    const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
+    // const searchPhrase = cleanedGuess;
+
     const results = answerIndex().search(searchPhrase);
     // console.log({ results });
     if (results.length === 0) {
@@ -119,7 +132,7 @@ export default function (props: Props) {
     const topScore = topAnswer.score ?? 1;
     const name =
       topAnswer.item.properties[locale === "en-CA" ? "ADMIN" : langKey()];
-    if (topScore < 0.0001) {
+    if (topScore < CORRECT_THRESHHOLD) {
       const existingGuess = props.guesses.countries.find((guess) => {
         return topAnswer.item.properties.NAME === guess.properties.NAME;
       });
@@ -132,7 +145,7 @@ export default function (props: Props) {
         return;
       }
       return topAnswer.item;
-    } else if (topScore < 0.05) {
+    } else if (topScore < APPROX_THRESHHOLD) {
       setMsg(`Did you mean ${name}?`);
       return;
     } else {

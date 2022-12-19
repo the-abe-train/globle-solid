@@ -5,13 +5,16 @@
     { "real": "north macedonia", "alternative": "macedonia" },
     { "real": "congo", "alternative": "congo-brazzaville" },
     { "real": "vatican", "alternative": "holy see" },
-    { "real": "vatican", "alternative": "vatican city" },
     { "real": "cabo verde", "alternative": "cape verde" },
     {
       "real": "democratic republic of the congo",
       "alternative": "democratic republic of congo"
     },
     { "real": "democratic republic of the congo", "alternative": "dr congo" },
+    {
+      "real": "democratic republic of the congo",
+      "alternative": "dem rep congo"
+    },
     { "real": "bosnia and herzegovina", "alternative": "bosnia" },
     { "real": "ivory coast", "alternative": "cote d'ivoire" },
     { "real": "ivory coast", "alternative": "côte d'ivoire" },
