@@ -115,7 +115,7 @@ export default function (props: Props) {
     // const searchPhrase = cleanedGuess;
 
     const results = answerIndex().search(searchPhrase);
-    console.log({ results });
+    // console.log({ results });
     if (results.length === 0) {
       setMsg(`"${newGuess}" not found in database.`);
       return;
