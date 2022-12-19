@@ -17,6 +17,9 @@ type Props = {
   ans: Country;
 };
 
+const CORRECT_THRESHHOLD = 0.000001;
+const APPROX_THRESHHOLD = 0.05;
+
 export default function (props: Props) {
   const context = getContext();
   const locale = context.locale().locale;
@@ -127,7 +130,7 @@ export default function (props: Props) {
     const topScore = topAnswer.score ?? 1;
     const name =
       topAnswer.item.properties[locale === "en-CA" ? "ADMIN" : langKey()];
-    if (topScore < 0.0001) {
+    if (topScore < CORRECT_THRESHHOLD) {
       const existingGuess = props.guesses.countries.find((guess) => {
         return topAnswer.item.properties.NAME === guess.properties.NAME;
       });
@@ -140,7 +143,7 @@ export default function (props: Props) {
         return;
       }
       return topAnswer.item;
-    } else if (topScore < 0.05) {
+    } else if (topScore < APPROX_THRESHHOLD) {
       setMsg(`Did you mean ${name}?`);
       return;
     } else {
