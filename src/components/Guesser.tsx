@@ -97,6 +97,7 @@ export default function (props: Props) {
 
   function findAltName(guess: string) {
     const alts = alternateNames[locale];
+    if (!alts) return;
     const map = alts.find((pair) => {
       return pair.alternative === guess.toLowerCase();
     });
@@ -108,7 +109,7 @@ export default function (props: Props) {
   function findCountry(newGuess: string) {
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
 
-    if (buggyNames.includes(cleanedGuess.toLowerCase())) {
+    if (buggyNames?.includes(cleanedGuess.toLowerCase())) {
       setMsg(`"${newGuess}" not found in database.`);
       return;
     }
