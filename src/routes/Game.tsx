@@ -47,8 +47,9 @@ function Inner(props: Props) {
   const context = getContext();
   const [pov, setPov] = createSignal<Coords | null>(null);
 
-  const lastWin = dayjs(context.storedStats().lastWin);
-  const [win, setWin] = createSignal(lastWin.isSame(dayjs(), "date"));
+  // const lastWin = dayjs(context.storedStats().lastWin);
+  // const statsAreFresh = dayjs(context.storedGuesses().day).isAfter(dayjs());
+  // const alreadyWonToday = lastWin.isSame(dayjs(), "date");
 
   const restoredGuesses = () => {
     const oldGuesses = context.storedGuesses();
@@ -67,6 +68,9 @@ function Inner(props: Props) {
   };
 
   const { guesses, setGuesses } = createGuessStore(restoredGuesses());
+
+  // const [win, setWin] = createSignal(statsAreFresh && alreadyWonToday);
+  const [win, setWin] = createSignal(false);
 
   // Effects
   createEffect(() => {
