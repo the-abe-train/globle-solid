@@ -37,6 +37,8 @@ describe("Explore changing the language", () => {
       window.localStorage.setItem("practice", JSON.stringify(madagascar));
     });
     cy.visit("/practice");
+    cy.get('[data-cy="guesser"]').type("libye{enter}");
+    cy.contains("Libye").should("exist");
     cy.get('[data-cy="guesser"]').type("royaume uni{enter}");
     cy.contains("Royaume-Uni").should("exist");
   });

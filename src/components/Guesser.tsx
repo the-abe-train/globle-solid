@@ -110,10 +110,12 @@ export default function (props: Props) {
     const fixedGuess = guess.toLowerCase().trim();
     const countries = rawAnswerData["features"] as Country[];
     const foundCountry = countries.find((country) => {
+      const { properties } = country;
       const { NAME, NAME_LONG, ABBREV, ADMIN, BRK_NAME, NAME_SORT } =
-        country.properties;
+        properties;
+      const name = langKey ? (properties[langKey()] as string) : NAME;
       return (
-        NAME.toLowerCase() === fixedGuess ||
+        name.toLowerCase() === fixedGuess ||
         NAME_LONG.toLowerCase() === fixedGuess ||
         ADMIN.toLowerCase() === fixedGuess ||
         ABBREV.toLowerCase() === fixedGuess ||
