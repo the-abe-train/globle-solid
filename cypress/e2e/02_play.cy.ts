@@ -81,8 +81,12 @@ describe("Tests with a fake answer", () => {
     cy.contains("next guess").should("exist");
 
     // Close enough guess
-    cy.get('[data-cy="guesser"]').type("saudi{enter}");
+    cy.get('[data-cy="guesser"]').type("saudi arubia{enter}");
     cy.contains("Saudi Arabia is warmer").should("exist");
+
+    // Already guessed
+    cy.get('[data-cy="guesser"]').type("saudi arobia{enter}");
+    cy.contains("Already guessed Saudi Arabia").should("exist");
 
     // Correct abbreviation
     cy.get('[data-cy="guesser"]').type("uae{enter}");

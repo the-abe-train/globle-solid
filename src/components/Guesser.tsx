@@ -106,6 +106,41 @@ export default function (props: Props) {
     }
   }
 
+  function directSearch(guess: string) {
+    const fixedGuess = guess.toLowerCase().trim();
+    const countries = rawAnswerData["features"] as Country[];
+    const foundCountry = countries.find((country) => {
+      const { NAME, NAME_LONG, ABBREV, ADMIN, BRK_NAME, NAME_SORT } =
+        country.properties;
+      return (
+        NAME.toLowerCase() === fixedGuess ||
+        NAME_LONG.toLowerCase() === fixedGuess ||
+        ADMIN.toLowerCase() === fixedGuess ||
+        ABBREV.toLowerCase() === fixedGuess ||
+        ABBREV.replace(/\./g, "").toLowerCase() === fixedGuess ||
+        NAME.replace(/-/g, " ").toLowerCase() === fixedGuess ||
+        BRK_NAME.toLowerCase() === fixedGuess ||
+        NAME_SORT.toLowerCase() === fixedGuess
+      );
+    });
+    if (!foundCountry) {
+      setMsg(`"${guess}" not found in database.`);
+      return;
+    }
+    const existingGuess = props.guesses.countries.find((guess) => {
+      return foundCountry.properties.NAME === guess.properties.NAME;
+    });
+    if (existingGuess) {
+      if (locale === "en-CA") {
+        setMsg(`Already guessed ${foundCountry.properties.NAME}.`);
+      } else {
+        setMsg(translate("Game6", "Already guessed"));
+      }
+      return;
+    }
+    return foundCountry;
+  }
+
   function findCountry(newGuess: string) {
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
 
@@ -115,10 +150,12 @@ export default function (props: Props) {
     }
 
     const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
-    // const searchPhrase = cleanedGuess;
+
+    if (searchPhrase.length <= 5) {
+      return directSearch(searchPhrase);
+    }
 
     const results = answerIndex().search(searchPhrase);
-    // console.log({ results });
     if (results.length === 0) {
       setMsg(`"${newGuess}" not found in database.`);
       return;
