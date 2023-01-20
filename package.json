@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "vite",
-    "dev": "wrangler pages dev -- vite",
+    "dev": "wrangler pages dev --compatibility-date=2023-01-20 -- vite",
     "build": "vite build",
     "serve": "vite preview",
     "cy:open": "cypress open",
