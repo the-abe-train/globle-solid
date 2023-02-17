@@ -107,7 +107,7 @@ describe("Tests with a fake answer", () => {
     // Testing the sorted list
     cy.get("li").eq(0).should("contain.text", "Saud.");
     cy.get('[data-cy="change-sort"]').click();
-    cy.get("li").eq(0).should("contain.text", "Turkey");
+    cy.get("li").eq(0).should("contain.text", "Türkiye");
 
     // Winning
     cy.get('[data-cy="change-sort"]').click();
@@ -124,7 +124,7 @@ describe("Tests with a fake answer", () => {
     // Check that the stats remain when you leave and come back
     cy.visit("/");
     cy.visit("/game");
-    cy.contains("Turkey").should("exist");
+    cy.contains("Türkiye").should("exist");
   });
 
   it("breaks a streak", () => {
