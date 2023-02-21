@@ -19,7 +19,8 @@
     { "real": "ivory coast", "alternative": "cote d'ivoire" },
     { "real": "ivory coast", "alternative": "côte d'ivoire" },
     { "real": "ivory coast", "alternative": "cote divoire" },
-    { "real": "turkey", "alternative": "turkiye" }
+    { "real": "turkey", "alternative": "turkiye" },
+    { "real": "czechia", "alternative": "czech republic" }
   ],
   "fr-FR": [
     { "real": "eswatini", "alternative": "swaziland" },
