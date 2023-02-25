@@ -151,7 +151,11 @@ export default function (props: Props) {
       return;
     }
 
+    if (cleanedGuess.toLowerCase() === "namibia") {
+      directSearch("Namibia");
+    }
     const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
+    console.log(searchPhrase);
 
     if (searchPhrase.length <= 5) {
       return directSearch(searchPhrase);
