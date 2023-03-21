@@ -7,6 +7,7 @@
     { "real": "congo", "alternative": "congo-brazzaville" },
     { "real": "vatican", "alternative": "holy see" },
     { "real": "cabo verde", "alternative": "cape verde" },
+    { "real": "antigua and barbuda", "alternative": "waladli" },
     {
       "real": "democratic republic of the congo",
       "alternative": "democratic republic of congo"
