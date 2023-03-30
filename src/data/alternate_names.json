@@ -22,7 +22,19 @@
     { "real": "ivory coast", "alternative": "côte d'ivoire" },
     { "real": "ivory coast", "alternative": "cote divoire" },
     { "real": "turkey", "alternative": "turkiye" },
-    { "real": "czechia", "alternative": "czech republic" }
+    { "real": "czechia", "alternative": "czech republic" },
+    {
+      "real": "saint vincent and the grenadines",
+      "alternative": "saint vincent"
+    },
+    {
+      "real": "saint vincent and the grenadines",
+      "alternative": "st vin and gren"
+    },
+    {
+      "real": "saint vincent and the grenadines",
+      "alternative": "st vincent"
+    }
   ],
   "fr-FR": [
     { "real": "eswatini", "alternative": "swaziland" },
