@@ -35,10 +35,10 @@ export default function () {
           collected from your account, send me a message on{" "}
           <a class="underline" href="https://twitter.com/theAbeTrain">
             Twitter
-          </a>{" "}
-          or via the form on my{" "}
-          <a class="underline" href="https://the-abe-train.com">
-            personal website
+          </a>
+          , or through the form on the{" "}
+          <a class="underline" href="https://trainwrecklabs.com/contact">
+            Trainwreck Labs website
           </a>
           .
         </p>
@@ -229,10 +229,11 @@ export default function () {
             <a class="underline" href="https://twitter.com/theAbeTrain">
               Twitter
             </a>
-            , or through the form on my{" "}
-            <a class="underline" href="https://the-abe-train.com">
-              personal website.
+            , or through the form on the{" "}
+            <a class="underline" href="https://trainwrecklabs.com/contact">
+              Trainwreck Labs website
             </a>
+            .
           </li>
           <li>
             To show you personalised advertising by identifying your interests

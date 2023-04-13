@@ -17,7 +17,7 @@ export default {
   Tap: "Toque",
   Aux2: "Alguma dúvida?",
   Aux3: "Cheque a área Perguntas Frequentes",
-  Footer1: "por The Abe Train",
+  Footer1: "por Trainwreck Labs",
   Footer2: "Curtindo o jogo?",
   Footer3: "Pague meu cafezinho",
   Loading: "Carregando...",

@@ -16,7 +16,7 @@ export const English = {
   Tap: "Tap",
   Aux2: "Have a question?",
   Aux3: "Check out the FAQ",
-  Footer1: "by The Abe Train",
+  Footer1: "by Trainwreck Labs",
   Footer2: "Enjoying the game?",
   Footer3: "Buy me a coffee",
   Loading: "Loading...",

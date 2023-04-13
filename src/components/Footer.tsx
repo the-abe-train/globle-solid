@@ -1,5 +1,7 @@
 import { A } from "@solidjs/router";
 import Icon from "./Icon";
+import trainwreckWhite from "../images/trainwreck-white.svg";
+import trainwreckBlack from "../images/trainwreck-black.svg";
 
 export default function Footer() {
   return (
@@ -8,8 +10,22 @@ export default function Footer() {
     flex-grow mb-24"
     >
       <span class="space-x-1 flex">
-        <a href="https://the-abe-train.com" data-i18n="Footer1">
-          by The Abe Train
+        <a href="https://trainwrecklabs.com">
+          <span data-i18n="Footer1">by Trainwreck Labs</span>
+          <img
+            src={trainwreckBlack}
+            width={14}
+            height={14}
+            class="mx-2 mb-[1px] inline dark:hidden"
+            alt="trainwreck"
+          />
+          <img
+            src={trainwreckWhite}
+            width={14}
+            height={14}
+            class="mx-2 mb-[1px] hidden dark:inline "
+            alt="trainwreck"
+          />
         </a>
         <a
           href="https://twitter.com/theAbeTrain"

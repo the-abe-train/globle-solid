@@ -17,7 +17,7 @@ export default {
   Tap: "Trykk",
   Aux2: "Har du et spørsmål?",
   Aux3: "Sjekk FAQ (vanlige spørsmål)",
-  Footer1: "av The Abe Train",
+  Footer1: "av Trainwreck Labs",
   Footer2: "Liker du spillet?",
   Footer3: "Kjøp en kaffe til meg",
   Loading: "Laster...",

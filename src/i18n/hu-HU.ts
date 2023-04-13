@@ -15,7 +15,7 @@ export default {
   Aux1: `{{Click}} a földgömbre!`,
   Aux2: "Van kérdésed?",
   Aux3: "Nézd meg a gyakori kérdéseket",
-  Footer1: "The Abe Train által",
+  Footer1: "Trainwreck Labs által",
   Footer2: "Élvezed a játékot?",
   Footer3: "Hívj meg egy kávera",
   Loading: "Betöltés...",

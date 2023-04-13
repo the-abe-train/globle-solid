@@ -11,7 +11,7 @@ export default {
   Aux1: "¡Haz click en el globo para jugar!",
   Aux2: "¿Tienes alguna duda?",
   Aux3: "Visita Preguntas Frecuentes.",
-  Footer1: "Creado por The Abe Train",
+  Footer1: "Creado por Trainwreck Labs",
   Footer2: "¿Estas disfrutando el juego?",
   Footer3: "Cómprame un café!",
   Loading: "Cargando...",

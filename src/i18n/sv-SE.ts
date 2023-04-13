@@ -13,7 +13,7 @@ export default {
   Tap: "Tryck",
   Aux2: "Har du en fråga?",
   Aux3: "Läs vår FAQ",
-  Footer1: "av The Abe Train",
+  Footer1: "av Trainwreck Labs",
   Footer2: "Gillar du spelet?",
   Footer3: "Bjud mig på en kaffe",
   Loading: "Laddar...",

@@ -13,7 +13,7 @@ export default {
   Tap: "Dotknij",
   Aux2: "Masz pytania?",
   Aux3: "Zobacz FAQ",
-  Footer1: "stworzone przez The Abe Train",
+  Footer1: "stworzone przez Trainwreck Labs",
   Footer2: "Podoba Ci się gra?",
   Footer3: "Kup mi kawę",
   Loading: "Ładowanie...",
