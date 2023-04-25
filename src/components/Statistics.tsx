@@ -226,6 +226,13 @@ globle-game.com
           </a>
         </button>
       </div>
+      <p class="dark:text-gray-200  mt-3 text-center">
+        Find even more games at{" "}
+        <a href="https://trainwrecklabs.com" class="underline">
+          Trainwreck Labs
+        </a>
+        .
+      </p>
       <Prompt
         showPrompt={showPrompt}
         setShowPrompt={setShowPrompt}
