@@ -34,7 +34,8 @@
     {
       "real": "saint vincent and the grenadines",
       "alternative": "st vincent"
-    }
+    },
+    { "real": "timor-leste", "alternative": "timor leste" }
   ],
   "fr-FR": [
     { "real": "eswatini", "alternative": "swaziland" },
