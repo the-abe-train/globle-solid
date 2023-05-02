@@ -1,6 +1,8 @@
 {
   "name": "Globle",
   "short_name": "Globle",
+  "start_url": "/",
+  "description": "Use your geography knowledge to figure out the mystery country in as few guesses as possible!",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -15,5 +17,5 @@
   ],
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "display": "standalone"
+  "display": "fullscreen"
 }
