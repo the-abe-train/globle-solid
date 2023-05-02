@@ -27,7 +27,7 @@ export default function () {
       font: "Zilla Slab",
       logo: chronogramLogo,
       bg: "bg-stone-50",
-      weight: 3,
+      weight: 5,
     },
     {
       name: "GLOBLE: CAPITALS",
