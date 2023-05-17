@@ -321,3 +321,14 @@ synacor.com, 82151, RESELLER, e108f11b2cdf7d5b
 imds.tv, 82151, RESELLER, ae6c32151e71f19d
 openx.com, 558758631, RESELLER, 6a698e2ec38604c7
 adagio.io, 1205, RESELLER
+pubmatic.com, 159110, RESELLER, 5d62403b186f2ace
+yahoo.com, 59973, RESELLER, e1a5b5b6e3255540
+indexexchange.com, 195924, RESELLER
+pubmatic.com, 156325, RESELLER, 5d62403b186f2ace
+telaria.com, 4jdlm-4qsx9, RESELLER, 1a4e959a1b50034a
+tremorhub.com, 4jdlm-4qsx9, RESELLER, 1a4e959a1b50034a
+emxdgt.com, 1291, RESELLER, 1e1d41537f7cad7f
+contextweb.com, 561707, RESELLER, 89ff185a4c4e857c
+triplelift.com, 12396, RESELLER, 6c33edb13117fd86
+sharethrough.com, 8bab9627, RESELLER, d53b998a7bd4ecd2
+gumgum.com, 15563, RESELLER, ffdef49475d318a9
