@@ -7,7 +7,6 @@ import UAParser from "ua-parser-js";
 import { getContext } from "../Context";
 import { translatePage } from "../i18n";
 import i18next from "i18next";
-import plurality from "../images/plurality.png";
 import TwlAd from "./TwlAd";
 
 type Props = {
@@ -104,7 +103,7 @@ globle-game.com
       const isFirefox = parser.getBrowser().name === "Firefox";
       setPromptType("Message");
       if ("canShare" in navigator && isMobile && !isFirefox) {
-        await navigator.share({ title: "Plurality Stats", text: shareString });
+        await navigator.share({ title: "Globle Stats", text: shareString });
         setPromptText("Shared!");
         setShowPrompt(true);
       } else if (navigator.clipboard && window.isSecureContext) {

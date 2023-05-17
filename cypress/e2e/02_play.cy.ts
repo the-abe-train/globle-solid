@@ -97,7 +97,7 @@ describe("Tests with a fake answer", () => {
     cy.contains("Myanmar is cooler").should("exist");
 
     // Toggle distance unit
-    cy.contains("3,270").should("exist");
+    cy.contains("3,265").should("exist");
     cy.contains("km").should("exist");
     cy.contains("miles").should("not.exist");
     cy.get('[data-cy="toggle-km-miles"]').click();

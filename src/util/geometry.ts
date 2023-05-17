@@ -1,4 +1,5 @@
 import * as geometry from "spherical-geometry-js";
+import { getCountry } from "./data";
 
 function pointToCoordinates(point: Array<number>) {
   // In the data, coordinates are [E/W (lng), N/S (lat)]
@@ -57,23 +58,37 @@ function calcProximity(points1: number[][], points2: number[][]) {
 }
 
 export function polygonDistance(country1: Country, country2: Country) {
-  // console.log("Country 1:", country1.properties.NAME);
-  // console.log("Country 2", country2.properties.NAME);
-  // console.log(
-  //   `calculating distance between ${country1.properties.NAME} and ${country2.properties.NAME}`
-  // );
   const name1 = country1.properties.NAME;
   const name2 = country2.properties.NAME;
-  if (name1 === "South Africa" && name2 === "Lesotho") return 0;
-  if (name1 === "Lesotho" && name2 === "South Africa") return 0;
-  if (name1 === "Italy" && name2 === "Vatican") return 0;
-  if (name1 === "Vatican" && name2 === "Italy") return 0;
-  if (name1 === "Italy" && name2 === "San Marino") return 0;
-  if (name1 === "San Marino" && name2 === "Italy") return 0;
+
+  const adjacentCountries: [string, string, number][] = [
+    ["South Africa", "Lesotho", 0],
+    ["Italy", "Vatican", 0],
+    ["Italy", "San Marino", 0],
+    ["Italy", "Monaco", 10_000],
+  ];
+
+  for (const [m1, m2, distance] of adjacentCountries) {
+    if ((name1 === m1 && name2 === m2) || (name1 === m2 && name2 === m1)) {
+      return distance;
+    }
+  }
+
   const points1 = polygonPoints(country1);
   const points2 = polygonPoints(country2);
   return calcProximity(points1, points2);
 }
+
+// function testDistance(country1: string, country2: string) {
+//   // find country objects by their names
+//   const c1 = getCountry(country1);
+//   const c2 = getCountry(country2);
+//   if (!c1 || !c2) {
+//     throw new Error("Country not found");
+//   }
+//   const distance = polygonDistance(c1, c2);
+//   console.log(`Distance between ${country1} and ${country2} is ${distance}`);
+// }
 
 export function altitudeFunction(area: number) {
   // This function may seem arbitrary but I made it with a spreadsheet

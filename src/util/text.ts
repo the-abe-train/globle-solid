@@ -5,7 +5,7 @@ import { isTerritory } from "../util/data";
 import { getCountry } from "./data";
 
 export function formatKm(m: number) {
-  const BIN = 10;
+  const BIN = 5;
   const unitMap: Record<Unit, number> = {
     km: 1000,
     miles: 1609.34,

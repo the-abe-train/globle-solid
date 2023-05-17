@@ -90,7 +90,7 @@ function Inner(props: Props) {
   // When the player wins!
   createEffect(
     on(win, () => {
-      const today = dayjs();
+      const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const lastWin = dayjs(context.storedStats().lastWin);
       if (win() && lastWin.isBefore(today, "date")) {
         // Store new stats in local storage
