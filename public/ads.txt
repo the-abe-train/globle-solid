@@ -332,3 +332,11 @@ contextweb.com, 561707, RESELLER, 89ff185a4c4e857c
 triplelift.com, 12396, RESELLER, 6c33edb13117fd86
 sharethrough.com, 8bab9627, RESELLER, d53b998a7bd4ecd2
 gumgum.com, 15563, RESELLER, ffdef49475d318a9
+adcolony.com,b175a0e2e9f44ee9,reseller,1ad675c9de6b5176
+aps.amazon.com,de948cab-9232-4f2a-90f5-794be75952c6,reseller
+disqus.com,533,reseller
+rubiconproject.com,18694,reseller,0bfd66d529a55807
+sharethrough.com,5pFlvV45,reseller,d53b998a7bd4ecd2
+sharethrough.com,UvcAx8IL,reseller,d53b998a7bd4ecd2
+smartadserver.com,3238,reseller,060d053dcf45cbf3
+zeta.com,533,reseller
