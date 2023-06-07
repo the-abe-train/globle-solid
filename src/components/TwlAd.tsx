@@ -41,7 +41,7 @@ export default function () {
     {
       name: "Plurality",
       style: "text-2xl ml-1 mr-2 font-bold",
-      url: "https://plurality.fun",
+      url: "https://www.plurality.fun",
       font: "Amaranth",
       logo: pluralityLogo,
       bg: "bg-orange-50",
