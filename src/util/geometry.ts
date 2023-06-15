@@ -63,6 +63,7 @@ export function polygonDistance(country1: Country, country2: Country) {
 
   const adjacentCountries: [string, string, number][] = [
     ["South Africa", "Lesotho", 0],
+    ["Jordan", "Israel", 0],
     ["Italy", "Vatican", 0],
     ["Italy", "San Marino", 0],
     ["Italy", "Monaco", 10_000],
