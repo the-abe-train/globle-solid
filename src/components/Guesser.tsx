@@ -1,4 +1,10 @@
-import { Accessor, createEffect, createMemo, createSignal } from "solid-js";
+import {
+  Accessor,
+  Show,
+  createEffect,
+  createMemo,
+  createSignal,
+} from "solid-js";
 import rawAnswerData from "../data/country_data.json";
 import territories from "../data/territories.json";
 import Fuse from "fuse.js";
@@ -9,6 +15,7 @@ import { getLangKey, translate } from "../i18n";
 import { isTerritory } from "../util/data";
 import alternateNames from "../data/alternate_names.json";
 import buggyNames from "../data/buggy_names.json";
+import Suggestion from "./Suggestion";
 
 type Props = {
   guesses: GuessStore;
@@ -39,6 +46,7 @@ export default function (props: Props) {
     return "";
   };
   const [msg, setMsg] = createSignal(mountMsg());
+  const [suggestion, setSuggestion] = createSignal("");
   const msgColour = () => {
     const green = context.theme().isDark
       ? "rgb(134 239 172)"
@@ -191,6 +199,7 @@ export default function (props: Props) {
       return topAnswer.item;
     } else if (topScore < APPROX_THRESHHOLD) {
       setMsg(`Did you mean ${name}?`);
+      setSuggestion(name);
       return;
     } else {
       setMsg(`"${newGuess}" not found in database.`);
@@ -201,7 +210,11 @@ export default function (props: Props) {
     e.preventDefault();
     const formData = new FormData(formRef);
     formRef.reset();
-    const guess = formData.get("guess")?.toString().trim();
+    const guess = formData.get("guess")?.toString().trim() || "";
+    submitGuess(guess);
+  }
+
+  function submitGuess(guess: string) {
     if (!guess) return setMsg("Enter your next guess.");
     const newCountry = findCountry(guess);
     if (!newCountry) return;
@@ -256,9 +269,19 @@ export default function (props: Props) {
           Enter
         </button>
       </form>
-      <p class="text-center font-medium" style={{ color: msgColour() }}>
-        {msg()}
-      </p>
+
+      <Show
+        when={msg()?.includes("Did you mean")}
+        fallback={
+          <p class="text-center font-medium" style={{ color: msgColour() }}>
+            {msg()}
+          </p>
+        }
+      >
+        <p class="text-center font-medium" style={{ color: msgColour() }}>
+          <Suggestion countryName={suggestion()} submitGuess={submitGuess} />
+        </p>
+      </Show>
     </div>
   );
 }
