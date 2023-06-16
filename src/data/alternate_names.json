@@ -17,6 +17,10 @@
       "real": "democratic republic of the congo",
       "alternative": "dem rep congo"
     },
+    {
+      "real": "democratic republic of the congo",
+      "alternative": "dem. rep. congo"
+    },
     { "real": "bosnia and herzegovina", "alternative": "bosnia" },
     { "real": "ivory coast", "alternative": "cote d'ivoire" },
     { "real": "ivory coast", "alternative": "côte d'ivoire" },
