@@ -69,7 +69,9 @@ const answers = [
   { day: "2023-06-20", key: 170, name: "Barbados" },
   { day: "2023-06-21", key: 2, name: "Chile" },
   { day: "2023-06-22", key: 127, name: "Honduras" },
-  { day: "2023-06-23", key: 164, name: "Japan" },
+
+  { day: "2023-06-23", key: 159, name: "Madagascar" },
+
   { day: "2023-06-24", key: 137, name: "Cameroon" },
   { day: "2023-06-25", key: 112, name: "Timor-Leste" },
   { day: "2023-06-26", key: 186, name: "Vanuatu" },
@@ -121,7 +123,9 @@ const answers = [
   { day: "2023-08-11", key: 53, name: "Cambodia" },
   { day: "2023-08-12", key: 67, name: "Denmark" },
   { day: "2023-08-13", key: 100, name: "Saudi Arabia" },
-  { day: "2023-08-14", key: 159, name: "Madagascar" },
+
+  { day: "2023-08-14", key: 164, name: "Japan" },
+
   { day: "2023-08-15", key: 7, name: "Cyprus" },
   { day: "2023-08-16", key: 50, name: "Sweden" },
   { day: "2023-08-17", key: 25, name: "Costa Rica" },
