@@ -340,3 +340,9 @@ sharethrough.com,5pFlvV45,reseller,d53b998a7bd4ecd2
 sharethrough.com,UvcAx8IL,reseller,d53b998a7bd4ecd2
 smartadserver.com,3238,reseller,060d053dcf45cbf3
 zeta.com,533,reseller
+onetag.com, 6b859b96c564fbe, RESELLER
+pubmatic.com, 161593, RESELLER, 5d62403b186f2ace
+smartadserver.com, 3554, RESELLER
+video.unrulymedia.com, 2564526802, RESELLER
+sharethrough.com, OAW69Fon, RESELLER, d53b998a7bd4ecd2
+openx.com, 558899373, RESELLER, 6a698e2ec38604c6
