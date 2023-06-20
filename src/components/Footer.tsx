@@ -9,9 +9,9 @@ export default function Footer() {
       class="pt-8 pb-4 text-xs flex items-end justify-between w-full 
     flex-grow mb-24"
     >
-      <span class="space-x-1 flex">
-        <a href="https://trainwrecklabs.com">
-          <span data-i18n="Footer1">by Trainwreck Labs</span>
+      <div class="space-y-3">
+        <a href="https://trainwrecklabs.com" data-i18n="Footer1">
+          <span>by Trainwreck Labs</span>
           <img
             src={trainwreckBlack}
             width={14}
@@ -28,24 +28,21 @@ export default function Footer() {
           />
         </a>
         <a
-          href="https://twitter.com/theAbeTrain"
-          aria-label="Twitter"
-          class="inline"
+          href="https://discord.gg/Xpyy8dCr9g"
+          aria-label="Discord"
+          class="flex items-center space-x-2"
+          target="_blank"
         >
-          <Icon shape="twitter" size={14} />
+          <span class="mb-1">Need help? We're on Discord</span>
+          <Icon shape="discord" size={18} />
         </a>
-      </span>
-      <p>
-        <span data-i18n="Aux2">Have a question?</span> <br class="sm:hidden" />
-        <A
-          href="/faq"
-          class="underline"
-          data-cy="faq-footer-link"
-          data-i18n="Aux3"
-        >
+      </div>
+      <span>
+        Have a question? <br class="sm:hidden" />
+        <A href="/faq" class="underline" data-cy="faq-footer-link">
           Check out the FAQ.
         </A>
-      </p>
+      </span>
     </footer>
   );
 }
