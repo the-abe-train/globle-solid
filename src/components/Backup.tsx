@@ -136,6 +136,11 @@ export default function () {
     setShowPrompt(true);
   }
 
+  function signOut() {
+    context.setToken({ google: "" });
+    refetch();
+  }
+
   async function deleteBackup() {
     try {
       const googleToken = context.token().google;
@@ -257,6 +262,18 @@ export default function () {
           onClick={deleteBackupPrompt}
         >
           Delete backup
+        </button>
+        <button
+          class=" text-red-700 border-red-700 border rounded-md px-4 py-2 block
+          text-base font-medium hover:bg-red-700 hover:text-gray-300
+          focus:outline-none focus:ring-2 focus:ring-red-300 
+          disabled:text-red-400 disabled:bg-transparent disabled:border-red-400
+          dark:text-red-500 dark:border-red-500 dark:disabled:border-red-400
+          dark:hover:bg-red-500 dark:hover:text-black"
+          disabled={!isConnected()}
+          onClick={signOut}
+        >
+          Sign out
         </button>
       </div>
       <Prompt
