@@ -1,11 +1,4 @@
-import {
-  Component,
-  createSignal,
-  lazy,
-  Match,
-  onMount,
-  Switch,
-} from "solid-js";
+import { Component, createSignal, lazy, onMount } from "solid-js";
 import { Route, Routes } from "@solidjs/router";
 import { getContext } from "./Context";
 import "./background.css";
@@ -15,8 +8,6 @@ import { translatePage } from "./i18n";
 import Modal from "./components/Modal";
 import Statistics from "./components/Statistics";
 import Practice from "./routes/Practice";
-import UAParser from "ua-parser-js";
-import SnackAdUnit from "./components/SnackAdUnit";
 
 const Home = lazy(() => import("./routes/Home"));
 const Settings = lazy(() => import("./routes/Settings"));
@@ -27,11 +18,8 @@ const PrivacyPolicy = lazy(() => import("./routes/PrivacyPolicy"));
 const App: Component = () => {
   const { theme } = getContext();
   const [showStats, setShowStats] = createSignal(false);
-  const [deviceType, setDeviceType] = createSignal("");
   onMount(() => {
     translatePage();
-    const parser = new UAParser();
-    setDeviceType(parser.getDevice().type ?? "");
   });
 
   return (
@@ -55,17 +43,6 @@ const App: Component = () => {
           <Route path="/faq" component={FAQ} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
         </Routes>
-        <Switch>
-          <Match when={deviceType() === "mobile"}>
-            <SnackAdUnit unitName="snack_mex1" siteId="2902" />
-          </Match>
-          <Match when={deviceType() === "tablet"}>
-            <SnackAdUnit unitName="snack_dex1" siteId="2902" />
-          </Match>
-          <Match when={!deviceType()}>
-            <SnackAdUnit unitName="snack_dex1" siteId="2902" />
-          </Match>
-        </Switch>
         <Footer />
       </main>
       <div

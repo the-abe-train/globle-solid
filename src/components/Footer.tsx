@@ -37,12 +37,15 @@ export default function Footer() {
           <Icon shape="discord" size={18} />
         </a>
       </div>
-      <span>
-        Have a question? <br class="sm:hidden" />
-        <A href="/faq" class="underline" data-cy="faq-footer-link">
-          Check out the FAQ.
-        </A>
-      </span>
+      <div class="space-y-3">
+        <p>
+          Have a question? <br class="sm:hidden" />
+          <A href="/faq" class="underline" data-cy="faq-footer-link">
+            Check out the FAQ.
+          </A>
+        </p>
+        <span data-ccpa-link="1" />
+      </div>
     </footer>
   );
 }
