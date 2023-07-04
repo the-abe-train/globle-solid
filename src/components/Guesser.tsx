@@ -73,9 +73,6 @@ export default function (props: Props) {
   let formRef: HTMLFormElement;
 
   // Search indexes
-  // TODO serach index clearly is not sworking for abvbreviations
-  // use direct search for the abbrevations that are cuausing trouble
-  // e.g. st. vin. and gren. and dem. rep. congo
   const answerIndex = createMemo(() => {
     const answers = rawAnswerData["features"] as Country[];
     const notAnswers = territories["features"] as Territory[];
@@ -162,9 +159,15 @@ export default function (props: Props) {
       return;
     }
 
+    // Hardcoded exceptions
     if (cleanedGuess.toLowerCase() === "namibia") {
-      directSearch("Namibia");
+      return directSearch("Namibia");
+    } else if (cleanedGuess.toLowerCase() === "dem rep congo") {
+      return directSearch("Democratic Republic of the Congo");
+    } else if (cleanedGuess.toLowerCase() === "st vin and gren") {
+      return directSearch("Saint Vincent and the Grenadines");
     }
+
     const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
     console.log(searchPhrase);
 
