@@ -2,28 +2,8 @@ import { A } from "@solidjs/router";
 import Icon from "./Icon";
 import trainwreckWhite from "../images/trainwreck-white.svg";
 import trainwreckBlack from "../images/trainwreck-black.svg";
-import { onMount } from "solid-js";
 
 export default function Footer() {
-  onMount(() => {
-    if ("nitroAds" in window) {
-      // @ts-ignore
-      window["nitroAds"].createAd("anchor", {
-        refreshLimit: 20,
-        refreshTime: 30,
-        format: "anchor",
-        anchor: "bottom",
-        anchorPersistClose: false,
-        mediaQuery: "(min-width: 0px)",
-        report: {
-          enabled: true,
-          icon: true,
-          wording: "Report Ad",
-          position: "top-right",
-        },
-      });
-    }
-  });
   return (
     <footer
       class="pt-8 pb-4 text-xs flex items-end justify-between w-full 

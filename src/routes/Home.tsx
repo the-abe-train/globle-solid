@@ -1,6 +1,7 @@
 import { lazy, onMount, Suspense } from "solid-js";
 import { translatePage } from "../i18n";
 import Preview from "../components/Preview";
+import NitroPayAd from "../components/NitroPayAd";
 const NavGlobe = lazy(() => import("../components/globes/NavGlobe"));
 
 export default function () {
@@ -41,6 +42,7 @@ export default function () {
         </a>{" "}
         to play Globle with capital cities!
       </p>
+      <NitroPayAd />
     </div>
   );
 }

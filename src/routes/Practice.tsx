@@ -2,7 +2,6 @@ import {
   createEffect,
   createSignal,
   lazy,
-  onCleanup,
   onMount,
   Setter,
   Show,
@@ -13,10 +12,10 @@ import List from "../components/List";
 import { createPracticeAns, getPracticeAns } from "../util/practice";
 import Prompt from "../components/Prompt";
 import { useNavigate } from "@solidjs/router";
-import { createGuessStore, GuessStore } from "../util/stores";
-import { getCountry, getTerritories, isCountry } from "../util/data";
+import { createGuessStore } from "../util/stores";
+import { getTerritories } from "../util/data";
 import { translate, translatePage } from "../i18n";
-import { createStore, unwrap } from "solid-js/store";
+import NitroPayAd from "../components/NitroPayAd";
 
 const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
@@ -132,6 +131,7 @@ function Inner(props: InnerProps) {
         yes={newGame}
         no={() => navigate("/")}
       />
+      <NitroPayAd />
     </div>
   );
 }

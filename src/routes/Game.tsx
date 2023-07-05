@@ -19,6 +19,7 @@ import { getCountry, getTerritories } from "../util/data";
 import { polygonDistance } from "../util/geometry";
 import { translatePage } from "../i18n";
 import { createGuessStore } from "../util/stores";
+import NitroPayAd from "../components/NitroPayAd";
 
 const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
@@ -147,6 +148,7 @@ function Inner(props: Props) {
         <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
       </Suspense>
       <List guesses={guesses} setPov={setPov} ans={props.ans} />
+      <NitroPayAd />
     </div>
   );
 }
