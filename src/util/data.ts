@@ -4,7 +4,9 @@ import rawTerritoriesData from "../data/territories.json";
 
 export function getCountry(name: string) {
   const db = rawCountryData["features"] as Country[];
-  const country = db.find((c) => c.properties.NAME === name);
+  const country = db.find(
+    (c) => c.properties.NAME === name || c.properties.ADMIN === name
+  );
   invariant(country, "An error exists in the country data.");
   return country;
 }
