@@ -6,7 +6,11 @@ export default defineConfig({
   plugins: [
     solidPlugin(),
     VitePWA({
+      injectRegister: "auto",
       registerType: "autoUpdate",
+      devOptions: {
+        enabled: true,
+      },
       workbox: {
         navigateFallbackDenylist: [/^\/ads\.txt/],
       },
