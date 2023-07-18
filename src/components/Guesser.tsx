@@ -229,9 +229,20 @@ export default function (props: Props) {
     const distance = polygonDistance(newCountry, props.ans);
     newCountry["proximity"] = distance;
     props.addGuess(newCountry);
-
-    if (newCountry.properties.NAME === props.ans.properties.NAME) return;
-    if (distance === 0) return setMsg(`${name} is adjacent to the answer!`);
+    const ansName =
+      props.ans.properties[locale === "en-CA" ? "NAME" : langKey()];
+    if (newCountry.properties.NAME === ansName) return;
+    if (distance === 0) {
+      if (
+        (name === "Naimibia" && ansName === "Zimbabwe") ||
+        (name === "Zimbabwe" && ansName === "Namibia")
+      ) {
+        setMsg(`${name} is almost adjacent to the answer!`);
+      } else {
+        setMsg(`${name} is adjacent to the answer!`);
+      }
+      return;
+    }
     if (props.guesses.length <= 1) return setMsg(mountMsg);
     const lastGuess = props.guesses.countries[props.guesses.length - 2];
     const lastDistance = lastGuess.proximity ?? 0;

@@ -12,6 +12,7 @@ import Polish from "./pl-PL";
 import Swedish from "./sv-SE";
 import Hungarian from "./hu-HU";
 import Norwegian from "./no-NO";
+import Russian from "./ru-RU";
 
 export const langMap = [
   { locale: "en-CA", langKey: "NAME", resource: English, name: "English" },
@@ -24,8 +25,9 @@ export const langMap = [
   { locale: "sv-SE", langKey: "NAME_SV", resource: Swedish, name: "Svenska" },
   { locale: "pl-PL", langKey: "NAME_PL", resource: Polish, name: "Polski" },
   { locale: "no-NO", langKey: "NAME_NO", resource: Norwegian, name: "Norsk" },
+  { locale: "ru-RU", langKey: "NAME_RU", resource: Russian, name: "Русский" },
 ] as const;
-export type Locale = typeof langMap[number]["locale"];
+export type Locale = (typeof langMap)[number]["locale"];
 
 export function getLangKey(locale: Locale) {
   const lang = langMap.find((lang) => lang.locale === locale);

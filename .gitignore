@@ -10,3 +10,4 @@ cypress/videos/
 answers_old.json
 wrangler.toml
 .dev.vars
+translate-text.txt

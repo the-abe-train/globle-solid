@@ -1,58 +1,41 @@
-import dayjs from "dayjs";
-import jwtDecode from "jwt-decode";
-import {
-  createEffect,
-  createResource,
-  createSignal,
-  Match,
-  Show,
-  Switch,
-} from "solid-js";
 import invariant from "tiny-invariant";
-import Prompt from "../components/Prompt";
+import jwtDecode from "jwt-decode";
+import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { getContext } from "../Context";
+import dayjs from "dayjs";
 
 export default function () {
-  // const url = "/.netlify/functions/backup";
-  const url = "/backup";
+  const [showPrompt, setShowPrompt] = createSignal(false);
+
   const context = getContext();
-  // Fetch backup
-  async function fetchBackup() {
-    const googleToken = context.token().google;
-    if (!googleToken) return null;
-    try {
-      const endpoint = `${url}?token=${googleToken}`;
-      const response = await fetch(endpoint);
-      if (response.status === 205) {
-        context.setToken({ google: "" });
-        return null;
-      }
-      if (response.status === 204) return null;
-      const data = (await response.json()) as any;
-      return (data?.document as Stats) ?? null;
-    } catch (e) {
-      return null;
-    }
-  }
 
   const isConnected = () => context.token().google !== "";
   const [msg, setMsg] = createSignal("");
-  const [showPrompt, setShowPrompt] = createSignal(false);
-  const [promptText, setPromptText] = createSignal("");
-  const [promptType, setPromptType] = createSignal<Prompt>("Choice");
-  const [promptAction, setPromptAction] = createSignal(restoreBackup);
-  const [backupStats, { refetch }] = createResource(
-    context.token().google,
-    fetchBackup
-  );
-  const alreadyBackedUp = () => {
-    const backup = backupStats();
-    if (!backup) return false;
-    return Object.keys(backup).every((key) => {
-      const statKey = key as keyof Stats;
-      return backup[statKey] === context.storedStats()[statKey];
-    });
-  };
+
+  onMount(async () => {
+    // If connected, fetch backup
+    if (isConnected()) {
+      const googleToken = context.token().google;
+      const endpoint = "/account" + "?token=" + googleToken;
+      const accountStats = await fetch(endpoint, {
+        method: "GET",
+      });
+      const data = (await accountStats.json()) as any;
+      if (data?.stats) {
+        const accountStats = data.stats as Stats;
+        const localStats = context.storedStats();
+        if (accountStats.lastWin === localStats.lastWin) {
+          setMsg(`Account is synced!`);
+        } else {
+          setMsg(
+            `Account last synced ${dayjs(accountStats.lastWin).format(
+              "MMM D, YYYY"
+            )}.`
+          );
+        }
+      }
+    }
+  });
 
   let googleBtn: HTMLDivElement;
   async function handleCredentialResponse(
@@ -60,8 +43,69 @@ export default function () {
   ) {
     if (googleResponse) {
       const googleToken = googleResponse?.credential;
+
+      // TODO hit account API
+      // Dev: Use localhost when testing locally
+      const endpoint = "/account" + "?token=" + googleToken;
+      const stats = context.storedStats();
+      const body = JSON.stringify(stats);
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body,
+      });
+
+      // If failed to create account, show error
+      if (response.status !== 200) {
+        setMsg("Failed to connect to Google account.");
+        return;
+      }
+
+      // If status is "Account created", then all is well.
+      if (response.statusText === "Account created") {
+        setMsg("Account created!");
+        return;
+      }
+
+      // If status is "Stats found", and no local stats, use account stats
+      const json = (await response.json()) as any;
+      console.log(json);
+      if (json?.stats) {
+        const accountStats = json.stats as Stats;
+        const localStats = context.storedStats();
+
+        if (localStats.gamesWon === 0) {
+          context.storeStats(accountStats);
+          setMsg("Loaded stats from account.");
+        } else {
+          // Combine local and account stats
+          const mostWins =
+            localStats.gamesWon > accountStats.gamesWon
+              ? localStats
+              : accountStats;
+          const latestWin =
+            new Date(localStats.lastWin) > new Date(accountStats.lastWin)
+              ? localStats
+              : accountStats;
+          const combinedStats: Stats = {
+            lastWin: latestWin.lastWin,
+            currentStreak: latestWin.currentStreak,
+            emojiGuesses: latestWin.emojiGuesses,
+            gamesWon: mostWins.gamesWon,
+            maxStreak: mostWins.maxStreak,
+            usedGuesses: mostWins.usedGuesses,
+          };
+          context.storeStats(combinedStats);
+
+          await fetch(endpoint, {
+            method: "PUT",
+            body: JSON.stringify(combinedStats),
+          });
+          setMsg("Combined local and account stats.");
+        }
+      }
+
+      // Add token to context
       context.setToken({ google: googleToken });
-      refetch();
     } else {
       setMsg("Failed to connect to Google account.");
     }
@@ -80,95 +124,32 @@ export default function () {
     }
   });
 
-  // Saving score
-  async function saveBackup() {
-    try {
-      const body = JSON.stringify({
-        stats: context.storedStats(),
-        token: context.token().google,
-      });
-      const googleToken = context.token().google;
-      invariant(googleToken, "No token found in context.");
-      const endpoint = `${url}?token=${googleToken}`;
-      const netlifyResponse = await fetch(endpoint, {
-        method: "PUT",
-        body,
-      });
-      const data = (await netlifyResponse.json()) as any;
-      const message = data.message;
-      setPromptType("Message");
-      setPromptText(message);
-      setShowPrompt(true);
-      refetch();
-    } catch (e) {
-      console.error(e);
-      setMsg("Failed to save score. Please contact support.");
-    }
-  }
-
-  // Restore backup
-  function restoreBackupPrompt() {
-    setPromptType("Choice");
-    setPromptText(
-      "Are you sure you want to restore from backup? This will replace your current score."
-    );
-    setPromptAction(() => restoreBackup);
-    setShowPrompt(true);
-  }
-  async function restoreBackup() {
-    try {
-      const data = await fetchBackup();
-      // const data = await fetchBackup(context.token().google);
-      if (data) context.storeStats(data);
-      setPromptType("Message");
-      setPromptText("Backup restored.");
-    } catch (e) {
-      console.error(e);
-      setMsg("Failed to restore backup. Please contact support.");
-    }
-  }
-
-  // Delete backup
-  function deleteBackupPrompt() {
-    setPromptType("Choice");
-    setPromptText("Are you sure you want to delete your backup?");
-    setPromptAction(() => deleteBackup);
+  // delete backup
+  function deleteAccountPrompt() {
     setShowPrompt(true);
   }
 
-  function signOut() {
-    context.setToken({ google: "" });
-    refetch();
-  }
-
-  async function deleteBackup() {
+  async function deleteAccount() {
     try {
       const googleToken = context.token().google;
       invariant(googleToken, "No token found in context.");
-      const endpoint = `${url}?token=${googleToken}`;
-      const netlifyResponse = await fetch(endpoint, {
+      const endpoint = "/account" + "?token=" + googleToken;
+      const response = await fetch(endpoint, {
         method: "DELETE",
       });
-      const data = (await netlifyResponse.json()) as any;
-      setPromptType("Message");
-      setPromptText(data.message);
-      refetch();
+      const data = (await response.json()) as any;
+      context.setToken({ google: "" });
+      setMsg(data.message);
+      setShowPrompt(false);
     } catch (e) {
       console.error(e);
-      setMsg("Failed to restore score. Please contact support.");
+      setMsg("Failed to delete backup. Please contact support.");
     }
   }
 
-  function showStats(stats: Stats, source: "Local Stats" | "Cloud Backup") {
-    if ((stats.gamesWon < 1 || !stats.lastWin) && source === "Local Stats")
-      return <p>No local stats recorded.</p>;
-    return (
-      <p>
-        {source} -- Date saved:
-        {dayjs(stats.lastWin).format(" YYYY-MM-DD")}, best streak:{" "}
-        {stats.maxStreak}.
-      </p>
-    );
+  function logout() {
+    context.setToken({ google: "" });
+    setMsg("Logged out.");
   }
 
   return (
@@ -195,94 +176,62 @@ export default function () {
           Google account <b>{jwtDecode<Token>(context.token().google).email}</b>{" "}
           connected!
         </p>
-        <Switch>
-          <Match when={backupStats.loading}>
-            {" "}
-            <p data-i18n="Loading">Loading...</p>{" "}
-          </Match>
-          <Match when={backupStats.error}>
-            {" "}
-            <p>Error connecting to cloud</p>{" "}
-          </Match>
-          <Match when={!backupStats.loading}>
-            <Show
-              when={backupStats()}
-              fallback={<p>No cloud backup saved yet.</p>}
-              keyed
-            >
-              {(stats) => showStats(stats, "Cloud Backup")}
-            </Show>
-          </Match>
-        </Switch>
-        <Show
-          when={context.storedStats()}
-          fallback={<p>No local stats saved yet.</p>}
-          keyed
-        >
-          {(stats) => showStats(stats, "Local Stats")}
-        </Show>
       </Show>
       <p>{msg()}</p>
-      <div class="flex space-x-3">
-        <button
-          class="bg-blue-700 hover:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900
-          text-white rounded-md px-4 py-2 block text-base font-medium 
-          focus:outline-none focus:ring-2 focus:ring-blue-300 
-          disabled:bg-blue-400 dark:disabled:bg-purple-900
-          justify-around"
-          disabled={
-            !isConnected() ||
-            context.storedStats().gamesWon < 1 ||
-            alreadyBackedUp() ||
-            backupStats.loading
-          }
-          onClick={saveBackup}
-        >
-          Save cloud backup
-        </button>
-        <button
-          class="bg-blue-700 hover:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900
-          text-white rounded-md px-4 py-2 block text-base font-medium 
-          focus:outline-none focus:ring-2 focus:ring-blue-300 
-          disabled:bg-blue-400 dark:disabled:bg-purple-900
-          justify-around"
-          disabled={!isConnected() || !backupStats()}
-          onClick={restoreBackupPrompt}
-        >
-          Restore from backup
-        </button>
-        <button
-          class=" text-red-700 border-red-700 border rounded-md px-4 py-2 block
+      <Show when={isConnected()}>
+        <div class="flex space-x-4">
+          <button
+            class=" text-red-700 border-red-700 border rounded-md px-4 py-2 block
           text-base font-medium hover:bg-red-700 hover:text-gray-300
           focus:outline-none focus:ring-2 focus:ring-red-300 
           disabled:text-red-400 disabled:bg-transparent disabled:border-red-400
           dark:text-red-500 dark:border-red-500 dark:disabled:border-red-400
           dark:hover:bg-red-500 dark:hover:text-black"
-          disabled={!isConnected() || !backupStats()}
-          onClick={deleteBackupPrompt}
-        >
-          Delete backup
-        </button>
-        <button
-          class=" text-red-700 border-red-700 border rounded-md px-4 py-2 block
+            disabled={!isConnected()}
+            onClick={deleteAccountPrompt}
+          >
+            Delete backup
+          </button>
+          <button
+            class=" text-red-700 border-red-700 border rounded-md px-4 py-2 block
           text-base font-medium hover:bg-red-700 hover:text-gray-300
           focus:outline-none focus:ring-2 focus:ring-red-300 
           disabled:text-red-400 disabled:bg-transparent disabled:border-red-400
           dark:text-red-500 dark:border-red-500 dark:disabled:border-red-400
           dark:hover:bg-red-500 dark:hover:text-black"
-          disabled={!isConnected()}
-          onClick={signOut}
-        >
-          Sign out
-        </button>
-      </div>
-      <Prompt
-        setShowPrompt={setShowPrompt}
-        showPrompt={showPrompt}
-        promptType={promptType()}
-        text={promptText()}
-        yes={promptAction()}
-      />
+            disabled={!isConnected()}
+            onClick={logout}
+          >
+            Log out
+          </button>
+        </div>
+      </Show>
+      <Show when={showPrompt()}>
+        <p>Are you sure you want to delete your account?</p>
+        <div class="flex space-x-3">
+          <button
+            class=" text-red-700 border-red-700 border rounded-md px-4 py-2 block
+          text-base font-medium hover:bg-red-700 hover:text-gray-300
+          focus:outline-none focus:ring-2 focus:ring-red-300 
+          disabled:text-red-400 disabled:bg-transparent disabled:border-red-400
+          dark:text-red-500 dark:border-red-500 dark:disabled:border-red-400
+          dark:hover:bg-red-500 dark:hover:text-black"
+            onClick={deleteAccount}
+          >
+            Yes
+          </button>
+          <button
+            class="bg-blue-700 hover:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900
+          text-white rounded-md px-4 py-2 block text-base font-medium 
+          focus:outline-none focus:ring-2 focus:ring-blue-300 
+          disabled:bg-blue-400 dark:disabled:bg-purple-900
+          justify-around"
+            onClick={() => setShowPrompt(false)}
+          >
+            No
+          </button>
+        </div>
+      </Show>
     </div>
   );
 }

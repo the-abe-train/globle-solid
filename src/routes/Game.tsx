@@ -48,10 +48,6 @@ function Inner(props: Props) {
   const context = getContext();
   const [pov, setPov] = createSignal<Coords | null>(null);
 
-  // const lastWin = dayjs(context.storedStats().lastWin);
-  // const statsAreFresh = dayjs(context.storedGuesses().day).isAfter(dayjs());
-  // const alreadyWonToday = lastWin.isSame(dayjs(), "date");
-
   const restoredGuesses = () => {
     const oldGuesses = context.storedGuesses();
 
@@ -70,7 +66,6 @@ function Inner(props: Props) {
 
   const { guesses, setGuesses } = createGuessStore(restoredGuesses());
 
-  // const [win, setWin] = createSignal(statsAreFresh && alreadyWonToday);
   const [win, setWin] = createSignal(false);
 
   // Effects
@@ -120,6 +115,14 @@ function Inner(props: Props) {
           emojiGuesses,
         };
         context.storeStats(newStats);
+
+        // Store new stats in account
+        const googleToken = context.token().google;
+        const endpoint = "/account" + "?token=" + googleToken;
+        fetch(endpoint, {
+          method: "PUT",
+          body: JSON.stringify(newStats),
+        });
 
         // Show stats
         setTimeout(() => props.setShowStats(true), 2000);
