@@ -77,5 +77,57 @@
     { "real": "china", "alternative": "chiny" }
   ],
   "sv-SE": [],
-  "ru-RU": []
+  "ru-RU": [],
+  "lt-LT": [
+    { "real": "Belarus", "lt": "Baltarusija", "alternative": "gudija" },
+    {
+      "real": "Central African Rep.",
+      "lt": "Centrinės Afrikos Respublika",
+      "alternative": "car"
+    },
+    {
+      "real": "Dem. Rep. Congo",
+      "lt": "Kongo Demokratinė Respublika",
+      "alternative": "kongo dr"
+    },
+    { "real": "Georgia", "lt": "Sakartvelas", "alternative": "gruzija" },
+    { "real": "Kazakhstan", "lt": "Kazachija", "alternative": "kazachstanas" },
+    { "real": "Kyrgyzstan", "lt": "Kirgizija", "alternative": "kirgizstanas" },
+    { "real": "Moldova", "lt": "Moldova", "alternative": "moldavija" },
+    { "real": "Myanmar", "lt": "Mianmaras", "alternative": "birma" },
+    { "real": "Netherlands", "lt": "Nyderlandai", "alternative": "olandija" },
+    {
+      "real": "South Africa",
+      "lt": "Pietų Afrika",
+      "alternative": "pietų afrikos respublika"
+    },
+    { "real": "South Africa", "lt": "Pietų Afrika", "alternative": "par" },
+    { "real": "Tajikistan", "lt": "Tadžikija", "alternative": "tadžikistanas" },
+    {
+      "real": "Turkmenistan",
+      "lt": "Turkmėnija",
+      "alternative": "turkmėnistanas"
+    },
+    {
+      "real": "United Arab Emirates",
+      "lt": "Jungtiniai Arabų Emyratai",
+      "alternative": "jae"
+    },
+    {
+      "real": "United Kingdom",
+      "lt": "Jungtinė Karalystė",
+      "alternative": "didžioji britanija"
+    },
+    {
+      "real": "United States of America",
+      "lt": "Jungtinės Valstijos",
+      "alternative": "jungtinės amerikos valstijos"
+    },
+    {
+      "real": "United States of America",
+      "lt": "Jungtinės Valstijos",
+      "alternative": "jav"
+    },
+    { "real": "Uzbekistan", "lt": "Uzbekija", "alternative": "uzbekistanas" }
+  ]
 }

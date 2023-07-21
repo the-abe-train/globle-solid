@@ -13,6 +13,7 @@ import Swedish from "./sv-SE";
 import Hungarian from "./hu-HU";
 import Norwegian from "./no-NO";
 import Russian from "./ru-RU";
+import Lithuanian from "./lt-LT";
 
 export const langMap = [
   { locale: "en-CA", langKey: "NAME", resource: English, name: "English" },
@@ -26,6 +27,12 @@ export const langMap = [
   { locale: "pl-PL", langKey: "NAME_PL", resource: Polish, name: "Polski" },
   { locale: "no-NO", langKey: "NAME_NO", resource: Norwegian, name: "Norsk" },
   { locale: "ru-RU", langKey: "NAME_RU", resource: Russian, name: "Русский" },
+  {
+    locale: "lt-LT",
+    langKey: "NAME_LT",
+    resource: Lithuanian,
+    name: "Lietuvių",
+  },
 ] as const;
 export type Locale = (typeof langMap)[number]["locale"];
 
