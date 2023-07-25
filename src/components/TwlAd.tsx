@@ -3,7 +3,6 @@ import UAParser from "ua-parser-js";
 import forgeousLogo from "../images/other-games/forgeous-logo.png";
 import chronogramLogo from "../images/other-games/chronogram-logo.png";
 import globleCapitalsLogo from "../images/other-games/globle-capitals-logo.png";
-import pluralityLogo from "../images/other-games/plurality-logo.png";
 import externalIcon from "../images/other-games/external.svg";
 
 export default function () {
@@ -18,7 +17,7 @@ export default function () {
       font: "Mogra",
       logo: forgeousLogo,
       bg: "bg-stone-50",
-      weight: isMobile ? 2 : 0,
+      weight: isMobile ? 1 : 0,
     },
     {
       name: "Chronogram",
@@ -27,7 +26,7 @@ export default function () {
       font: "Zilla Slab",
       logo: chronogramLogo,
       bg: "bg-stone-50",
-      weight: 5,
+      weight: 3,
     },
     {
       name: "GLOBLE: CAPITALS",
@@ -37,15 +36,6 @@ export default function () {
       logo: globleCapitalsLogo,
       bg: "bg-sky-50",
       weight: 1,
-    },
-    {
-      name: "Plurality",
-      style: "text-2xl ml-1 mr-2 font-bold",
-      url: "https://www.plurality.fun",
-      font: "Amaranth",
-      logo: pluralityLogo,
-      bg: "bg-orange-50",
-      weight: 2,
     },
   ];
 
