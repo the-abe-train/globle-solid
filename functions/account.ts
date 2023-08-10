@@ -46,10 +46,6 @@ export const onRequestPost: PagesFunction<E> = async (context) => {
   const email = jwtDecode<Token>(tokenString).email;
   const loginMethod = "google"; // TODO: add Discord login
 
-  // Get stats data from req body
-  const stats = (await request.json()) as Record<string, any>;
-  stats.lastWin = { $date: new Date(stats.lastWin) };
-
   // Check if game account exists
   const gameAccount = await mongoApi(env, "globle", "findOne", {
     filter: { email },
@@ -67,13 +63,14 @@ export const onRequestPost: PagesFunction<E> = async (context) => {
   const json = await mongoApi(env, "accounts", "findOne", {
     filter: { email },
   });
-  console.log("Exising TWL account:", json);
+  // console.log("Exising TWL account:", json);
   let twlId = json?.document?._id;
   console.log({ twlId });
 
   // If so, add game account to TWL account
   const globleUserId = crypto.randomUUID();
   if (twlId) {
+    console.log("Adding game account to TWL account");
     const twlResponse = await mongoApi(env, "accounts", "updateOne", {
       filter: { _id: { $oid: twlId } },
       update: {
@@ -87,11 +84,12 @@ export const onRequestPost: PagesFunction<E> = async (context) => {
         $addToSet: { loginMethods: loginMethod },
       },
     });
-    console.log(twlResponse);
+    // console.log(twlResponse);
   }
 
   // If not, create new TWL account, and get inserted ID
   if (!twlId) {
+    console.log("Creating new TWL account");
     const twlResponse = await mongoApi(env, "accounts", "insertOne", {
       document: {
         email,
@@ -120,7 +118,12 @@ export const onRequestPost: PagesFunction<E> = async (context) => {
     );
   }
 
+  // Get stats data from req body
+  const stats = (await request.json()) as Record<string, any>;
+  if (!stats.lastWin.$date) stats.lastWin = { $date: new Date(stats.lastWin) };
+
   // Create new game account with TWL account ID
+  console.log("Creating new Globle game document");
   await mongoApi(env, "globle", "insertOne", {
     document: {
       _id: globleUserId,
@@ -147,11 +150,20 @@ export const onRequestPut: PagesFunction<E> = async (context) => {
   //Put stats to existing account
   const stats = (await request.json()) as Record<string, any>;
   stats.lastWin = { $date: new Date(stats.lastWin) };
-  await mongoApi(env, "globle", "updateOne", {
+  const output = await mongoApi(env, "globle", "updateOne", {
     filter: { email },
     update: { $set: { stats } },
   });
-
+  if (!output?.matchedCount) {
+    console.log("Account not found");
+    await fetch(url.origin + "/account?token=" + tokenString, {
+      method: "POST",
+      body: JSON.stringify(stats),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
   return new Response(
     JSON.stringify({
       message: "Stats updated",
