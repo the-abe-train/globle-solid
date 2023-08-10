@@ -74,11 +74,13 @@ export default function (props: Props) {
     const emptyStats = context.resetStats();
     // Store new stats in account
     const googleToken = context.token().google;
-    const endpoint = "/account" + "?token=" + googleToken;
-    fetch(endpoint, {
-      method: "PUT",
-      body: JSON.stringify(emptyStats),
-    });
+    if (googleToken) {
+      const endpoint = "/account" + "?token=" + googleToken;
+      fetch(endpoint, {
+        method: "PUT",
+        body: JSON.stringify(emptyStats),
+      });
+    }
     setPromptType("Message");
     setPromptText("Stats reset.");
     setTimeout(() => {

@@ -118,11 +118,13 @@ function Inner(props: Props) {
 
         // Store new stats in account
         const googleToken = context.token().google;
-        const endpoint = "/account" + "?token=" + googleToken;
-        fetch(endpoint, {
-          method: "PUT",
-          body: JSON.stringify(newStats),
-        });
+        if (googleToken) {
+          const endpoint = "/account" + "?token=" + googleToken;
+          fetch(endpoint, {
+            method: "PUT",
+            body: JSON.stringify(newStats),
+          });
+        }
 
         // Show stats
         setTimeout(() => props.setShowStats(true), 2000);
