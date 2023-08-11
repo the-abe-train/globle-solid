@@ -3,6 +3,7 @@ import UAParser from "ua-parser-js";
 import forgeousLogo from "../images/other-games/forgeous-logo.png";
 import chronogramLogo from "../images/other-games/chronogram-logo.png";
 import globleCapitalsLogo from "../images/other-games/globle-capitals-logo.png";
+import metazooaLogo from "../images/other-games/metazooa-logo.png";
 import externalIcon from "../images/other-games/external.svg";
 
 export default function () {
@@ -26,7 +27,7 @@ export default function () {
       font: "Zilla Slab",
       logo: chronogramLogo,
       bg: "bg-stone-50",
-      weight: 3,
+      weight: 2,
     },
     {
       name: "GLOBLE: CAPITALS",
@@ -35,7 +36,16 @@ export default function () {
       font: "Montserrat",
       logo: globleCapitalsLogo,
       bg: "bg-sky-50",
-      weight: 1,
+      weight: 2,
+    },
+    {
+      name: "Metazooa",
+      style: "text-2xl mt-1 ml-1 mr-2",
+      url: "https://metazooa.com",
+      font: "Gluten",
+      logo: metazooaLogo,
+      bg: "bg-green-50",
+      weight: 6,
     },
   ];
 
