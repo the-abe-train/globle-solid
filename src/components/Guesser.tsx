@@ -40,7 +40,7 @@ export default function (props: Props) {
     } else if (props.guesses.length === 1) {
       return translate(
         "Game4",
-        "Drag, tap, and zoom in on the globe to help you find your next guess.`"
+        "Drag, tap, and zoom in on the globe to help you find your next guess."
       );
     }
     return "";
