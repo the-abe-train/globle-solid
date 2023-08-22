@@ -19,7 +19,7 @@ export default function () {
         },
       });
       // @ts-ignore
-      window["nitroAds"].createAd("siderail", {
+      window["nitroAds"].createAd("left-siderail", {
         refreshLimit: 20,
         refreshTime: 60,
         format: "rail",
