@@ -18,6 +18,24 @@ export default function () {
           position: "top-right",
         },
       });
+      // @ts-ignore
+      window["nitroAds"].createAd("siderail", {
+        refreshLimit: 20,
+        refreshTime: 60,
+        format: "rail",
+        rail: "left",
+        railOffsetTop: 0,
+        railOffsetBottom: 0,
+        railCollisionWhitelist: ["*"],
+        sizes: [["160", "600"]],
+        report: {
+          enabled: true,
+          icon: true,
+          wording: "Report Ad",
+          position: "bottom-right",
+        },
+        mediaQuery: "(min-width: 1025px)",
+      });
     }
   });
   return <></>;
