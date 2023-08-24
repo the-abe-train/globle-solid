@@ -37,17 +37,39 @@ export function addGameToStats(
 export function combineStats(localStats: Stats, accountStats: Stats) {
   const mostWins =
     localStats.gamesWon > accountStats.gamesWon ? localStats : accountStats;
-  const latestWin =
+  const latestStats =
     new Date(localStats.lastWin) > new Date(accountStats.lastWin)
       ? localStats
       : accountStats;
+  const olderStats =
+    new Date(localStats.lastWin) > new Date(accountStats.lastWin)
+      ? accountStats
+      : localStats;
+  const prevWin = dayjs(olderStats.lastWin);
+  const lastWin = dayjs(latestStats.lastWin);
+  const streakContnues =
+    latestStats.currentStreak < olderStats.currentStreak &&
+    lastWin.subtract(1, "day").isSame(prevWin, "date");
+  const currentStreak = streakContnues
+    ? latestStats.currentStreak + olderStats.currentStreak
+    : latestStats.currentStreak;
+
+  const maxStreak = Math.max(
+    currentStreak,
+    olderStats.maxStreak,
+    latestStats.maxStreak
+  );
+
+  // If no overlap, combine usedGuesses
+  const usedGuesses = [...olderStats.usedGuesses, ...latestStats.usedGuesses];
+
   const combinedStats: Stats = {
-    lastWin: latestWin.lastWin,
-    currentStreak: latestWin.currentStreak,
-    emojiGuesses: latestWin.emojiGuesses,
-    gamesWon: mostWins.gamesWon,
-    maxStreak: mostWins.maxStreak,
-    usedGuesses: mostWins.usedGuesses,
+    lastWin: latestStats.lastWin,
+    currentStreak,
+    emojiGuesses: latestStats.emojiGuesses,
+    gamesWon: usedGuesses.length,
+    maxStreak,
+    usedGuesses,
   };
   return combinedStats;
 }
