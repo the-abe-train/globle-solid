@@ -20,6 +20,7 @@ import { polygonDistance } from "../util/geometry";
 import { translatePage } from "../i18n";
 import { createGuessStore } from "../util/stores";
 import NitroPayAd from "../components/NitroPayAd";
+import { addGameToStats, combineStats, getAcctStats } from "../util/stats";
 
 const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
@@ -85,41 +86,36 @@ function Inner(props: Props) {
 
   // When the player wins!
   createEffect(
-    on(win, () => {
+    on(win, async () => {
+      // Sync local storage with account
+      const googleToken = context.token().google;
+      const endpoint = "/account" + "?token=" + googleToken;
+      if (googleToken) {
+        const accountStats = await getAcctStats(context, googleToken);
+        if (typeof accountStats !== "string") {
+          const localStats = context.storedStats();
+          const combinedStats = combineStats(localStats, accountStats);
+          context.storeStats(combinedStats);
+        }
+      }
+
+      // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const lastWin = dayjs(context.storedStats().lastWin);
       if (win() && lastWin.isBefore(today, "date")) {
         // Store new stats in local storage
-        const gamesWon = context.storedStats().gamesWon + 1;
-        const streakBroken = !dayjs()
-          .subtract(1, "day")
-          .isSame(lastWin, "date");
-        const currentStreak = streakBroken
-          ? 1
-          : context.storedStats().currentStreak + 1;
-        const maxStreak =
-          currentStreak > context.storedStats().maxStreak
-            ? currentStreak
-            : context.storedStats().maxStreak;
-        const usedGuesses = [
-          ...context.storedStats().usedGuesses,
-          guesses.length,
-        ];
-        const emojiGuesses = emojiString(guesses.countries, props.ans);
-        const newStats = {
-          lastWin: today.toString(),
-          gamesWon,
-          currentStreak,
-          maxStreak,
-          usedGuesses,
-          emojiGuesses,
-        };
+        const newStats = addGameToStats(
+          context,
+          guesses,
+          props.ans,
+          lastWin,
+          today
+        );
+
         context.storeStats(newStats);
 
         // Store new stats in account
-        const googleToken = context.token().google;
         if (googleToken) {
-          const endpoint = "/account" + "?token=" + googleToken;
           fetch(endpoint, {
             method: "PUT",
             body: JSON.stringify(newStats),

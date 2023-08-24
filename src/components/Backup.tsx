@@ -3,6 +3,7 @@ import jwtDecode from "jwt-decode";
 import { createEffect, createSignal, onMount, Show } from "solid-js";
 import { getContext } from "../Context";
 import dayjs from "dayjs";
+import { combineStats, getAcctStats } from "../util/stats";
 
 export default function () {
   const [showPrompt, setShowPrompt] = createSignal(false);
@@ -41,74 +42,35 @@ export default function () {
   async function handleCredentialResponse(
     googleResponse?: google.accounts.id.CredentialResponse
   ) {
-    if (googleResponse) {
-      const googleToken = googleResponse?.credential;
+    if (!googleResponse) return setMsg("Failed to connect to Google account.");
+    const googleToken = googleResponse?.credential;
 
-      // TODO hit account API
-      // Dev: Use localhost when testing locally
-      const endpoint = "/account" + "?token=" + googleToken;
-      const stats = context.storedStats();
-      const body = JSON.stringify(stats);
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body,
-      });
-
-      // If failed to create account, show error
-      if (response.status !== 200) {
-        setMsg("Failed to connect to Google account.");
-        return;
-      }
-
-      // If status is "Account created", then all is well.
-      if (response.statusText === "Account created") {
-        setMsg("Account created!");
-        return;
-      }
-
-      // If status is "Stats found", and no local stats, use account stats
-      const json = (await response.json()) as any;
-      console.log(json);
-      if (json?.stats) {
-        const accountStats = json.stats as Stats;
-        const localStats = context.storedStats();
-
-        if (localStats.gamesWon === 0) {
-          context.storeStats(accountStats);
-          setMsg("Loaded stats from account.");
-        } else {
-          // Combine local and account stats
-          const mostWins =
-            localStats.gamesWon > accountStats.gamesWon
-              ? localStats
-              : accountStats;
-          const latestWin =
-            new Date(localStats.lastWin) > new Date(accountStats.lastWin)
-              ? localStats
-              : accountStats;
-          const combinedStats: Stats = {
-            lastWin: latestWin.lastWin,
-            currentStreak: latestWin.currentStreak,
-            emojiGuesses: latestWin.emojiGuesses,
-            gamesWon: mostWins.gamesWon,
-            maxStreak: mostWins.maxStreak,
-            usedGuesses: mostWins.usedGuesses,
-          };
-          context.storeStats(combinedStats);
-
-          await fetch(endpoint, {
-            method: "PUT",
-            body: JSON.stringify(combinedStats),
-          });
-          setMsg("Combined local and account stats.");
-        }
-      }
-
-      // Add token to context
-      context.setToken({ google: googleToken });
-    } else {
-      setMsg("Failed to connect to Google account.");
+    // Fetch account stats
+    const accountStats = await getAcctStats(context, googleToken);
+    if (typeof accountStats === "string") {
+      return setMsg(accountStats);
     }
+    const localStats = context.storedStats();
+
+    if (localStats.gamesWon === 0) {
+      context.storeStats(accountStats);
+      setMsg("Loaded stats from account.");
+    } else {
+      // Combine local and account stats
+      const combinedStats = combineStats(localStats, accountStats);
+      context.storeStats(combinedStats);
+
+      // Store combined stats in account
+      const endpoint = "/account" + "?token=" + googleToken;
+      await fetch(endpoint, {
+        method: "PUT",
+        body: JSON.stringify(combinedStats),
+      });
+      setMsg("Combined local and account stats.");
+    }
+
+    // Add token to context
+    context.setToken({ google: googleToken });
   }
 
   createEffect(() => {
