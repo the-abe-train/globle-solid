@@ -61,7 +61,9 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
   );
 
   // If no overlap, combine usedGuesses
-  const usedGuesses = [...olderStats.usedGuesses, ...latestStats.usedGuesses];
+  const usedGuesses = streakContnues
+    ? [...olderStats.usedGuesses, ...latestStats.usedGuesses]
+    : mostWins.usedGuesses;
 
   const combinedStats: Stats = {
     lastWin: latestStats.lastWin,

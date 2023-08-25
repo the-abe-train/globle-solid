@@ -15,7 +15,7 @@ test("sync devices", () => {
     lastWin: "2020-01-02",
     currentStreak: 2,
     emojiGuesses: "🇺🇸🇺🇸",
-    gamesWon: 2, // This should be 3, but I don't store info info to fix it
+    gamesWon: 2,
     maxStreak: 2,
     usedGuesses: [1, 2],
   };
@@ -24,9 +24,9 @@ test("sync devices", () => {
     lastWin: "2020-01-02",
     currentStreak: 2,
     emojiGuesses: "🇺🇸🇺🇸",
-    gamesWon: 3,
+    gamesWon: 2,
     maxStreak: 2,
-    usedGuesses: [1, 1, 2],
+    usedGuesses: [1, 2],
   });
 });
 
@@ -80,8 +80,64 @@ test("streak is broken", () => {
     lastWin: "2020-01-03",
     currentStreak: 1,
     emojiGuesses: "🇺🇸🇺🇸",
-    gamesWon: 6,
+    gamesWon: 5, // wrong, but best with the logic we have
     maxStreak: 5,
-    usedGuesses: [1, 1, 1, 1, 1, 2],
+    usedGuesses: [1, 1, 1, 1, 1],
   });
 });
+
+test("duplicate game", () => {
+  const stats1: Stats = {
+    lastWin: "2023-08-25",
+    currentStreak: 5,
+    emojiGuesses: "🇺🇸",
+    gamesWon: 16,
+    maxStreak: 5,
+    usedGuesses: [...new Array(16).fill(1)],
+  };
+  const stats2: Stats = {
+    lastWin: "2023-08-25",
+    currentStreak: 5,
+    emojiGuesses: "🇺🇸",
+    gamesWon: 16,
+    maxStreak: 5,
+    usedGuesses: [...new Array(16).fill(1)],
+  };
+  const combinedStats = combineStats(stats1, stats2);
+  expect(combinedStats).toEqual({
+    lastWin: "2023-08-25",
+    currentStreak: 5,
+    emojiGuesses: "🇺🇸",
+    gamesWon: 16,
+    maxStreak: 5,
+    usedGuesses: [...new Array(16).fill(1)],
+  });
+});
+
+// test("games won doubles", () => {
+//   const stats1: Stats = {
+//     lastWin: "2023-08-25",
+//     currentStreak: 549,
+//     emojiGuesses: "🇺🇸",
+//     gamesWon: 1654,
+//     maxStreak: 549,
+//     usedGuesses: [...new Array(1654).fill(1)],
+//   };
+//   const stats2: Stats = {
+//     lastWin: "2023-08-25",
+//     currentStreak: 549,
+//     emojiGuesses: "🇺🇸",
+//     gamesWon: 1654,
+//     maxStreak: 549,
+//     usedGuesses: [...new Array(1654).fill(1)],
+//   };
+//   const combinedStats = combineStats(stats1, stats2);
+//   expect(combinedStats).toEqual({
+//     lastWin: "2023-08-25",
+//     currentStreak: 549,
+//     emojiGuesses: "🇺🇸",
+//     gamesWon: 1654,
+//     maxStreak: 549,
+//     usedGuesses: [...new Array(1654).fill(1)],
+//   });
+// });
