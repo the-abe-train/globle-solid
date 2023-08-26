@@ -18,22 +18,20 @@ export default function () {
     if (isConnected()) {
       const googleToken = context.token().google;
       const endpoint = "/account" + "?token=" + googleToken;
-      const accountStats = await fetch(endpoint, {
-        method: "GET",
-      });
-      const data = (await accountStats.json()) as any;
-      if (data?.stats) {
+      try {
+        const accountStatsResp = await fetch(endpoint, {
+          method: "GET",
+        });
+        const data = (await accountStatsResp.json()) as any;
+        console.log("Combining local and account stats.");
         const accountStats = data.stats as Stats;
         const localStats = context.storedStats();
-        if (accountStats.lastWin === localStats.lastWin) {
-          setMsg(`Account is synced!`);
-        } else {
-          setMsg(
-            `Account last synced ${dayjs(accountStats.lastWin).format(
-              "MMM D, YYYY"
-            )}.`
-          );
-        }
+        const combinedStats = combineStats(localStats, accountStats);
+        context.storeStats(combinedStats);
+        const accountLastWin = dayjs(accountStats.lastWin);
+        setMsg(`Account last synced ${accountLastWin.format("MMM D, YYYY")}.`);
+      } catch (e) {
+        console.error("Failed to combine local and account stats.");
       }
     }
   });
