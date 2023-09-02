@@ -3,6 +3,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { emojiString } from "./colour";
 import { getContext } from "../Context";
 import { GuessStore } from "./stores";
+import { use } from "chai";
 
 export function addGameToStats(
   context: ReturnType<typeof getContext>,
@@ -61,9 +62,12 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
   );
 
   // If no overlap, combine usedGuesses
-  const usedGuesses = streakContnues
+  let usedGuesses = streakContnues
     ? [...olderStats.usedGuesses, ...latestStats.usedGuesses]
     : mostWins.usedGuesses;
+  if (usedGuesses.length > 10_000) {
+    usedGuesses = usedGuesses.slice(usedGuesses.length - 10_000);
+  }
 
   const combinedStats: Stats = {
     lastWin: latestStats.lastWin,
