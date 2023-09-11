@@ -166,6 +166,8 @@ export default function (props: Props) {
       return directSearch("Democratic Republic of the Congo");
     } else if (cleanedGuess.toLowerCase() === "st vin and gren") {
       return directSearch("Saint Vincent and the Grenadines");
+    } else if (cleanedGuess.toLowerCase() === "eq guinea") {
+      return directSearch("Equatorial Guinea");
     }
 
     const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
