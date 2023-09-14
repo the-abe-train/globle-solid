@@ -1,5 +1,4 @@
 import * as geometry from "spherical-geometry-js";
-import { getCountry } from "./data";
 
 function pointToCoordinates(point: Array<number>) {
   // In the data, coordinates are [E/W (lng), N/S (lat)]
