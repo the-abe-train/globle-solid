@@ -35,9 +35,13 @@ export function addGameToStats(
   return newStats;
 }
 
+// On Oct 2, games won > 1000 was 599
+
 export function combineStats(localStats: Stats, accountStats: Stats) {
-  const mostWins =
+  let mostWins =
     localStats.gamesWon > accountStats.gamesWon ? localStats : accountStats;
+  const gamesWonError = accountStats.gamesWon > 1000;
+  if (gamesWonError) mostWins = localStats;
   const latestStats =
     new Date(localStats.lastWin) > new Date(accountStats.lastWin)
       ? localStats
@@ -62,6 +66,7 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
   );
 
   // If no overlap, combine usedGuesses
+  // TODO if browser guesses is over 600, use the stats in the db instead
   let usedGuesses = streakContnues
     ? [...olderStats.usedGuesses, ...latestStats.usedGuesses]
     : mostWins.usedGuesses;
