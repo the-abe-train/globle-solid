@@ -41,7 +41,7 @@ export function addGameToStats(
 export function combineStats(localStats: Stats, accountStats: Stats) {
   let mostWins =
     localStats.gamesWon > accountStats.gamesWon ? localStats : accountStats;
-  const gamesWonError = accountStats.gamesWon > 1000;
+  const gamesWonError = localStats.gamesWon > 1000;
   if (gamesWonError) mostWins = accountStats;
   const latestStats =
     new Date(localStats.lastWin) > new Date(accountStats.lastWin)
