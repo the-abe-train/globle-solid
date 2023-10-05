@@ -39,11 +39,6 @@ export default function () {
       return { name: key, value: key };
     }
   );
-  // const schemesList = Object.entries(getColourScheme(isDark())).map(
-  //   ([key, value]) => {
-  //     return { name: key, value };
-  //   }
-  // );
 
   function enterPracticeMode() {
     createPracticeAns();
