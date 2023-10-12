@@ -168,6 +168,9 @@ export default function (props: Props) {
       return directSearch("Saint Vincent and the Grenadines");
     } else if (cleanedGuess.toLowerCase() === "eq guinea") {
       return directSearch("Equatorial Guinea");
+    } else if (cleanedGuess.toLowerCase() === "american samoa") {
+      setMsg(`In Globle, American Samoa is a territory, not a country.`);
+      return;
     }
 
     const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
