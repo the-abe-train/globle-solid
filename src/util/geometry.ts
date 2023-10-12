@@ -64,6 +64,7 @@ export function polygonDistance(country1: Country, country2: Country) {
     ["South Africa", "Lesotho", 0],
     ["Jordan", "Israel", 0],
     ["Lebanon", "Israel", 0],
+    ["Egypt", "Israel", 0],
     ["Italy", "Vatican", 0],
     ["Italy", "Vatican City", 0],
     ["Italy", "San Marino", 0],
