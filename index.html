@@ -70,6 +70,19 @@
         queue: [],
       };
     </script>
+
+    <!-- NitroPay subscription -->
+    <script type="text/javascript">
+      window.nitroSponsor = window.nitroSponsor || {
+        init: function () {
+          window.nitroSponsor.queue.push(["init", arguments]);
+        },
+        status: "init",
+        queue: [],
+      };
+    </script>
+    <script async src="https://s.nitropay.com/sponsor.js"></script>
+
     <script
       data-cfasync="false"
       async

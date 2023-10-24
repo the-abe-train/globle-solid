@@ -103,7 +103,7 @@ export default function (props: Props) {
 🔥 ${currentStreak} | Avg. Guesses: ${showAvgGuesses}
 ${wonToday() ? emojiGuesses : "--"} = ${todaysGuesses}
 
-globle-game.com
+https://globle-game.com
 #globle`;
 
     try {

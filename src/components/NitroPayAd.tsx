@@ -1,7 +1,11 @@
 import { onMount } from "solid-js";
+import { getContext } from "../Context";
 
 export default function () {
-  onMount(() => {
+  const context = getContext();
+  const isConnected = () => context.token().google !== "";
+
+  onMount(async () => {
     try {
       if ("nitroAds" in window) {
         // @ts-ignore
@@ -43,6 +47,29 @@ export default function () {
       console.error("Failed to load NitroPay Ads");
       console.error(e);
     }
+    if (!isConnected()) return console.log("Not connected to TWL account.");
+    // @ts-ignore
+    if (!window["nitroSponsor"])
+      return console.log("NitroPay Sponsor not loaded.");
+    const googleToken = context.token().google;
+    const endpoint = "/sponsor" + "?token=" + googleToken;
+    const tokenResp = await fetch(endpoint);
+    const token = await tokenResp.text();
+    // @ts-ignore
+    window["nitroSponsor"].init(
+      {
+        token,
+        successUrl: "https://example.com/success",
+        cancelUrl: "https://example.com/cancel",
+        product: 58,
+      },
+      function (res: any) {
+        // success callback
+        console.log("NitroPay Sponsor success");
+
+        console.log(res);
+      }
+    );
   });
   return <></>;
 }

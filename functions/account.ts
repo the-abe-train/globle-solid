@@ -6,7 +6,7 @@ type E = {
   MONGO_API_KEY: string;
 };
 
-async function mongoApi(
+export async function mongoApi(
   env: E,
   collection: string,
   action: string,
