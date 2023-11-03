@@ -1,4 +1,4 @@
-import { onMount } from "solid-js";
+import { onMount, onCleanup } from "solid-js";
 import { getContext } from "../Context";
 
 export default function () {
@@ -71,5 +71,15 @@ export default function () {
       }
     );
   });
+
+  onCleanup(() => {
+    // @ts-ignore
+    if ("nitroAds" in window) {
+      // @ts-ignore
+      window["nitroAds"].stop();
+      return console.log("NitroPay ad stopped.");
+    }
+  });
+
   return <></>;
 }
