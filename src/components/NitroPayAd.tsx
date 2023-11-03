@@ -5,43 +5,51 @@ export default function () {
   const context = getContext();
   const isConnected = () => context.token().google !== "";
 
+  let anchorAd: any;
+  let leftSiderail: any;
+
   onMount(async () => {
     try {
       if ("nitroAds" in window) {
-        // @ts-ignore
-        window["nitroAds"].createAd("anchor", {
-          refreshLimit: 20,
-          refreshTime: 30,
-          format: "anchor",
-          anchor: "bottom",
-          anchorPersistClose: false,
-          mediaQuery: "(min-width: 0px)",
-          report: {
-            enabled: true,
-            icon: true,
-            wording: "Report Ad",
-            position: "top-right",
-          },
-          anchorBgColor: "#ffffff00",
-        });
-        // @ts-ignore
-        window["nitroAds"].createAd("left-siderail", {
-          refreshLimit: 20,
-          refreshTime: 60,
-          format: "rail",
-          rail: "left",
-          railOffsetTop: 0,
-          railOffsetBottom: 0,
-          railCollisionWhitelist: ["*"],
-          sizes: [["160", "600"]],
-          report: {
-            enabled: true,
-            icon: true,
-            wording: "Report Ad",
-            position: "bottom-right",
-          },
-          mediaQuery: "(min-width: 1025px)",
-        });
+        console.log("Loading NitroPay Ads");
+        [anchorAd, leftSiderail] = await Promise.all([
+          // @ts-ignore
+          window["nitroAds"].createAd("anchor", {
+            refreshLimit: 20,
+            refreshTime: 30,
+            format: "anchor",
+            anchor: "bottom",
+            anchorPersistClose: false,
+            mediaQuery: "(min-width: 0px)",
+            report: {
+              enabled: true,
+              icon: true,
+              wording: "Report Ad",
+              position: "top-right",
+            },
+            anchorBgColor: "#ffffff00",
+          }),
+          // @ts-ignore
+          window["nitroAds"].createAd("left-siderail", {
+            refreshLimit: 20,
+            refreshTime: 60,
+            format: "rail",
+            rail: "left",
+            railOffsetTop: 0,
+            railOffsetBottom: 0,
+            railCollisionWhitelist: ["*"],
+            sizes: [["160", "600"]],
+            report: {
+              enabled: true,
+              icon: true,
+              wording: "Report Ad",
+              position: "bottom-right",
+            },
+            mediaQuery: "(min-width: 1025px)",
+          }),
+        ]);
+      } else {
+        console.log("NitroPay not loaded.");
       }
     } catch (e) {
       console.error("Failed to load NitroPay Ads");
@@ -75,6 +83,10 @@ export default function () {
   onCleanup(() => {
     // @ts-ignore
     if ("nitroAds" in window) {
+      console.log("Cleaning up NitroPay Ads");
+      anchorAd.onNavigate();
+      leftSiderail.onNavigate();
+
       // @ts-ignore
       window["nitroAds"].stop();
       return console.log("NitroPay ad stopped.");
