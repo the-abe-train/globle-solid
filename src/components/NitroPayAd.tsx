@@ -15,7 +15,7 @@ export default function () {
         [anchorAd, leftSiderail] = await Promise.all([
           // @ts-ignore
           window["nitroAds"].createAd("anchor", {
-            refreshLimit: 20,
+            refreshLimit: 0,
             refreshTime: 30,
             format: "anchor",
             anchor: "bottom",
@@ -31,8 +31,8 @@ export default function () {
           }),
           // @ts-ignore
           window["nitroAds"].createAd("left-siderail", {
-            refreshLimit: 20,
-            refreshTime: 60,
+            refreshLimit: 0,
+            refreshTime: 30,
             format: "rail",
             rail: "left",
             railOffsetTop: 0,
