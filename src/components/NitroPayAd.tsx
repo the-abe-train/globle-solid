@@ -82,7 +82,7 @@ export default function () {
 
   onCleanup(() => {
     // @ts-ignore
-    if ("nitroAds" in window) {
+    if ("nitroAds" in window && anchorAd && leftSiderail) {
       console.log("Cleaning up NitroPay Ads");
       anchorAd.onNavigate();
       leftSiderail.onNavigate();
