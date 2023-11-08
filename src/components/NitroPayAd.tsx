@@ -81,15 +81,20 @@ export default function () {
   });
 
   onCleanup(() => {
-    // @ts-ignore
-    if ("nitroAds" in window && anchorAd && leftSiderail) {
-      console.log("Cleaning up NitroPay Ads");
-      anchorAd.onNavigate();
-      leftSiderail.onNavigate();
-
+    try {
       // @ts-ignore
-      window["nitroAds"].stop();
-      return console.log("NitroPay ad stopped.");
+      if ("nitroAds" in window) {
+        console.log("Cleaning up NitroPay Ads");
+        if (anchorAd) anchorAd.onNavigate();
+        if (leftSiderail) leftSiderail.onNavigate();
+
+        // @ts-ignore
+        window["nitroAds"].stop();
+        return console.log("NitroPay ad stopped.");
+      }
+    } catch (e) {
+      console.error("Failed to clean up NitroPay Ads");
+      console.error(e);
     }
   });
 
