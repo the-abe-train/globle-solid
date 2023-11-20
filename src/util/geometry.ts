@@ -69,7 +69,7 @@ export function polygonDistance(country1: Country, country2: Country) {
     ["Italy", "Vatican City", 0],
     ["Italy", "San Marino", 0],
     ["Italy", "Monaco", 10_000],
-    ["Italy", "France", 10_000],
+    // ["Italy", "France", 10_000],
   ];
 
   for (const [m1, m2, distance] of adjacentCountries) {
