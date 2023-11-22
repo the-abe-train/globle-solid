@@ -44,7 +44,7 @@ export const onRequestPost: PagesFunction<E> = async (context) => {
           email,
           reactivate_existing: false,
           send_welcome_email: true,
-          utm_source: "capitals",
+          utm_source: "globle",
           utm_medium: "website",
           referring_site: request.url,
           custom_fields: [{ name: "twlId", value: userId }],
