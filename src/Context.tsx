@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode";
 import dayjs from "dayjs";
 import {
   Accessor,
@@ -79,6 +80,12 @@ export const makeContext = (mode: "Stored" | "Static") => {
   const [locale, setLocale] = create("locale");
   const [colours, setColours] = create("colours");
   const [user, setUser] = create("user");
+
+  // Transitioning from token to email
+  if (token().google) {
+    const email = jwtDecode<Token>(token().google).email;
+    setUser({ email });
+  }
 
   return {
     theme,

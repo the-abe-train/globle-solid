@@ -12,7 +12,8 @@ export default function () {
 
   return (
     <div
-      class="border border-black px-2 pb-3 pt-1 my-2 w-fit mx-auto rainbow"
+      class="border border-black px-2 pb-3 pt-1 my-2 w-fit mx-auto rainbow
+      dark:text-black"
       style={{ width: "fit-content" }}
     >
       <div class="flex self-center items-center justify-center mt-3 mb-5">

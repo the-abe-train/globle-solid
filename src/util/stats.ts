@@ -1,9 +1,7 @@
-import { props } from "cypress/types/bluebird";
 import dayjs, { Dayjs } from "dayjs";
 import { emojiString } from "./colour";
 import { getContext } from "../Context";
 import { GuessStore } from "./stores";
-import { use } from "chai";
 
 export function addGameToStats(
   context: ReturnType<typeof getContext>,
