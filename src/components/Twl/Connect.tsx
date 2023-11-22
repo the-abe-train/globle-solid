@@ -1,12 +1,11 @@
 import Icon from "../Icon";
 import { createEffect, createSignal } from "solid-js";
-import { getAcctStats, combineStats } from "../../util/stats";
 import { getContext } from "../../Context";
 import jwtDecode from "jwt-decode";
 
 export default function () {
   const url = new URL(window.location.href);
-  const discordRedirectUri = `${url.origin}/auth/discord`;
+  const discordRedirectUri = `${url.origin}/discord`;
 
   const DISCORD_CLIENT_ID = import.meta.env.VITE_DISCORD_CLIENT_ID;
   const DISCORD_STATE = import.meta.env.VITE_DISCORD_STATE;
