@@ -85,17 +85,9 @@ type E = {
 export const onRequestGet: PagesFunction<E> = async (context) => {
   const { request, env } = context;
   const url = new URL(request.url);
-  const tokenString = url.searchParams.get("token") || "";
-  const googleData = jose.decodeJwt(tokenString);
-  console.log(googleData);
-  const email = googleData["email"];
+  const email = url.searchParams.get("email") || "";
   if (!email) {
-    return new Response(
-      JSON.stringify({
-        message: "No email found in token",
-      }),
-      { status: 400 }
-    );
+    return new Response("No email found in token", { status: 400 });
   }
   console.log("Fetching token for user:", email);
 
@@ -105,35 +97,27 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
   });
   const twlId = json?.document?._id;
   if (!twlId) {
-    return new Response(
-      JSON.stringify({
-        message: "No TWL account found",
-      }),
-      { status: 400 }
-    );
+    return new Response("No TWL account found", { status: 400 });
   }
 
   try {
-    console.log(env);
+    // console.log(env);
     const signer = new Signer(env.NITROPAY_PRIVATE_KEY);
     const token = await signer.sign({
       userId: twlId,
       siteId: "58",
     });
-    console.log("NitroPay token:", token);
 
     // If stats, return stats
-    return new Response(token, {
+    const clubMember = json?.document?.subscription?.active;
+    return new Response(JSON.stringify({ token, clubMember }), {
       status: 200,
       statusText: "Stats found",
     });
   } catch (ex) {
     console.error(ex);
-    return new Response(
-      JSON.stringify({
-        message: ex,
-      }),
-      { status: 400 }
-    );
+    return new Response(JSON.stringify({ message: "Error signing token" }), {
+      status: 400,
+    });
   }
 };

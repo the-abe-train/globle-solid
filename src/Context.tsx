@@ -53,6 +53,7 @@ export const makeContext = (mode: "Stored" | "Static") => {
     token: { google: "" },
     locale: { locale: "en-CA" as Locale },
     colours: { colours: "Default" as ColourScheme },
+    user: { email: "" },
   };
 
   type Keys = keyof typeof initial;
@@ -77,6 +78,7 @@ export const makeContext = (mode: "Stored" | "Static") => {
   const [distanceUnit, setDistanceUnit] = create("distanceUnit");
   const [locale, setLocale] = create("locale");
   const [colours, setColours] = create("colours");
+  const [user, setUser] = create("user");
 
   return {
     theme,
@@ -97,6 +99,8 @@ export const makeContext = (mode: "Stored" | "Static") => {
     setLocale,
     colours,
     setColours,
+    user,
+    setUser,
   };
 };
 

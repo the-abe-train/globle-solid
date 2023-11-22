@@ -1,14 +1,14 @@
-import { createEffect, createSignal, onMount, Show, Suspense } from "solid-js";
-import Backup from "../components/Backup";
+import { createEffect, createSignal, onMount, Suspense } from "solid-js";
 import Toggle from "../components/Toggle";
 import { getContext } from "../Context";
-import { useNavigate } from "@solidjs/router";
+import { useNavigate, useSearchParams } from "@solidjs/router";
 import SelectMenu from "../components/SelectMenu";
 import { langMap, translate, translatePage } from "../i18n";
 import NavGlobe from "../components/globes/NavGlobe";
 import { createPracticeAns } from "../util/practice";
 import { getColourScheme } from "../util/colour";
-import dayjs from "dayjs";
+import TwlAccount from "../components/Twl/TwlAccount";
+import { combineStats, getAcctStats } from "../util/stats";
 
 export default function () {
   const context = getContext();
@@ -40,21 +40,45 @@ export default function () {
     }
   );
 
+  // Get email from search params after Discord sign in
+  const [searchParams] = useSearchParams();
+  const email = searchParams.email || context.user().email;
+  if (email) {
+    context.setUser({ email });
+  }
+
   function enterPracticeMode() {
     createPracticeAns();
     navigate("/practice");
   }
 
-  // Load backup
-  const [showBackup, setShowBackup] = createSignal(false);
-  onMount(() => {
-    const googleScript = document.getElementById("google-signin-script");
-    if (window.google) {
-      setShowBackup(true);
-    } else {
-      googleScript?.addEventListener("load", () => {
-        setShowBackup(true);
-      });
+  onMount(async () => {
+    // If connected, fetch backup
+    try {
+      if (email) {
+        const endpoint = "/account" + "?email=" + email;
+        const accountStats = await getAcctStats(context);
+        if (typeof accountStats === "string") {
+          return;
+        }
+        const localStats = context.storedStats();
+
+        if (localStats.gamesWon === 0) {
+          context.storeStats(accountStats);
+        } else {
+          // Combine local and account stats
+          const combinedStats = combineStats(localStats, accountStats);
+          context.storeStats(combinedStats);
+
+          // Store combined stats in account
+          await fetch(endpoint, {
+            method: "PUT",
+            body: JSON.stringify(combinedStats),
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Failed to combine local and account stats.");
     }
   });
 
@@ -116,9 +140,7 @@ export default function () {
           </span>
         </button>
       </div>
-      <Show when={showBackup()} fallback={<p>Unable to load backup.</p>}>
-        <Backup />
-      </Show>
+      <TwlAccount />
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <NavGlobe />
       </Suspense>

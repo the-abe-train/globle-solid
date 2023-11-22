@@ -39,11 +39,10 @@ export async function mongoApi(
 }
 
 export const onRequestPost: PagesFunction<E> = async (context) => {
-  // Parse email from token
+  // Parse email
   const { request, env } = context;
   const url = new URL(request.url);
-  const tokenString = url.searchParams.get("token") || "";
-  const email = jwtDecode<Token>(tokenString).email;
+  const email = url.searchParams.get("email") || "";
   const loginMethod = "google"; // TODO: add Discord login
 
   // Check if game account exists
@@ -156,7 +155,7 @@ export const onRequestPut: PagesFunction<E> = async (context) => {
   });
   if (!output?.matchedCount) {
     console.log("Account not found");
-    await fetch(url.origin + "/account?token=" + tokenString, {
+    await fetch(url.origin + "/account?email=" + email, {
       method: "POST",
       body: JSON.stringify(stats),
       headers: {

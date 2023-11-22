@@ -44,7 +44,7 @@ export default function () {
     const googleToken = googleResponse?.credential;
 
     // Fetch account stats
-    const accountStats = await getAcctStats(context, googleToken);
+    const accountStats = await getAcctStats(context);
     if (typeof accountStats === "string") {
       return setMsg(accountStats);
     }

@@ -88,15 +88,15 @@ function Inner(props: Props) {
   createEffect(
     on(win, async () => {
       // Sync local storage with account
-      const googleToken = context.token().google;
-      const endpoint = "/account" + "?token=" + googleToken;
+      const email = context.user().email;
+      const endpoint = "/account" + "?email=" + email;
 
       // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const lastWin = dayjs(context.storedStats().lastWin);
       if (win() && lastWin.isBefore(today, "date")) {
-        if (googleToken) {
-          const accountStats = await getAcctStats(context, googleToken);
+        if (email) {
+          const accountStats = await getAcctStats(context);
           if (typeof accountStats !== "string") {
             const localStats = context.storedStats();
             const combinedStats = combineStats(localStats, accountStats);
@@ -115,7 +115,7 @@ function Inner(props: Props) {
         context.storeStats(newStats);
 
         // Store new stats in account
-        if (googleToken) {
+        if (email) {
           fetch(endpoint, {
             method: "PUT",
             body: JSON.stringify(newStats),

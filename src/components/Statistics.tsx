@@ -73,9 +73,9 @@ export default function (props: Props) {
     context.resetGuesses();
     const emptyStats = context.resetStats();
     // Store new stats in account
-    const googleToken = context.token().google;
-    if (googleToken) {
-      const endpoint = "/account" + "?token=" + googleToken;
+    const email = context.user().email;
+    if (email) {
+      const endpoint = "/account" + "?email=" + email;
       fetch(endpoint, {
         method: "PUT",
         body: JSON.stringify(emptyStats),

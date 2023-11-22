@@ -86,13 +86,11 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
   return combinedStats;
 }
 
-export async function getAcctStats(
-  context: ReturnType<typeof getContext>,
-  googleToken: string
-) {
+export async function getAcctStats(context: ReturnType<typeof getContext>) {
   // Dev: Use localhost when testing locally
-  const endpoint = "/account" + "?token=" + googleToken;
+  const email = context.user().email;
   const stats = context.storedStats();
+  const endpoint = "/account" + "?email=" + email;
   const body = JSON.stringify(stats);
   const response = await fetch(endpoint, {
     method: "POST",
@@ -114,20 +112,4 @@ export async function getAcctStats(
   const accountStats = accountData.stats as Stats;
   if (!accountStats) return "Failed to connect to Google account.";
   return accountStats;
-
-  // const localStats = context.storedStats();
-
-  // if (localStats.gamesWon === 0) {
-  //   context.storeStats(accountStats);
-  //   return "Loaded stats from account.";
-  // } else {
-  //   // Combine local and account stats
-  //   const combinedStats = combineStats(localStats, accountStats);
-  //   context.storeStats(combinedStats);
-  //   await fetch(endpoint, {
-  //     method: "PUT",
-  //     body: JSON.stringify(combinedStats),
-  //   });
-  //   return "Combined local and account stats.";
-  // }
 }

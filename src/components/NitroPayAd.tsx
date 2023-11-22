@@ -59,8 +59,8 @@ export default function () {
     // @ts-ignore
     if (!window["nitroSponsor"])
       return console.log("NitroPay Sponsor not loaded.");
-    const googleToken = context.token().google;
-    const endpoint = "/sponsor" + "?token=" + googleToken;
+    const email = context.user().email;
+    const endpoint = "/sponsor" + "?email=" + email;
     const tokenResp = await fetch(endpoint);
     const token = await tokenResp.text();
     // @ts-ignore
