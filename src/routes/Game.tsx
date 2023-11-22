@@ -100,6 +100,7 @@ function Inner(props: Props) {
           if (typeof accountStats !== "string") {
             const localStats = context.storedStats();
             const combinedStats = combineStats(localStats, accountStats);
+            console.log("Storing stats", combinedStats);
             context.storeStats(combinedStats);
           }
         }

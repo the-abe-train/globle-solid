@@ -73,6 +73,12 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
     usedGuesses = usedGuesses.slice(usedGuesses.length - 10_000);
   }
 
+  // Error handling
+  if (maxStreak > usedGuesses.length || currentStreak > usedGuesses.length) {
+    console.error("Streak is greater than games won.");
+    return localStats;
+  }
+
   const combinedStats: Stats = {
     lastWin: latestStats.lastWin,
     currentStreak,
