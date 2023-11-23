@@ -194,8 +194,7 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
   // Parse email from token
   const { request, env } = context;
   const url = new URL(request.url);
-  const tokenString = url.searchParams.get("token") || "";
-  const email = jwtDecode<Token>(tokenString).email;
+  const email = url.searchParams.get("email") || "";
 
   // Get stats from account
   const json = await mongoApi(env, "globle", "findOne", {

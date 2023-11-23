@@ -93,13 +93,10 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
 export async function getAcctStats(context: ReturnType<typeof getContext>) {
   // Dev: Use localhost when testing locally
   const email = context.user().email;
-  const stats = context.storedStats();
+  // const stats = context.storedStats();
   const endpoint = "/account" + "?email=" + email;
-  const body = JSON.stringify(stats);
-  const response = await fetch(endpoint, {
-    method: "POST",
-    body,
-  });
+  // const body = JSON.stringify(stats);
+  const response = await fetch(endpoint);
 
   // If failed to create account, show error
   if (response.status !== 200) {
