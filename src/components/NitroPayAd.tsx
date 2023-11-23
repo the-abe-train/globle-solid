@@ -10,6 +10,29 @@ export default function () {
 
   onMount(async () => {
     try {
+      // @ts-ignore
+      if (!window["nitroSponsor"])
+        return console.log("NitroPay Sponsor not loaded.");
+      const email = context.user().email;
+      const endpoint = "/sponsor" + "?email=" + email;
+      const tokenResp = await fetch(endpoint);
+      const token = await tokenResp.text();
+      // @ts-ignore
+      window["nitroSponsor"].init(
+        {
+          token,
+          successUrl: "https://example.com/success",
+          cancelUrl: "https://example.com/cancel",
+          product: 58,
+        },
+        function (res: any) {
+          // success callback
+          console.log("NitroPay Sponsor success");
+
+          console.log(res);
+        }
+      );
+
       if ("nitroAds" in window) {
         console.log("Loading NitroPay Ads");
         [anchorAd, leftSiderail] = await Promise.all([
@@ -56,28 +79,6 @@ export default function () {
       console.error(e);
     }
     if (!isConnected()) return console.log("Not connected to TWL account.");
-    // @ts-ignore
-    if (!window["nitroSponsor"])
-      return console.log("NitroPay Sponsor not loaded.");
-    const email = context.user().email;
-    const endpoint = "/sponsor" + "?email=" + email;
-    const tokenResp = await fetch(endpoint);
-    const token = await tokenResp.text();
-    // @ts-ignore
-    window["nitroSponsor"].init(
-      {
-        token,
-        successUrl: "https://example.com/success",
-        cancelUrl: "https://example.com/cancel",
-        product: 58,
-      },
-      function (res: any) {
-        // success callback
-        console.log("NitroPay Sponsor success");
-
-        console.log(res);
-      }
-    );
   });
 
   onCleanup(() => {
