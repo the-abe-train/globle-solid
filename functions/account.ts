@@ -148,6 +148,18 @@ export const onRequestPut: PagesFunction<E> = async (context) => {
   //Put stats to existing account
   const stats = (await request.json()) as Record<string, any>;
   stats.lastWin = { $date: new Date(stats.lastWin) };
+
+  // If games won > 2000, don't PUT
+  if (stats?.gamesWon > 2000) {
+    console.log("Games won > 2000, not updating");
+    return new Response(
+      JSON.stringify({
+        message: "Games won > 2000, not updating",
+      }),
+      { status: 200, statusText: "Games won > 2000, not updating" }
+    );
+  }
+
   const output = await mongoApi(env, "globle", "updateOne", {
     filter: { email },
     update: { $set: { stats } },
