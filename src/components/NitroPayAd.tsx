@@ -3,7 +3,7 @@ import { getContext } from "../Context";
 
 export default function () {
   const context = getContext();
-  const isConnected = () => context.token().google !== "";
+  const isConnected = () => context.user().email !== "";
 
   let anchorAd: any;
   let leftSiderail: any;
