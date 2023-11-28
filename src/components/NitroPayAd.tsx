@@ -17,7 +17,12 @@ export default function () {
         const email = context.user().email;
         const endpoint = "/sponsor" + "?email=" + email;
         const tokenResp = await fetch(endpoint);
-        const token = await tokenResp.text();
+        const tokenJson = (await tokenResp.json()) as {
+          token: string;
+          clubMember: boolean;
+        };
+        if (!tokenJson.clubMember) return console.log("Not a club member.");
+        const token = tokenJson?.token;
         // @ts-ignore
         if (!window["nitroSponsor"]) {
           console.log("NitroPay Sponsor not loaded.");
@@ -33,13 +38,17 @@ export default function () {
             function (res: any) {
               // success callback
               console.log("NitroPay Sponsor success");
-
               console.log(res);
             }
           );
         }
       }
+    } catch (e) {
+      console.error("Failed to load NitroPay Sponsor");
+      console.error(e);
+    }
 
+    try {
       if ("nitroAds" in window) {
         console.log("Loading NitroPay Ads");
         [anchorAd, leftSiderail] = await Promise.all([
