@@ -856,6 +856,7 @@ const onRequest: PagesFunction<E> = async (context) => {
     // const answerKey = generateKey(listLength, dayCode, env.SHUFFLE_KEY);
     const answerKey = pickAnswer(today);
     const answer = encrypt(`${answerKey}`, env.CRYPTO_KEY);
+    console.log({ answerKey, answer });
     return new Response(
       JSON.stringify({
         message: "Mystery country retrieved.",
