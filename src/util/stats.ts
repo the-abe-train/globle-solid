@@ -4,24 +4,22 @@ import { getContext } from "../Context";
 import { GuessStore } from "./stores";
 
 export function addGameToStats(
-  context: ReturnType<typeof getContext>,
-  guesses: GuessStore,
-  ans: Country,
-  lastWin: Dayjs,
-  today: Dayjs
+  storedStats: Stats,
+  guesses: Country[],
+  ans: Country
 ) {
   // Store new stats in local storage
-  const gamesWon = context.storedStats().gamesWon + 1;
+  const gamesWon = storedStats.gamesWon + 1;
+  const today = dayjs();
+  const lastWin = dayjs(storedStats.lastWin);
   const streakBroken = !dayjs().subtract(1, "day").isSame(lastWin, "date");
-  const currentStreak = streakBroken
-    ? 1
-    : context.storedStats().currentStreak + 1;
+  const currentStreak = streakBroken ? 1 : storedStats.currentStreak + 1;
   const maxStreak =
-    currentStreak > context.storedStats().maxStreak
+    currentStreak > storedStats.maxStreak
       ? currentStreak
-      : context.storedStats().maxStreak;
-  const usedGuesses = [...context.storedStats().usedGuesses, guesses.length];
-  const emojiGuesses = emojiString(guesses.countries, ans);
+      : storedStats.maxStreak;
+  const usedGuesses = [...storedStats.usedGuesses, guesses.length];
+  const emojiGuesses = emojiString(guesses, ans);
   const newStats = {
     lastWin: today.toString(),
     gamesWon,
@@ -39,8 +37,8 @@ export function addGameToStats(
 export function combineStats(localStats: Stats, accountStats: Stats) {
   let mostWins =
     localStats.gamesWon > accountStats.gamesWon ? localStats : accountStats;
-  const gamesWonError = localStats.gamesWon > 1000;
-  if (gamesWonError) mostWins = accountStats;
+  // const gamesWonError = localStats.gamesWon > 1000;
+  // if (gamesWonError) mostWins = accountStats;
   const latestStats =
     new Date(localStats.lastWin) > new Date(accountStats.lastWin)
       ? localStats
@@ -49,6 +47,8 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
     new Date(localStats.lastWin) > new Date(accountStats.lastWin)
       ? accountStats
       : localStats;
+  // const latestStats = localStats;
+  // const olderStats = accountStats;
   const prevWin = dayjs(olderStats.lastWin);
   const lastWin = dayjs(latestStats.lastWin);
   const streakContnues =

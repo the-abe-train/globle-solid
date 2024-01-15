@@ -106,11 +106,11 @@ function Inner(props: Props) {
         }
         // Store new stats in local storage
         const newStats = addGameToStats(
-          context,
-          guesses,
-          props.ans,
-          lastWin,
-          today
+          context.storedStats(),
+          guesses.countries,
+          props.ans
+          // lastWin,
+          // today
         );
 
         context.storeStats(newStats);

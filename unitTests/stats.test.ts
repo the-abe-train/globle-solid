@@ -1,6 +1,8 @@
 // sum.test.js
 import { expect, test } from "vitest";
-import { combineStats } from "../src/util/stats";
+import { addGameToStats, combineStats } from "../src/util/stats";
+import { getCountry } from "../src/util/data";
+import dayjs from "dayjs";
 
 test("sync devices", () => {
   const yesterdaysStats: Stats = {
@@ -114,30 +116,24 @@ test("duplicate game", () => {
   });
 });
 
-// test("games won doubles", () => {
-//   const stats1: Stats = {
-//     lastWin: "2023-08-25",
-//     currentStreak: 549,
-//     emojiGuesses: "🇺🇸",
-//     gamesWon: 1654,
-//     maxStreak: 549,
-//     usedGuesses: [...new Array(1654).fill(1)],
-//   };
-//   const stats2: Stats = {
-//     lastWin: "2023-08-25",
-//     currentStreak: 549,
-//     emojiGuesses: "🇺🇸",
-//     gamesWon: 1654,
-//     maxStreak: 549,
-//     usedGuesses: [...new Array(1654).fill(1)],
-//   };
-//   const combinedStats = combineStats(stats1, stats2);
-//   expect(combinedStats).toEqual({
-//     lastWin: "2023-08-25",
-//     currentStreak: 549,
-//     emojiGuesses: "🇺🇸",
-//     gamesWon: 1654,
-//     maxStreak: 549,
-//     usedGuesses: [...new Array(1654).fill(1)],
-//   });
-// });
+test("add game to stats", () => {
+  const stats1: Stats = {
+    lastWin: "2023-08-25",
+    currentStreak: 5,
+    emojiGuesses: "🇺🇸",
+    gamesWon: 16,
+    maxStreak: 5,
+    usedGuesses: [...new Array(16).fill(1)],
+  };
+  const guesses = [getCountry("Ghana"), getCountry("Togo")];
+  const ans = getCountry("Benin");
+  const newStats = addGameToStats(stats1, guesses, ans);
+  expect(newStats).toEqual({
+    lastWin: dayjs().toString(),
+    currentStreak: 1,
+    emojiGuesses: "🟥🟥",
+    gamesWon: 17,
+    maxStreak: 5,
+    usedGuesses: [...new Array(16).fill(1), 2],
+  });
+});

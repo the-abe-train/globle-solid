@@ -35,17 +35,18 @@ export function useLocalStorage<T extends Record<string, any>>(
 }
 
 export const makeContext = (mode: "Stored" | "Static") => {
+  const statistics: Stats = {
+    gamesWon: 0,
+    lastWin: "1970-01-01",
+    currentStreak: 0,
+    maxStreak: 0,
+    usedGuesses: [] as number[],
+    emojiGuesses: "",
+  };
   const initial = {
     theme: { isDark: false },
     labels: { labelsOn: false },
-    statistics: {
-      gamesWon: 0,
-      lastWin: "1970-01-01",
-      currentStreak: 0,
-      maxStreak: 0,
-      usedGuesses: [] as number[],
-      emojiGuesses: "",
-    },
+    statistics,
     guesses: {
       countries: [] as string[],
       day: dayjs().endOf("day").toDate(),
