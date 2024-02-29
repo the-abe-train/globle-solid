@@ -75,7 +75,9 @@ export default function () {
         </a>
         !
       </p>
-      <a href={game().url} class="w-max mx-auto block p-2">
+      <form action={game().url} class="w-max mx-auto block p-2" target="_blank">
+        <input type="text" hidden name="utm_medium" value="game" />
+        <input type="text" hidden name="utm_source" value="Globle" />
         <button
           class={`rounded ${game().bg} flex border border-stone-500 
     px-2 py-1 items-center`}
@@ -92,7 +94,7 @@ export default function () {
           </span>
           <img src={externalIcon} alt="External" width={15} />
         </button>
-      </a>
+      </form>
     </div>
   );
 }
