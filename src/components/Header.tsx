@@ -1,5 +1,7 @@
 import { A } from "@solidjs/router";
 import { Accessor, Setter, Show } from "solid-js";
+import globleLogo from "../images/no-bg-logos/globle.png";
+import capitalsLogo from "../images/no-bg-logos/capitals.png";
 import Icon from "./Icon";
 
 type Props = {
@@ -15,10 +17,33 @@ export default function Header({ showStats, setShowStats }: Props) {
   return (
     <header class="pt-6 h-14 relative dark:text-gray-200 z-10">
       <div class="relative h-full">
-        <div class="flex absolute left-0 bottom-1">
+        <div class="flex absolute left-0 bottom-1 space-x-3">
           <A href="/" aria-label="help" data-cy="home-link">
-            <Icon shape="help" size={24} />
+            <img
+              src={globleLogo}
+              alt="Globle"
+              width={25}
+              height={20}
+              class="h-max"
+              style={{ filter: "saturate(0.8)" }}
+            />
           </A>
+          <a
+            href="https://globle-capitals.com?utm_source=globle&utm_medium=referral"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="help"
+            data-cy="home-link"
+          >
+            <img
+              src={capitalsLogo}
+              alt="Globle: Capitals"
+              width={25}
+              height={20}
+              class="h-max dark:invert"
+              // style={{ filter: "saturate(0.8)" }}
+            />
+          </a>
         </div>
         <A
           class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-max"
