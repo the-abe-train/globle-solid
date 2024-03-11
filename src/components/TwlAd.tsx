@@ -5,6 +5,7 @@ import chronogramLogo from "../images/other-games/chronogram-logo.png";
 import globleCapitalsLogo from "../images/other-games/globle-capitals-logo.png";
 import metazooaLogo from "../images/other-games/metazooa-logo.png";
 import externalIcon from "../images/other-games/external.svg";
+import linxiconLogo from "../images/other-games/linxicon-logo.png";
 
 export default function () {
   const parser = new UAParser();
@@ -36,7 +37,7 @@ export default function () {
       font: "Montserrat",
       logo: globleCapitalsLogo,
       bg: "bg-sky-50",
-      weight: 2,
+      weight: 3,
     },
     {
       name: "Metazooa",
@@ -45,7 +46,16 @@ export default function () {
       font: "Gluten",
       logo: metazooaLogo,
       bg: "bg-green-50",
-      weight: 6,
+      weight: 2,
+    },
+    {
+      name: "Linxicon",
+      style: "text-2xl ml-1 mr-2",
+      url: "https://linxicon.com",
+      font: "McLaren",
+      bg: "bg-stone-50",
+      logo: linxiconLogo,
+      weight: 8,
     },
   ];
 
