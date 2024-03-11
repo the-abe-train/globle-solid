@@ -55,7 +55,7 @@ export default function () {
       font: "McLaren",
       bg: "bg-stone-50",
       logo: linxiconLogo,
-      weight: 8,
+      weight: 10,
     },
   ];
 
