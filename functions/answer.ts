@@ -427,7 +427,9 @@ const answers = [
   { day: "2024-06-08", key: 29, name: "Bhutan" },
   { day: "2024-06-09", key: 42, name: "Uruguay" },
   { day: "2024-06-10", key: 143, name: "Guinea-Bissau" },
-  { day: "2024-06-11", key: 179, name: "Cabo Verde" },
+
+  { day: "2024-06-11", key: 102, name: "Zimbabwe" },
+
   { day: "2024-06-12", key: 23, name: "North Korea" },
   { day: "2024-06-13", key: 192, name: "Seychelles" },
   { day: "2024-06-14", key: 153, name: "Mauritania" },
@@ -535,7 +537,9 @@ const answers = [
   { day: "2024-09-24", key: 151, name: "Egypt" },
   { day: "2024-09-25", key: 151, name: "Canada" },
   { day: "2024-09-26", key: 30, name: "Ukraine" },
-  { day: "2024-09-27", key: 102, name: "Zimbabwe" },
+
+  { day: "2024-09-27", key: 179, name: "Cabo Verde" },
+
   { day: "2024-09-28", key: 95, name: "Benin" },
   { day: "2024-09-29", key: 55, name: "United Arab Emirates" },
   { day: "2024-09-30", key: 44, name: "Russia" },
