@@ -22,7 +22,7 @@ export async function mongoApi(
     collection,
     ...query,
   };
-  console.log(body);
+  // console.log(body);
   const mongoResponse = await fetch(api, {
     method: "POST",
     body: JSON.stringify(body),
@@ -32,9 +32,9 @@ export async function mongoApi(
       "api-key": env.MONGO_API_KEY,
     },
   });
-  console.log(mongoResponse.status, mongoResponse.statusText);
+  // console.log(mongoResponse.status, mongoResponse.statusText);
   const json = (await mongoResponse.json()) as Record<string, any>;
-  console.log("MongoDB API response:", json);
+  // console.log("MongoDB API response:", json);
   return json;
 }
 

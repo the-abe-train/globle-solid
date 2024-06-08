@@ -13,7 +13,6 @@ import {
 import Guesser from "../components/Guesser";
 import List from "../components/List";
 import { getAnswer } from "../util/encryption";
-import { emojiString } from "../util/colour";
 import { getContext } from "../Context";
 import { getCountry, getTerritories } from "../util/data";
 import { polygonDistance } from "../util/geometry";
