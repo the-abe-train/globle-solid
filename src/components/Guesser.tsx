@@ -81,6 +81,7 @@ export default function (props: Props) {
       "properties.NAME",
       "properties.ADMIN",
       "properties.NAME_SORT",
+      "properties.FORMAL_EN",
     ];
     if (locale !== "en-CA") {
       keys.push(`properties.${langKey}`);
@@ -91,14 +92,21 @@ export default function (props: Props) {
       includeScore: true,
       getFn: (obj) => {
         let { ABBREV, NAME, ADMIN, NAME_SORT } = obj.properties;
-        if (!isTerritory(obj)) {
-          NAME = obj.properties[langKey()] as string;
-        }
         const abbrev =
           ABBREV && NAME.includes(" ") ? ABBREV.replace(/\./g, "") : "";
         const nameSort =
           NAME_SORT && NAME.includes(" ") ? NAME_SORT.replace(/\./g, "") : "";
-        return [NAME, ADMIN, nameSort, ABBREV, abbrev];
+        const arr = [ADMIN, nameSort, ABBREV, abbrev];
+        if (!isTerritory(obj)) {
+          NAME = obj.properties[langKey()] as string;
+          arr.unshift(NAME);
+          const formalEn = obj.properties.FORMAL_EN;
+          const hasFormal = formalEn && formalEn !== NAME;
+          if (hasFormal) arr.push(formalEn);
+        } else {
+          arr.push(NAME);
+        }
+        return arr;
       },
     });
   });

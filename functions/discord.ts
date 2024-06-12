@@ -21,7 +21,7 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
   console.log(`State: ${state}, expected: ${env.DISCORD_STATE}`);
 
   if (parseInt(state) !== parseInt(env.DISCORD_STATE)) {
-    return new Response("Security check failed");
+    return new Response("Security check failed", { status: 400 });
   }
 
   const fd = new FormData();
