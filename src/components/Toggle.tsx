@@ -29,8 +29,11 @@ export default function Toggle(props: Props) {
       onClick={() => props.setToggle((prev) => !prev)}
       tabIndex={0}
     >
-      <span data-i18n={values().i18n}>{values().default}</span>
-      <div class="relative cursor-pointer ">
+      <p>
+        <span class="opacity-0">|</span>
+        <span data-i18n={values().i18n}>{values().default}</span>
+      </p>
+      <div class="relative cursor-pointer">
         <div
           class="block bg-gray-100 w-14 h-8 rounded-full border-2 
         border-gray-500"
