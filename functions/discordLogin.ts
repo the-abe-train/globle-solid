@@ -52,7 +52,16 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
   const { origin } = url;
 
   const destinationURL = `${origin}/settings/?email=${email}`;
-  // return Response.redirect(destinationURL, 301);
+
+  return new Response(JSON.stringify(userData), {
+    headers: {
+      "content-type": "application/json",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      Pragma: "no-cache",
+      Expires: "0",
+    },
+  });
+
   return new Response(null, {
     status: 301, // Use 307 or 308 for temporary redirects without method change
     headers: {

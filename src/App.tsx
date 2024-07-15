@@ -9,6 +9,7 @@ import Modal from "./components/Modal";
 import Statistics from "./components/Statistics";
 import Practice from "./routes/Practice";
 import Route404 from "./routes/Route404";
+import Discord from "./routes/Discord";
 
 const Home = lazy(() => import("./routes/Home"));
 const Settings = lazy(() => import("./routes/Settings"));
@@ -43,6 +44,7 @@ const App: Component = () => {
           <Route path="/settings" component={Settings} />
           <Route path="/faq" component={FAQ} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
+          <Route path="/discord" element={Discord} />
           <Route path="*" component={Route404} />
         </Routes>
         <Footer />
