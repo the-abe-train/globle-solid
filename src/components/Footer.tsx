@@ -20,7 +20,6 @@ export default function Footer() {
       window["__cmp"]("addConsentLink");
     }
   });
-
   return (
     <footer
       class="pt-8 pb-4 text-xs flex items-end justify-between w-full 
