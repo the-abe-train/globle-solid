@@ -59,15 +59,15 @@ export default function () {
       <p class="text-center text-sm my-5">
         Connect a TWL Account to backup your stats.
       </p>
-      <div class="w-52 my-2 mx-auto">
+      <div class="w-52 mx-auto flex justify-center">
         <div
           ref={googleBtn!}
-          class="w-fit my-3 h-10 flex flex-col justify-center"
+          class="w-full my-1 h-10 flex flex-col justify-center"
         />
       </div>
       <form
         action="https://discord.com/api/oauth2/authorize"
-        class="w-52 mx-auto"
+        class="w-52 mx-auto mb-3"
       >
         <input hidden type="text" name="client_id" value={DISCORD_CLIENT_ID} />
         <input
@@ -80,12 +80,12 @@ export default function () {
         <input hidden type="text" name="scope" value="identify email" />
         <input hidden type="text" name="state" value={DISCORD_STATE} />
         <button
-          class="bg-white border rounded shadow p-1 w-full my-2
+          class="bg-white border rounded shadow p-1 w-full h-10 my-2
           flex items-center justify-center align-middle space-x-3"
         >
-          <span class="text-sm">Sign in with Discord</span>
+          <span class="text-sm p-1">Sign in with Discord</span>
           <div class="mt-1">
-            <Icon shape="discord" size={18} />
+            <Icon shape="discord" size={20} />
           </div>
         </button>
       </form>

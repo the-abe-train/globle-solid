@@ -2,8 +2,25 @@ import { A } from "@solidjs/router";
 import Icon from "./Icon";
 import trainwreckWhite from "../images/trainwreck-white.svg";
 import trainwreckBlack from "../images/trainwreck-black.svg";
+import { onMount } from "solid-js";
+
+declare global {
+  interface Window {
+    __uspapi?: (command: string, version: number) => void;
+    __cmp?: (command: string) => void;
+  }
+}
 
 export default function Footer() {
+  onMount(() => {
+    if (window.__uspapi) {
+      window.__uspapi("addLink", 1);
+    }
+    if (window["__cmp"]) {
+      window["__cmp"]("addConsentLink");
+    }
+  });
+
   return (
     <footer
       class="pt-8 pb-4 text-xs flex items-end justify-between w-full 
@@ -44,7 +61,8 @@ export default function Footer() {
             Check out the FAQ.
           </A>
         </p>
-        <span data-ccpa-link="1" />
+        <p data-ccpa-link="1" class="underline" />
+        <div id="ncmp-consent-link" class="underline" />
       </div>
     </footer>
   );

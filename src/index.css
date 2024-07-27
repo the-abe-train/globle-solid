@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#ncmp-consent-link button {
+  text-decoration: underline;
+}

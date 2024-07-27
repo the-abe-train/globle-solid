@@ -77,7 +77,15 @@ export default function () {
             railOffsetTop: 0,
             railOffsetBottom: 0,
             railCollisionWhitelist: ["*"],
-            sizes: [["160", "600"]],
+            sizes: [
+              ["160", "600"],
+              ["300", "250"],
+              ["300", "600"],
+              ["320", "50"],
+              ["320", "100"],
+              ["336", "280"],
+              ["320", "480"],
+            ],
             report: {
               enabled: true,
               icon: true,
