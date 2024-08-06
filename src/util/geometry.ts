@@ -1,4 +1,5 @@
 import * as geometry from "spherical-geometry-js";
+import { getCountry } from "./data";
 
 function pointToCoordinates(point: Array<number>) {
   // In the data, coordinates are [E/W (lng), N/S (lat)]
@@ -62,9 +63,10 @@ export function polygonDistance(country1: Country, country2: Country) {
 
   const adjacentCountries: [string, string, number][] = [
     ["South Africa", "Lesotho", 0],
-    ["Jordan", "Israel", 0],
-    ["Lebanon", "Israel", 0],
-    ["Egypt", "Israel", 0],
+    ["Israel", "Jordan", 0],
+    ["Israel", "Lebanon", 0],
+    ["Israel", "Syria", 0],
+    ["Israel", "Egypt", 0],
     ["Italy", "Vatican", 0],
     ["Italy", "Vatican City", 0],
     ["Italy", "San Marino", 0],
@@ -82,16 +84,17 @@ export function polygonDistance(country1: Country, country2: Country) {
   return calcProximity(points1, points2);
 }
 
-// function testDistance(country1: string, country2: string) {
-//   // find country objects by their names
-//   const c1 = getCountry(country1);
-//   const c2 = getCountry(country2);
-//   if (!c1 || !c2) {
-//     throw new Error("Country not found");
-//   }
-//   const distance = polygonDistance(c1, c2);
-//   console.log(`Distance between ${country1} and ${country2} is ${distance}`);
-// }
+function testDistance(country1: string, country2: string) {
+  // find country objects by their names
+  const c1 = getCountry(country1);
+  const c2 = getCountry(country2);
+  if (!c1 || !c2) {
+    throw new Error("Country not found");
+  }
+  const distance = polygonDistance(c1, c2);
+  console.log(`Distance between ${country1} and ${country2} is ${distance}`);
+}
+testDistance("Israel", "Lebanon");
 
 export function altitudeFunction(area: number) {
   // This function may seem arbitrary but I made it with a spreadsheet
