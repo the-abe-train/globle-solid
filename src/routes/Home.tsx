@@ -35,12 +35,25 @@ export default function () {
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <NavGlobe />
       </Suspense>
-      <p data-i18n="help4">
-        Or{" "}
-        <a class="underline" href="https://globle-capitals.com">
-          click here
+      <p data-i18n="help4" class="text-sm pt-4">
+        Already found today's Mystery Country? Find the world's capital cities
+        with{" "}
+        <a
+          class="underline"
+          target="_blank"
+          href="https://globle-capitals.com?utm_source=globle&utm_medium=referral"
+        >
+          Globle: Capitals
         </a>{" "}
-        to play Globle with capital cities!
+        or play against your friends with{" "}
+        <a
+          class="underline"
+          target="_blank"
+          href="https://globle-leagues.com?utm_source=globle&utm_medium=referral"
+        >
+          Globle: Leagues
+        </a>
+        !
       </p>
       <NitroPayAd />
     </div>

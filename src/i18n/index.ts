@@ -14,6 +14,7 @@ import Hungarian from "./hu-HU";
 import Norwegian from "./no-NO";
 import Russian from "./ru-RU";
 import Lithuanian from "./lt-LT";
+import Xhosa from "./xh-ZA";
 
 export const langMap = [
   { locale: "en-CA", langKey: "NAME", resource: English, name: "English" },
@@ -33,6 +34,7 @@ export const langMap = [
     resource: Lithuanian,
     name: "Lietuvių",
   },
+  { locale: "xh-ZA", langKey: "NAME_XH", resource: Xhosa, name: "isiXhosa" },
 ] as const;
 export type Locale = (typeof langMap)[number]["locale"];
 
