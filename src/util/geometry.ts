@@ -1,5 +1,7 @@
 import * as geometry from "spherical-geometry-js";
 import { getCountry } from "./data";
+import { format } from "d3";
+import { formatKm } from "./text";
 
 function pointToCoordinates(point: Array<number>) {
   // In the data, coordinates are [E/W (lng), N/S (lat)]
@@ -84,17 +86,20 @@ export function polygonDistance(country1: Country, country2: Country) {
   return calcProximity(points1, points2);
 }
 
-function testDistance(country1: string, country2: string) {
-  // find country objects by their names
-  const c1 = getCountry(country1);
-  const c2 = getCountry(country2);
-  if (!c1 || !c2) {
-    throw new Error("Country not found");
-  }
-  const distance = polygonDistance(c1, c2);
-  console.log(`Distance between ${country1} and ${country2} is ${distance}`);
-}
-testDistance("Israel", "Lebanon");
+// function testDistance(country1: string, country2: string) {
+//   // find country objects by their names
+//   const c1 = getCountry(country1);
+//   const c2 = getCountry(country2);
+//   if (!c1 || !c2) {
+//     throw new Error("Country not found");
+//   }
+//   const distance = polygonDistance(c1, c2);
+//   console.log(`Distance between ${country1} and ${country2} is ${distance}`);
+//   const km = formatKm(distance);
+//   const miles = formatKm(distance * 0.621371);
+//   console.log(`${km} km, ${miles} miles`);
+// }
+// testDistance("Mexico", "Cuba");
 
 export function altitudeFunction(area: number) {
   // This function may seem arbitrary but I made it with a spreadsheet
