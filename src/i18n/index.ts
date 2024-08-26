@@ -3,24 +3,29 @@ import UAParser from "ua-parser-js";
 import { getContext } from "../Context";
 import { getMaxColour } from "../util/colour";
 import { English } from "./en-CA";
-import Spanish from "./es-MX";
-import French from "./fr-FR";
-import Port from "./pt-BR";
-import German from "./de-DE";
-import Italian from "./it-IT";
-import Polish from "./pl-PL";
-import Swedish from "./sv-SE";
-import Hungarian from "./hu-HU";
-import Norwegian from "./no-NO";
-import Russian from "./ru-RU";
-import Lithuanian from "./lt-LT";
-import Xhosa from "./xh-ZA";
+import { Spanish } from "./es-MX";
+import { French } from "./fr-FR";
+import { Portuguese } from "./pt-BR";
+import { German } from "./de-DE";
+import { Italian } from "./it-IT";
+import { Polish } from "./pl-PL";
+import { Swedish } from "./sv-SE";
+import { Hungarian } from "./hu-HU";
+import { Norwegian } from "./no-NO";
+import { Russian } from "./ru-RU";
+import { Lithuanian } from "./lt-LT";
+import { Xhosa } from "./xh-ZA";
 
 export const langMap = [
   { locale: "en-CA", langKey: "NAME", resource: English, name: "English" },
   { locale: "fr-FR", langKey: "NAME_FR", resource: French, name: "Français" },
   { locale: "es-MX", langKey: "NAME_ES", resource: Spanish, name: "Español" },
-  { locale: "pt-BR", langKey: "NAME_PT", resource: Port, name: "Português" },
+  {
+    locale: "pt-BR",
+    langKey: "NAME_PT",
+    resource: Portuguese,
+    name: "Português",
+  },
   { locale: "de-DE", langKey: "NAME_DE", resource: German, name: "Deutsch" },
   { locale: "hu-HU", langKey: "NAME_HU", resource: Hungarian, name: "Magyar" },
   { locale: "it-IT", langKey: "NAME_IT", resource: Italian, name: "Italiano" },

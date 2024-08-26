@@ -1,4 +1,4 @@
-export default {
+export const Spanish: Messages = {
   name: "Español",
   helpTitle: "Como jugar",
   help1: `Cada día habrá un País Secreto. Tu objetivo es adivinar el país secreto en el menor número de intentos posibles. Cada respuesta incorrrecta aparecerá en el globo con un color indicando que tan cerca se encuentra del País Secreto. Entre más <b>caliente</b> sea el color, más cerca estarás de la respuesta.`,
@@ -81,8 +81,6 @@ export default {
   Practice3: "Nuevo juego de práctica",
   Practice4: "Si",
   Practice5: "No",
-  SortByGuesses: "Ordenar por orden de intentos",
-  SortByDistance: "Ordenar por distancia",
   TWL1: "Conecta una cuenta de TWL para respaldar tus estadísticas.",
   TWL2: "Inicia sesión con Google",
   TWL3: "Inicia sesión con Discord",
@@ -92,4 +90,10 @@ export default {
   TWL7: "Miembro del club",
   TWL8: "Desconectar",
   TWL9: "Ve tu",
+  Click: "Haz clic",
+  Tap: "Toca",
+  q6: "6. ¿Son aceptables las ortografías alternativas de los países?",
+  a6: "Hay muchos países con varios nombres aceptables. Se aceptan algunas ortografías alternativas y nombres anteriores, por ejemplo, Birmania para Myanmar. También se aceptan acrónimos para algunos países de varias palabras, por ejemplo, EAU para Emiratos Árabes Unidos.",
+  q8: "8. ¿Por qué mi amigo y yo recibimos países misteriosos diferentes?",
+  a8: "A veces las actualizaciones del juego no llegan al mismo tiempo a todos los navegadores/dispositivos. Para solucionar este problema, puedes obtener el código más reciente haciendo una actualización forzada (Ctrl + Shift + R en escritorio, las instrucciones varían en dispositivos móviles).",
 };

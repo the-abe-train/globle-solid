@@ -1,4 +1,4 @@
-export default {
+export const Polish: Messages = {
   name: "Polski",
   helpTitle: "Jak grać",
   help1: `Każdego dnia pojawia się nowy Tajemniczy Kraj. Twoim zadaniem jest go odgadnąć przy jak najmniejszej liczbie prób. Każda nieprawidłowa odpowiedź pojawia się na kuli ziemskiej w kolorze wskazującym jak blisko jest do Tajemniczego Kraju. Im <b>cieplejszy</b> kolor, tym bliżej jesteś prawidłowej odpowiedzi.`,
@@ -66,12 +66,33 @@ export default {
   Settings9: "Trenuj",
   Settings10: "Tęcza aktywowana",
   Settings11: "Tęcza dezaktywowana",
-  Answer: "Odpowiadać",
-  Closest: "Najbliższy",
-  Guessed: "Guessed", //TODO: Translate
+  Game12: "Najbliższy",
+  Game13: "Guessed", //TODO: Translate
   Practice1: "Jesteś w trybie ćwiczeń.",
   Practice2: "Wyjdź z trybu ćwiczeń",
   Practice3: "Nowa gra treningowa",
-  SortByGuesses: "Sort by order of guesses", //TODO: Translate
-  SortByDistance: "Sort by distance", //TODO: Translate
+  Game16: "Sortuj według kolejności zgadywania",
+  Game17: "Sortuj według odległości",
+  q8: "8. Dlaczego ja i mój przyjaciel dostajemy różne tajemnicze kraje?",
+  a8: "Czasami aktualizacje gry nie docierają do wszystkich przeglądarek/urządzeń w tym samym czasie. Aby rozwiązać ten problem, możesz uzyskać najnowszy kod, wykonując twarde odświeżenie (Ctrl + Shift + R na komputerze, instrukcje mogą się różnić na urządzeniach mobilnych).",
+  Game9: "Zgadywania pojawią się tutaj.",
+  Game10: "jest chłodniejszy.",
+  Game11: "jest cieplejszy!",
+  Game14: "{{guess}} jest sąsiadem odpowiedzi!",
+  Game15: "{{guess}} jest prawie sąsiadem odpowiedzi!",
+  Game18: "Pokaż odpowiedź",
+  Settings12: "Kolory",
+  Settings13: "Etykiety włączone",
+  Settings14: "Etykiety wyłączone",
+  Practice4: "Tak",
+  Practice5: "Nie",
+  TWL1: "Połącz konto TWL, aby tworzyć kopie zapasowe swoich statystyk.",
+  TWL2: "Zaloguj się przez Google",
+  TWL3: "Zaloguj się przez Discord",
+  TWL4: "Zapisz się na newsletter Trainwreck Labs.",
+  TWL5: "Konto",
+  TWL6: "Usuń reklamy",
+  TWL7: "Członek klubu",
+  TWL8: "Wyloguj się",
+  TWL9: "Przejdź do swojego",
 };

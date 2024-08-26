@@ -1,4 +1,4 @@
-export default {
+export const Italian: Messages = {
   name: "Italiano",
   helpTitle: "Come giocare",
   help1: `Ogni giorno c'è un nuovo Paese Misterioso. Il tuo obiettivo è indovinare il
@@ -71,12 +71,33 @@ export default {
   Settings9: "Pratica",
   Settings10: "Arcobaleno attivato",
   Settings11: "Arcobaleno disattivato",
-  Answer: "Risposta",
-  Closest: "Paesi più vicini",
-  Guessed: "Guessed", //TODO: Translate
+  Game12: "Paesi più vicini",
   Practice1: "Sei in modalità allenamento.",
   Practice2: "Esci dalla modalità allenamento",
   Practice3: "Nuovo gioco di pratica",
-  SortByGuesses: "Sort by order of guesses", //TODO: Translate
-  SortByDistance: "Sort by distance", //TODO: Translate
+  q8: "8. Perché io e il mio amico riceviamo paesi misteriosi diversi?",
+  a8: "A volte gli aggiornamenti del gioco non raggiungono tutti i browser/dispositivi contemporaneamente. Per risolvere questo problema, puoi ottenere l'ultima versione del codice eseguendo un aggiornamento forzato (Ctrl + Shift + R su desktop, le istruzioni variano per i dispositivi mobili).",
+  Game9: "Le ipotesi appariranno qui.",
+  Game10: "è più freddo.",
+  Game11: "è più caldo!",
+  Game13: "Indovinato",
+  Game14: "{{guess}} è adiacente alla risposta!",
+  Game15: "{{guess}} è quasi adiacente alla risposta!",
+  Game16: "Ordina per ordine delle ipotesi",
+  Game17: "Ordina per distanza",
+  Game18: "Rivela risposta",
+  Settings12: "Colori",
+  Settings13: "Etichette attive",
+  Settings14: "Etichette disattive",
+  Practice4: "Sì",
+  Practice5: "No",
+  TWL1: "Collega un account TWL per eseguire il backup delle tue statistiche.",
+  TWL2: "Accedi con Google",
+  TWL3: "Accedi con Discord",
+  TWL4: "Iscriviti alla newsletter di Trainwreck Labs.",
+  TWL5: "Account",
+  TWL6: "Rimuovi annunci",
+  TWL7: "Membro del club",
+  TWL8: "Disconnetti",
+  TWL9: "Vai al tuo",
 };

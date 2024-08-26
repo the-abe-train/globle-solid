@@ -1,4 +1,4 @@
-export default {
+export const German: Messages = {
   name: "Deutsch",
   helpTitle: "Spielanleitung",
   help1: `Jeden Tag gibt es ein neues geheimes Land. Dein Ziel ist es, dieses Land
@@ -70,12 +70,33 @@ export default {
   Settings9: "Üben",
   Settings10: "Regenbogen aktiviert",
   Settings11: "Regenbogen deaktiviert",
-  Answer: "Answer", //TODO: Translate
-  Closest: "Closest", //TODO: Translate
-  Guessed: "Guessed", //TODO: Translate
-  Practice1: "You are in practice mode.", //TODO: Translate
-  Practice2: "Exit practice mode", //TODO: Translate
-  Practice3: "New practice game", //TODO: Translate
-  SortByGuesses: "Sort by order of guesses", //TODO: Translate
-  SortByDistance: "Sort by distance", //TODO: Translate
+  q8: "8. Warum bekommen mein Freund und ich unterschiedliche mysteriöse Länder?",
+  a8: "Manchmal erreichen die Spiel-Updates nicht alle Browser/Geräte gleichzeitig. Um dieses Problem zu beheben, kannst du den neuesten Code durch ein Hard-Refresh erhalten (Strg + Umschalt + R auf dem Desktop, Anweisungen variieren je nach Mobilgerät).",
+  Game9: "Vermutungen werden hier angezeigt.",
+  Game10: "ist kälter.",
+  Game11: "ist wärmer!",
+  Game12: "Am nächsten",
+  Game13: "Geraten",
+  Game14: "{{guess}} grenzt an die Antwort!",
+  Game15: "{{guess}} ist fast angrenzend an die Antwort!",
+  Game16: "Nach Reihenfolge der Vermutungen sortieren",
+  Game17: "Nach Entfernung sortieren",
+  Game18: "Antwort anzeigen",
+  Settings12: "Farben",
+  Settings13: "Beschriftungen ein",
+  Settings14: "Beschriftungen aus",
+  Practice1: "Du spielst ein Übungsspiel.",
+  Practice2: "Übungsmodus beenden",
+  Practice3: "Neues Übungsspiel",
+  Practice4: "Ja",
+  Practice5: "Nein",
+  TWL1: "Verbinde ein TWL-Konto, um deine Statistiken zu sichern.",
+  TWL2: "Mit Google anmelden",
+  TWL3: "Mit Discord anmelden",
+  TWL4: "Abonniere den Trainwreck Labs Newsletter.",
+  TWL5: "Konto",
+  TWL6: "Werbung entfernen",
+  TWL7: "Clubmitglied",
+  TWL8: "Abmelden",
+  TWL9: "Gehe zu deinem",
 };
