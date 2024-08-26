@@ -101,6 +101,7 @@ declare global {
       NAME_ZHT: string;
       NAME_NO: string;
       NAME_LT: string;
+      NAME_XH: string;
     };
     bbox: number[];
     geometry:

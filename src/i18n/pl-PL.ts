@@ -15,7 +15,7 @@ export default {
   Aux3: "Zobacz FAQ",
   Footer1: "stworzone przez Trainwreck Labs",
   Footer2: "Podoba Ci się gra?",
-  Footer3: "Kup mi kawę",
+  Footer3: "Znajdź TWL na Discordzie",
   Loading: "Ładowanie...",
   FAQTitle: "FAQ",
   q1: "1. Jak obliczana jest odległość pomiędzy zgadywaną a poprawną odpowiedzią?",
@@ -69,9 +69,9 @@ export default {
   Answer: "Odpowiadać",
   Closest: "Najbliższy",
   Guessed: "Guessed", //TODO: Translate
-  PracticeMode: "Jesteś w trybie ćwiczeń.",
-  PracticeExit: "Wyjdź z trybu ćwiczeń",
-  PracticeNew: "Nowa gra treningowa",
+  Practice1: "Jesteś w trybie ćwiczeń.",
+  Practice2: "Wyjdź z trybu ćwiczeń",
+  Practice3: "Nowa gra treningowa",
   SortByGuesses: "Sort by order of guesses", //TODO: Translate
   SortByDistance: "Sort by distance", //TODO: Translate
 };

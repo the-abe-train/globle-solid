@@ -79,9 +79,9 @@
   Answer: "Answer",
   Closest: "Tavo spėjimai (pagal atstumą)",
   Guessed: "Tavo spėjimai (pagal eiliškumą)",
-  PracticeMode: "Įjungtas pratybų režimas.",
-  PracticeExit: "Išjungti pratybų režimą",
-  PracticeNew: "Naujas pratybų žaidimas",
+  Practice1: "Įjungtas pratybų režimas.",
+  Practice2: "Išjungti pratybų režimą",
+  Practice3: "Naujas pratybų žaidimas",
   SortByGuesses: "Rikiuoti pagal eiliškumą",
   SortByDistance: "Rikiuoti pagal atstumą",
 };

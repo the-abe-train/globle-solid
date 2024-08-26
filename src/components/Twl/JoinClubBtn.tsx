@@ -1,5 +1,6 @@
 import { createEffect, createResource } from "solid-js";
 import { getContext } from "../../Context";
+import i18next from "i18next";
 
 type ResourceProps = {
   token: string;
@@ -33,7 +34,9 @@ export default function () {
     border border-black text-black cursor-pointer"
         classList={{ gold: !clubMember(), "gold-flat": clubMember() }}
       >
-        {clubMember() ? "Club member" : "Remove ads"}
+        {clubMember()
+          ? i18next.t("TWL7", "Club member")
+          : i18next.t("TWL6", "Remove ads")}
       </button>
     </form>
   );

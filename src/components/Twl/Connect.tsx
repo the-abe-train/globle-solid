@@ -56,7 +56,7 @@ export default function () {
 
   return (
     <div class="mt-6">
-      <p class="text-center text-sm my-5">
+      <p class="text-center text-sm my-5" data-i18n="TWL1">
         Connect a TWL Account to backup your stats.
       </p>
       <div class="w-52 mx-auto flex justify-center">
@@ -83,7 +83,9 @@ export default function () {
           class="bg-white border rounded shadow p-1 w-full h-10 my-2
           flex items-center justify-center align-middle space-x-3"
         >
-          <span class="text-sm p-1">Sign in with Discord</span>
+          <span class="text-sm p-1" data-i18n="TWL3">
+            Sign in with Discord
+          </span>
           <div class="mt-1">
             <Icon shape="discord" size={20} />
           </div>
@@ -100,7 +102,7 @@ export default function () {
             setChoice((x) => !x);
           }}
         />
-        <label for="check" class="text-sm text-center">
+        <label for="check" class="text-sm text-center" data-i18n="TWL4">
           Subscribe to Trainwreck Labs newsletter.
         </label>
       </form>

@@ -79,9 +79,9 @@ export default {
   Answer: "Impendulo",
   Closest: "Ekufutshane",
   Guessed: "Okuqikelelweyo",
-  PracticeMode: "Udlala umdlalo wokuziqhelanisa.",
-  PracticeExit: "Phuma kwindlela yokuziqhelanisa",
-  PracticeNew: "Umdlalo omtsha wokuziqhelanisa",
+  Practice1: "Udlala umdlalo wokuziqhelanisa.",
+  Practice2: "Phuma kwindlela yokuziqhelanisa",
+  Practice3: "Umdlalo omtsha wokuziqhelanisa",
   SortByGuesses: "Hlela ngokolandelelwano loqikelelo",
   SortByDistance: "Hlela ngomgama",
 };

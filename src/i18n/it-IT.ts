@@ -19,7 +19,7 @@ export default {
   Aux3: "Vai a vedere le FAQ",
   Footer1: "di Trainwreck Labs",
   Footer2: "Ti piace il gioco?",
-  Footer3: "Offrimi un caffè",
+  Footer3: "Trova TWL su Discord",
   Loading: "Caricamento...",
   FAQTitle: "FAQ",
   q1: "1. Come viene calcolata la distanza tra la risposta e la mia ipotesi?",
@@ -74,9 +74,9 @@ export default {
   Answer: "Risposta",
   Closest: "Paesi più vicini",
   Guessed: "Guessed", //TODO: Translate
-  PracticeMode: "Sei in modalità allenamento.",
-  PracticeExit: "Esci dalla modalità allenamento",
-  PracticeNew: "Nuovo gioco di pratica",
+  Practice1: "Sei in modalità allenamento.",
+  Practice2: "Esci dalla modalità allenamento",
+  Practice3: "Nuovo gioco di pratica",
   SortByGuesses: "Sort by order of guesses", //TODO: Translate
   SortByDistance: "Sort by distance", //TODO: Translate
 };

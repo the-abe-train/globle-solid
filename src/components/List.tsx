@@ -67,9 +67,9 @@ export default function (props: Props) {
 
   return (
     <div class="py-8 dark:text-white z-30 mb-16">
-      <Switch fallback={<p>Guesses will appear here.</p>}>
+      <Switch fallback={<p data-i18n="Game9">Guesses will appear here.</p>}>
         <Match when={props.guesses.length < 1}>
-          <p data-i18n="Game9">Guesses will appear here.</p>
+          <p>{i18next.t("Game9", "Guesses will appear here.")}</p>
         </Match>
         <Match when={isSortedByDistance()}>
           <p>{i18next.t("Game12", "Closest")}</p>
@@ -118,6 +118,7 @@ export default function (props: Props) {
                 on: { default: "km", i18n: "km" },
                 off: { default: "miles", i18n: "miles" },
               }}
+              gap={true}
             />
           </div>
           <p>

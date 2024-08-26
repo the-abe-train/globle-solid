@@ -33,7 +33,8 @@ describe("Test the answer fetching function", () => {
 
 describe("Tests with a fake answer", () => {
   beforeEach(() => {
-    cy.visit("/");
+    // cy.visit("/");
+    // cy.visit("/game");
     cy.intercept("GET", "/answer**", (req) => {
       const crypto = require("crypto-js");
       const body = JSON.stringify({
@@ -122,7 +123,7 @@ describe("Tests with a fake answer", () => {
     // cy.get(`[data-cy="today's-guesses"]`).should("contain", 4);
 
     // Check that the stats remain when you leave and come back
-    cy.visit("/");
+    // cy.visit("/");
     cy.visit("/game");
     cy.contains("Türkiye").should("exist");
   });

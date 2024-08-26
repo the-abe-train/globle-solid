@@ -49,17 +49,23 @@ export default function Footer() {
           class="flex items-center space-x-2"
           target="_blank"
         >
-          <span class="mb-1">Need help? We're on Discord</span>
+          <span class="mb-1" data-i18n="Footer3">
+            Find TWL on Discord
+          </span>
           <Icon shape="discord" size={18} />
         </a>
       </div>
       <div class="space-y-3">
-        <p>
-          Have a question? <br class="sm:hidden" />
-          <A href="/faq" class="underline" data-cy="faq-footer-link">
-            Check out the FAQ.
-          </A>
-        </p>
+        <p data-i18n="Aux2">Have a question?</p>
+        {/* <br class="sm:hidden" /> */}
+        <A
+          href="/faq"
+          class="underline block"
+          data-cy="faq-footer-link"
+          data-i18n="Aux3"
+        >
+          Check out the FAQ.
+        </A>
         <p data-ccpa-link="1" class="underline" />
         <div id="ncmp-consent-link" class="underline" />
       </div>

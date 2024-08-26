@@ -19,7 +19,7 @@ export default {
   Aux3: "Schau dir das FAQ an",
   Footer1: "von Trainwreck Labs",
   Footer2: "Gefällt dir das Spiel?",
-  Footer3: "Kauf mir einen Kaffee",
+  Footer3: "Finde TWL auf Discord",
   Loading: "Laden...",
   FAQTitle: "FAQ",
   q1: "1. Wie wird die Distanz zwischen der richtigen Lösung und meinem Versuch berechnet?",
@@ -73,9 +73,9 @@ export default {
   Answer: "Answer", //TODO: Translate
   Closest: "Closest", //TODO: Translate
   Guessed: "Guessed", //TODO: Translate
-  PracticeMode: "You are in practice mode.", //TODO: Translate
-  PracticeExit: "Exit practice mode", //TODO: Translate
-  PracticeNew: "New practice game", //TODO: Translate
+  Practice1: "You are in practice mode.", //TODO: Translate
+  Practice2: "Exit practice mode", //TODO: Translate
+  Practice3: "New practice game", //TODO: Translate
   SortByGuesses: "Sort by order of guesses", //TODO: Translate
   SortByDistance: "Sort by distance", //TODO: Translate
 };

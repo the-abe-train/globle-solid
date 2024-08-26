@@ -47,7 +47,7 @@ export default function () {
     context.setUser({ email });
   }
 
-  function enterPracticeMode() {
+  function enterPractice1() {
     createPracticeAns();
     navigate("/practice");
   }
@@ -127,7 +127,7 @@ export default function () {
           />
         </div>
         <button
-          onClick={enterPracticeMode}
+          onClick={enterPractice1}
           data-cy="practice-link"
           class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900
          dark:hover:bg-purple-900 disabled:bg-blue-900  text-white 

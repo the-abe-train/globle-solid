@@ -4,11 +4,11 @@
   "description": "",
   "scripts": {
     "start": "vite",
-    "dev": "wrangler pages dev -- vite",
+    "dev": "wrangler pages dev --compatibility-date=2024-08-22 -- vite",
     "build": "vite build",
     "serve": "vite preview",
     "cy:open": "cypress open",
-    "cy:run": "cypress run --browser firefox",
+    "cy:run": "cypress run --browser electron",
     "vitest": "vitest"
   },
   "license": "MIT",

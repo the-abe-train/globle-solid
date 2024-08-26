@@ -72,9 +72,9 @@ declare global {
     Answer: string;
     Closest: string;
     Guessed: string;
-    PracticeMode: string;
-    PracticeExit: string;
-    PracticeNew: string;
+    Practice1: string;
+    Practice2: string;
+    Practice3: string;
     SortByGuesses: string;
     SortByDistance: string;
   };

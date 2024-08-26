@@ -84,7 +84,7 @@ function Inner(props: InnerProps) {
 
   return (
     <div>
-      <p class="italic" data-i18n="PracticeMode">
+      <p class="italic" data-i18n="Practice1">
         You are playing a practice game.
       </p>
       <Guesser
@@ -118,14 +118,14 @@ function Inner(props: InnerProps) {
              focus:ring-4 focus:ring-blue-300 rounded-lg text-sm
              px-4 py-2.5 text-center w-max"
           onClick={revealAnswer}
-          data-i18n="Game15"
+          data-i18n="Game18"
         >
           Reveal answer
         </button>
       </Show>
       <Prompt
         promptType="Choice"
-        text={translate("Game14", "Play again") + "?"}
+        text={translate("Practice3", "Play again") + "?"}
         showPrompt={showPrompt}
         setShowPrompt={setShowPrompt}
         yes={newGame}

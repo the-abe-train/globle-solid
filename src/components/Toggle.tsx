@@ -7,6 +7,7 @@ type Props = {
     on: { default: string; i18n: string };
     off: { default: string; i18n: string };
   };
+  gap?: boolean;
 };
 
 export default function Toggle(props: Props) {
@@ -30,7 +31,7 @@ export default function Toggle(props: Props) {
       tabIndex={0}
     >
       <p>
-        <span class="opacity-0">|</span>
+        {props.gap && <span class="opacity-0">|</span>}
         <span data-i18n={values().i18n}>{values().default}</span>
       </p>
       <div class="relative cursor-pointer">

@@ -2,11 +2,19 @@ import { onMount, onCleanup } from "solid-js";
 import { getContext } from "../Context";
 
 export default function () {
+  if (import.meta.env.MODE === "development") {
+    console.log("NitroPayAd disabled in development mode.");
+    return;
+  }
+
   const context = getContext();
   const isConnected = () => context.user().email !== "";
 
   let anchorAd: any;
   let leftSiderail: any;
+
+  // Don't run in Dev mode
+  // If localhost in URL, return
 
   onMount(async () => {
     try {

@@ -31,7 +31,9 @@ export default function () {
 
   return (
     <div>
-      <p class="text-center">Account: {email}</p>
+      <p class="text-center">
+        <span data-i18n="TWL5">Account:</span> <span>{email}</span>
+      </p>
       <div class="my-4 flex mx-auto space-x-6 w-full justify-center">
         <JoinClubBtn />
         <button
@@ -39,12 +41,13 @@ export default function () {
         px-3 py-2 shadow focus:shadow-none hover:shadow-none rounded
         hover:bg-white transition-colors duration-300"
           onClick={logout}
+          data-i18n="TWL8"
         >
           Disconnect
         </button>
       </div>
       <p class="text-center">
-        Go to your{" "}
+        <span data-i18n="TWL9">Go to your </span>{" "}
         <a
           href="https://trainwrecklabs.com/dashboard"
           class="underline"
