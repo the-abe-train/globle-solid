@@ -97,5 +97,5 @@ export const English = {
   TWL6: "Remove ads",
   TWL7: "Club member",
   TWL8: "Disconnect",
-  TWL9: "Go to your Trainwreck Labs dashboard",
+  TWL9: "Go to your",
 };
