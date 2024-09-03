@@ -35,7 +35,7 @@ export default function (props: Props) {
         </svg>
       </p>
     ) : (
-      <p>{i18next.t(props.i18n)}</p>
+      <p data-i18n="Settings12">{i18next.t(props.i18n)}</p>
     );
   };
   return (

@@ -9,6 +9,7 @@ import { createPracticeAns } from "../util/practice";
 import { getColourScheme } from "../util/colour";
 import TwlAccount from "../components/Twl/TwlAccount";
 import { combineStats, getAcctStats } from "../util/stats";
+import i18next from "i18next";
 
 export default function () {
   const context = getContext();
@@ -119,7 +120,7 @@ export default function () {
             }))}
           />
           <SelectMenu
-            name={translate("Settings12", "Colours")}
+            name={i18next.t("Settings12", "Colours")}
             i18n="Settings12"
             choice={colours}
             choose={setColours}
