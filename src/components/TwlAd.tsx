@@ -6,6 +6,7 @@ import globleCapitalsLogo from "../images/other-games/globle-capitals-logo.png";
 import metazooaLogo from "../images/other-games/metazooa-logo.png";
 import externalIcon from "../images/other-games/external.svg";
 import linxiconLogo from "../images/other-games/linxicon-logo.png";
+import globleLogo from "../images/no-bg-logos/globle.png";
 
 export default function () {
   const parser = new UAParser();
@@ -44,7 +45,7 @@ export default function () {
       style: "text-xl mt-1 ml-1 mr-2 font-bold",
       url: "https://globle-leagues.com",
       font: "Montserrat",
-      logo: globleCapitalsLogo,
+      logo: globleLogo,
       bg: "bg-sky-50",
       weight: 3,
     },
