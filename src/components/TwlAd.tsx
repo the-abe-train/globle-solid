@@ -40,6 +40,15 @@ export default function () {
       weight: 3,
     },
     {
+      name: "GLOBLE: LEAGUES",
+      style: "text-xl mt-1 ml-1 mr-2 font-bold",
+      url: "https://globle-leagues.com",
+      font: "Montserrat",
+      logo: globleCapitalsLogo,
+      bg: "bg-sky-50",
+      weight: 3,
+    },
+    {
       name: "Metazooa",
       style: "text-2xl mt-1 ml-1 mr-2",
       url: "https://metazooa.com",
