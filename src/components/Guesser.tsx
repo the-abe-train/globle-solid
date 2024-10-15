@@ -247,7 +247,7 @@ export default function (props: Props) {
     if (newCountry.properties.NAME === ansName) return;
     if (distance === 0) {
       if (
-        (name === "Naimibia" && ansName === "Zimbabwe") ||
+        (name === "Namibia" && ansName === "Zimbabwe") ||
         (name === "Zimbabwe" && ansName === "Namibia")
       ) {
         setMsg(`${name} is almost adjacent to the answer!`);

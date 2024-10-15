@@ -94,12 +94,13 @@ export function polygonDistance(country1: Country, country2: Country) {
 //     throw new Error("Country not found");
 //   }
 //   const distance = polygonDistance(c1, c2);
-//   console.log(`Distance between ${country1} and ${country2} is ${distance}`);
 //   const km = formatKm(distance);
 //   const miles = formatKm(distance * 0.621371);
-//   console.log(`${km} km, ${miles} miles`);
+//   console.log(
+//     `Distance between ${country1} and ${country2} is ${km} km, ${miles} miles`
+//   );
 // }
-// testDistance("Greece", "Cyprus");
+// testDistance("Russia", "Australia");
 
 export function altitudeFunction(area: number) {
   // This function may seem arbitrary but I made it with a spreadsheet
