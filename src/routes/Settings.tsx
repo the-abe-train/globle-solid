@@ -10,6 +10,7 @@ import { getColourScheme } from "../util/colour";
 import TwlAccount from "../components/Twl/TwlAccount";
 import { combineStats, getAcctStats } from "../util/stats";
 import i18next from "i18next";
+import Prompt from "../components/Prompt";
 
 export default function () {
   const context = getContext();
@@ -82,6 +83,35 @@ export default function () {
       console.error("Failed to combine local and account stats.");
     }
   });
+  // Add reset stats functionality
+  const [showPrompt, setShowPrompt] = createSignal(false);
+  const [promptType, setPromptType] = createSignal<Prompt>("Choice");
+  const [promptText, setPromptText] = createSignal("");
+
+  function promptResetStats() {
+    setPromptText("Are you sure you want to reset your score?");
+    setPromptType("Choice");
+    setShowPrompt(true);
+  }
+
+  function triggerResetStats() {
+    context.resetGuesses();
+    const emptyStats = context.resetStats();
+    // Store new stats in account
+    const email = context.user().email;
+    if (email) {
+      const endpoint = "/account" + "?email=" + email;
+      fetch(endpoint, {
+        method: "PUT",
+        body: JSON.stringify(emptyStats),
+      });
+    }
+    setPromptType("Message");
+    setPromptText("Stats reset.");
+    setTimeout(() => {
+      setShowPrompt(false);
+    }, 2000);
+  }
 
   return (
     <div class="space-y-10">
@@ -127,24 +157,45 @@ export default function () {
             list={schemesList}
           />
         </div>
-        <button
-          onClick={enterPractice1}
-          data-cy="practice-link"
-          class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900
-         dark:hover:bg-purple-900 disabled:bg-blue-900  text-white 
-        focus:ring-4 focus:ring-blue-300 rounded-lg text-sm
-        px-4 py-2.5 text-center items-center
-        justify-center self-center mx-auto block"
-        >
-          <span class="font-medium text-base" data-i18n="Settings9">
-            Play practice game
-          </span>
-        </button>
+        <div class="flex py-4 justify-center space-x-20 ">
+          <button
+            onClick={enterPractice1}
+            data-cy="practice-link"
+            class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900
+           dark:hover:bg-purple-900 disabled:bg-blue-900  text-white 
+          focus:ring-4 focus:ring-blue-300 rounded-lg text-sm
+          px-4 py-2.5 text-center items-center
+          justify-center self-center block"
+          >
+            <span class="font-medium text-base" data-i18n="Settings9">
+              Play practice game
+            </span>
+          </button>
+          <button
+            class="text-red-700 border-red-700 border rounded-md px-6 py-2 block
+            text-base font-medium hover:bg-red-700 hover:text-gray-300
+            focus:outline-none focus:ring-2 focus:ring-red-300
+            dark:text-red-500 dark:border-red-500 dark:disabled:border-red-400
+            dark:hover:bg-red-500 dark:hover:text-black
+            mx-auto"
+            onClick={promptResetStats}
+            data-i18n="Stats8"
+          >
+            Reset
+          </button>
+        </div>
       </div>
       <TwlAccount />
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <NavGlobe />
       </Suspense>
+      <Prompt
+        showPrompt={showPrompt}
+        setShowPrompt={setShowPrompt}
+        promptType={promptType()}
+        text={promptText()}
+        yes={triggerResetStats}
+      />
     </div>
   );
 }

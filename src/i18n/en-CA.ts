@@ -83,7 +83,7 @@ export const English: Messages = {
   Settings14: "Labels off",
   Practice1: "You are playing a practice game.",
   Practice2: "Exit practice mode",
-  Practice3: "New practice game",
+  Practice3: "Play again?",
   Practice4: "Yes",
   Practice5: "No",
   TWL1: "Connect a TWL Account to backup your stats.",

@@ -5,7 +5,6 @@ import Modal from "./Modal";
 type Choice = {
   promptType: "Choice";
   yes: () => void;
-  no?: () => void;
 };
 
 type Message = {
@@ -31,11 +30,6 @@ export function Prompt(props: Props) {
   }
 
   function runNo() {
-    if (props.promptType === "Choice" && props.no) {
-      props.no();
-    } else {
-      return console.log("An error occurred.");
-    }
     props.setShowPrompt(false);
   }
 

@@ -8,6 +8,8 @@ import { getContext } from "../Context";
 import { translatePage } from "../i18n";
 import i18next from "i18next";
 import TwlAd from "./TwlAd";
+import { createPracticeAns } from "../util/practice";
+import { set } from "cypress/types/lodash";
 
 type Props = {
   showStats: Accessor<boolean>;
@@ -58,36 +60,9 @@ export default function (props: Props) {
     return statsTable;
   });
 
-  // Prompt
   const [showPrompt, setShowPrompt] = createSignal(false);
-  const [promptType, setPromptType] = createSignal<Prompt>("Choice");
+  const [promptType, setPromptType] = createSignal<Prompt>("Message");
   const [promptText, setPromptText] = createSignal("");
-
-  function promptResetStats() {
-    setPromptText("Are you sure you want to reset your score?");
-    setPromptType("Choice");
-    setShowPrompt(true);
-  }
-
-  function triggerResetStats() {
-    context.resetGuesses();
-    const emptyStats = context.resetStats();
-    // Store new stats in account
-    const email = context.user().email;
-    if (email) {
-      const endpoint = "/account" + "?email=" + email;
-      fetch(endpoint, {
-        method: "PUT",
-        body: JSON.stringify(emptyStats),
-      });
-    }
-    setPromptType("Message");
-    setPromptText("Stats reset.");
-    setTimeout(() => {
-      props.setShowStats(false);
-      navigate("/");
-    }, 2000);
-  }
 
   // Share score
   async function copyToClipboard() {
@@ -130,6 +105,12 @@ https://globle-game.com
     }
   }
 
+  function enterPractice() {
+    createPracticeAns();
+    navigate("/practice");
+    props.setShowStats(false);
+  }
+
   return (
     <div class="min-w-[250px]">
       <button
@@ -156,7 +137,6 @@ https://globle-game.com
                 <td
                   class="pt-4 border-b-2 border-dotted border-slate-700 
                 text-lg font-medium"
-                  // data-cy={row.i18n}
                 >
                   {i18next.t(row.i18n, row.label)}
                 </td>
@@ -174,22 +154,20 @@ https://globle-game.com
       </table>
       <div class="py-6 flex w-full justify-around">
         <button
-          class="text-red-700 border-red-700 border rounded-md px-6 py-2 block
-          text-base font-medium hover:bg-red-700 hover:text-gray-300
-          focus:outline-none focus:ring-2 focus:ring-red-300 sm:mx-4
-          dark:text-red-500 dark:border-red-500 dark:disabled:border-red-400
-          dark:hover:bg-red-500 dark:hover:text-black"
-          onClick={promptResetStats}
-          data-i18n="Stats8"
+          class="bg-blue-700 hover:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900
+          text-white dark:text-gray-200 rounded-md px-8 py-2 block text-base font-medium 
+          focus:outline-none focus:ring-2 focus:ring-blue-300"
+          onClick={enterPractice}
+          data-i18n="Settings9"
         >
-          Reset
+          Play practice game
         </button>
         <button
           class="bg-blue-700 hover:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900
           disabled:bg-blue-400 dark:disabled:bg-purple-900
           text-white dark:text-gray-200 rounded-md px-8 py-2 block text-base font-medium 
           focus:outline-none focus:ring-2 focus:ring-blue-300 
-          justify-around sm:flex-grow sm:mx-10"
+          justify-around "
           onClick={copyToClipboard}
           disabled={!wonToday()}
           data-i18n="Stats9"
@@ -198,13 +176,6 @@ https://globle-game.com
         </button>
       </div>
       <TwlAd />
-      <Prompt
-        showPrompt={showPrompt}
-        setShowPrompt={setShowPrompt}
-        promptType={promptType()}
-        text={promptText()}
-        yes={triggerResetStats}
-      />
     </div>
   );
 }

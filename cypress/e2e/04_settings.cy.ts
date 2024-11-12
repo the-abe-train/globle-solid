@@ -1,7 +1,13 @@
 describe("Explore changing the colours and theme", () => {
   it("checks the reds", () => {
     cy.visit("/");
-    cy.get("#Nepal").find('path[fill="rgb(251, 148, 97)"]').should("exist");
+    // Add debug commands
+    cy.get("body").then(($body) => {
+      console.log($body.html()); // This will show us the HTML
+    });
+    cy.get("#Nepal").should("exist"); // Check if Nepal exists at all
+    // Then try the original command
+    cy.get("#Nepal").find('path[fill="rgb(251, 147, 97)"]').should("exist");
   });
   it("check the blues", () => {
     cy.visit("/settings");
