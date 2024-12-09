@@ -59,7 +59,7 @@ export function translate(
   key: keyof Messages,
   defaultValue: string,
   interpolation?: Partial<Record<KeyWords, string>>
-) {
+): string {
   const parser = new UAParser();
   const isMobile = parser.getDevice().type === "mobile";
   const Click = isMobile ? i18next.t("Tap") : i18next.t("Click");

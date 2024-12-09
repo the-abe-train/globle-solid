@@ -1,11 +1,12 @@
 import { Accessor, Setter } from "solid-js";
+import { translate } from "../i18n";
 
 type Props = {
   toggleProp: Accessor<boolean>;
   setToggle: Setter<boolean>;
   values: {
-    on: { default: string; i18n: string };
-    off: { default: string; i18n: string };
+    on: { default: string; i18n: keyof Messages };
+    off: { default: string; i18n: keyof Messages };
   };
   gap?: boolean;
 };
@@ -32,7 +33,10 @@ export default function Toggle(props: Props) {
     >
       <p>
         {props.gap && <span class="opacity-0">|</span>}
-        <span data-i18n={values().i18n}>{values().default}</span>
+        {/* <span data-i18n={values().i18n}>{values().default}</span> */}
+        <span data-i18n={values().i18n}>
+          {translate(values().i18n, values().default)}
+        </span>
       </p>
       <div class="relative cursor-pointer">
         <div

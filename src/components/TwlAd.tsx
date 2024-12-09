@@ -7,6 +7,7 @@ import metazooaLogo from "../images/other-games/metazooa-logo.png";
 import externalIcon from "../images/other-games/external.svg";
 import linxiconLogo from "../images/other-games/linxicon-logo.png";
 import globleLogo from "../images/no-bg-logos/globle.png";
+import { translate } from "../i18n";
 
 export default function () {
   const parser = new UAParser();
@@ -89,7 +90,9 @@ export default function () {
   return (
     <div>
       <p class="dark:text-gray-200  mt-1 text-center">
-        Play another game from{" "}
+        <span data-i18n="TWL10">
+          {translate("TWL10", "Play another game from")}
+        </span>{" "}
         <a href="https://trainwrecklabs.com" class="underline">
           Trainwreck Labs
         </a>

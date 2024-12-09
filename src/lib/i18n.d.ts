@@ -86,6 +86,11 @@ declare global {
     Settings12: string;
     Settings13: string;
     Settings14: string;
+    Settings15: string;
+    Settings16: string;
+    Settings17: string;
+    Settings18: string;
+    Settings19: string;
     Practice1: string;
     Practice2: string;
     Practice3: string;
@@ -100,6 +105,7 @@ declare global {
     TWL7: string;
     TWL8: string;
     TWL9: string;
+    TWL10: string;
   };
 
   type LanguageName =

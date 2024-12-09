@@ -89,7 +89,10 @@ export default function () {
   const [promptText, setPromptText] = createSignal("");
 
   function promptResetStats() {
-    setPromptText("Are you sure you want to reset your score?");
+    // setPromptText("Are you sure you want to reset your score?");
+    setPromptText(
+      translate("Stats10", "Are you sure you want to reset your score?")
+    );
     setPromptType("Choice");
     setShowPrompt(true);
   }

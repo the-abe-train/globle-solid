@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import { Accessor, For, Setter, createSignal } from "solid-js";
+import { translate } from "../i18n";
 
 type Option = { name: string; value: any };
 
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function (props: Props) {
+  console.log("Choice", props.choice());
   // const [label, setLabel] = createSignal(i18next.t(props.i18n))
   const label = () => {
     if (props.choice()) {
@@ -35,7 +37,7 @@ export default function (props: Props) {
         </svg>
       </p>
     ) : (
-      <p data-i18n="Settings12">{i18next.t(props.i18n)}</p>
+      <p data-i18n="Settings12">{translate("Settings12", "Colours")}</p>
     );
   };
   return (

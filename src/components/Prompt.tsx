@@ -1,5 +1,5 @@
 import { Accessor, createSignal, onMount, Setter, Show } from "solid-js";
-import { translatePage } from "../i18n";
+import { translate, translatePage } from "../i18n";
 import Modal from "./Modal";
 
 type Choice = {
@@ -52,7 +52,7 @@ export function Prompt(props: Props) {
             data-cy="yes-btn"
             data-i18n="Yes"
           >
-            Yes
+            {translate("Practice4", "Yes")}
           </button>
           <button
             class="bg-blue-700 text-white rounded-md px-6 py-2 block 
@@ -61,7 +61,7 @@ export function Prompt(props: Props) {
             data-cy="no-btn"
             data-i18n="No"
           >
-            No
+            {translate("Practice5", "No")}
           </button>
         </div>
       </Show>

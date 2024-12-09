@@ -97,4 +97,10 @@ export const Swedish: Messages = {
   TWL7: "Klubbmedlem",
   TWL8: "Koppla från",
   TWL9: "Gå till din",
+  Settings15: "Standard",
+  Settings16: "Röd",
+  Settings17: "Blå",
+  Settings18: "Regnbåge",
+  Settings19: "Gråskala",
+  TWL10: "Spela ett annat spel från",
 };

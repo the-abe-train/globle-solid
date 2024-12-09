@@ -97,4 +97,10 @@ export const Polish: Messages = {
   TWL7: "Członek klubu",
   TWL8: "Wyloguj się",
   TWL9: "Przejdź do swojego",
+  Settings15: "Domyślny",
+  Settings16: "Czerwony",
+  Settings17: "Niebieski",
+  Settings18: "Tęcza",
+  Settings19: "Skala szarości",
+  TWL10: "Zagraj w inną grę od",
 };

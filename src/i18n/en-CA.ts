@@ -83,6 +83,11 @@ export const English: Messages = {
   Settings12: "Colours",
   Settings13: "Labels on",
   Settings14: "Labels off",
+  Settings15: "Default",
+  Settings16: "Reds",
+  Settings17: "Blues",
+  Settings18: "Rainbow",
+  Settings19: "Grayscale",
   Practice1: "You are playing a practice game.",
   Practice2: "Exit practice mode",
   Practice3: "Play again?",
@@ -97,4 +102,5 @@ export const English: Messages = {
   TWL7: "Club member",
   TWL8: "Disconnect",
   TWL9: "Go to your",
+  TWL10: "Play another game from",
 };
