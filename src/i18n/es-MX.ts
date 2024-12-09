@@ -49,6 +49,7 @@ export const Spanish: Messages = {
   Game17: "Ordenar por distancia",
   Game18: "Revelar respuesta",
   Game19: `"{{guess}}" no encontrado en la base de datos.`,
+  Game20: `¿Quisiste decir {{guess}}?`,
   StatsTitle: "Estadísticas",
   Stats1: "Última victoria	",
   Stats2: "Intentos de hoy",

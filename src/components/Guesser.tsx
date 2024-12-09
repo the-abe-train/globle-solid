@@ -228,7 +228,11 @@ export default function (props: Props) {
       }
       return topAnswer.item;
     } else if (topScore < APPROX_THRESHHOLD) {
-      setMsg(`Did you mean ${name}?`);
+      setMsg(
+        translate("Game20", `Did you mean ${name}?`, {
+          guess: name,
+        })
+      );
       setSuggestion(name);
       return;
     } else {

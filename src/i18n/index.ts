@@ -56,7 +56,7 @@ const resources = langMap.reduce((obj, lang) => {
 type KeyWords = "guess" | "answer" | "Click" | "click" | "Côte d'Ivoire";
 
 export function translate(
-  key: string,
+  key: keyof Messages,
   defaultValue: string,
   interpolation?: Partial<Record<KeyWords, string>>
 ) {
@@ -94,7 +94,10 @@ export async function translatePage() {
     // console.table(i18next.languages);
   }
   document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const attr = el.getAttribute("data-i18n") ?? "";
+    const attr = el.getAttribute("data-i18n") as keyof Messages;
+    // Check if attr is a key of Messages
+    if (!attr || !(attr in English)) return;
+
     const defaultValue = el.innerHTML;
     el.innerHTML = translate(attr, defaultValue);
   });

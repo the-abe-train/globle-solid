@@ -54,6 +54,7 @@ export const French: Messages = {
   Game14: "Rejouer",
   Game15: "Révéler la réponse",
   Game19: `"{{guess}}" n'a pas été trouvé dans la base de données.`,
+  Game20: `Vouliez-vous dire {{guess}}?`,
   StatsTitle: "Statistiques",
   Stats1: "Dernière victoire",
   Stats2: "Tentatives d'aujourd'hui",

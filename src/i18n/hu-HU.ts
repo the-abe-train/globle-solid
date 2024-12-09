@@ -46,6 +46,7 @@ export const Hungarian: Messages = {
   Game7: "A keresett ország {{answer}}!",
   Game8: "Legközelebbi határ:",
   Game19: `"{{guess}}" nem található az adatbázisban.`,
+  Game20: `Arra gondoltál, hogy {{guess}}?`,
   StatsTitle: "Statisztika",
   Stats1: "Utolsó nyerés",
   Stats2: "Mai próbálkozások",

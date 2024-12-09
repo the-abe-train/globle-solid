@@ -82,6 +82,7 @@ export const Polish: Messages = {
   Game15: "{{guess}} jest prawie sąsiadem odpowiedzi!",
   Game18: "Pokaż odpowiedź",
   Game19: `"{{guess}}" nie znaleziono w bazie danych.`,
+  Game20: `Czy miałeś na myśli {{guess}}?`,
   Settings12: "Kolory",
   Settings13: "Etykiety włączone",
   Settings14: "Etykiety wyłączone",

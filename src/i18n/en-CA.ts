@@ -54,6 +54,7 @@ export const English: Messages = {
   Game17: "Sort by distance",
   Game18: "Reveal answer",
   Game19: `"{{guess}}" not found in database.`,
+  Game20: "Did you mean {{guess}}?",
   StatsTitle: "Statistics",
   Stats1: "Last win",
   Stats2: "Today's guesses",

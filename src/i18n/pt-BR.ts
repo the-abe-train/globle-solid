@@ -100,4 +100,5 @@ export const Portuguese: Messages = {
   TWL7: "Membro do clube",
   TWL8: "Desconectar",
   TWL9: "Vá para o seu",
+  Game20: `Você quis dizer {{guess}}?`,
 };
