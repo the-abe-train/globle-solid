@@ -106,7 +106,7 @@ function Inner(props: InnerProps) {
              focus:ring-4 focus:ring-blue-300 rounded-lg text-sm
              px-4 py-2.5 text-center w-max"
             onClick={newGame}
-            data-i18n="Game14"
+            data-i18n="Practice3"
           >
             Play again
           </button>
@@ -129,7 +129,6 @@ function Inner(props: InnerProps) {
         showPrompt={showPrompt}
         setShowPrompt={setShowPrompt}
         yes={newGame}
-        no={() => navigate("/")}
       />
       <NitroPayAd />
     </div>

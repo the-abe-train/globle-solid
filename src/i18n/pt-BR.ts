@@ -85,6 +85,7 @@ export const Portuguese: Messages = {
   Game14: "{{guess}} é adjacente à resposta!",
   Game15: "{{guess}} está quase adjacente à resposta!",
   Game18: "Revelar resposta",
+  Game19: `"{{guess}}" não encontrado no banco de dados.`,
   Settings12: "Cores",
   Settings13: "Rótulos ativados",
   Settings14: "Rótulos desativados",

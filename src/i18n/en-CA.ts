@@ -53,6 +53,7 @@ export const English: Messages = {
   Game16: "Sort by order of guesses",
   Game17: "Sort by distance",
   Game18: "Reveal answer",
+  Game19: `"{{guess}}" not found in database.`,
   StatsTitle: "Statistics",
   Stats1: "Last win",
   Stats2: "Today's guesses",

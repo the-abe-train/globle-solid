@@ -46,6 +46,7 @@ export const Italian: Messages = {
   Game6: "Paese già provato",
   Game7: "Il paese misterioso è {{answer}}!",
   Game8: "Confine più vicino",
+  Game19: `"{{guess}}" non trovato nel database.`,
   StatsTitle: "Statistiche",
   Stats1: "Ultima vittoria",
   Stats2: "Tentativi di oggi",

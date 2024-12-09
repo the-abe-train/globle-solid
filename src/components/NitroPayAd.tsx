@@ -3,7 +3,6 @@ import { getContext } from "../Context";
 
 export default function () {
   if (import.meta.env.MODE === "development") {
-    console.log("NitroPayAd disabled in development mode.");
     return;
   }
 

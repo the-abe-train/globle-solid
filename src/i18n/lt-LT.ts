@@ -48,6 +48,7 @@
   Game11: "yra arčiau!",
   Game12: "Tavo spėjimai (pagal atstumą)",
   Game13: "Tavo spėjimai (pagal eiliškumą)",
+  Game19: `"{{guess}}" nerasta duomenų bazėje.`,
   StatsTitle: "Statistika",
   Stats1: "Paskutinį kartą atspėta",
   Stats2: "Šios dienos spėjimai",

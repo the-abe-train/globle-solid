@@ -59,11 +59,11 @@ export default function (props: Props) {
     const { properties } = props.ans;
     const name = langKey ? (properties[langKey()] as string) : properties.NAME;
     if (props.win() && name) {
+      console.log(`Win message for ${name}`);
       setMsg(
         translate("Game7", `The Mystery Country is ${name}!`, {
           answer: name,
         })
-        // `The Mystery Country is ${name}!`
       );
     } else if (props.win()) {
       setMsg("You win!");
@@ -142,7 +142,11 @@ export default function (props: Props) {
       );
     });
     if (!foundCountry) {
-      setMsg(`"${guess}" not found in database.`);
+      setMsg(
+        translate("Game19", `"${guess}" not found in database.`, {
+          guess,
+        })
+      );
       return;
     }
     const existingGuess = props.guesses.countries.find((guess) => {
@@ -163,7 +167,11 @@ export default function (props: Props) {
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
 
     if (buggyNames?.includes(cleanedGuess.toLowerCase())) {
-      setMsg(`"${newGuess}" not found in database.`);
+      setMsg(
+        translate("Game19", `"${newGuess}" not found in database.`, {
+          guess: newGuess,
+        })
+      );
       return;
     }
 
@@ -182,7 +190,6 @@ export default function (props: Props) {
     }
 
     const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
-    console.log(searchPhrase);
 
     if (searchPhrase.length <= 5) {
       return directSearch(searchPhrase);
@@ -190,7 +197,11 @@ export default function (props: Props) {
 
     const results = answerIndex().search(searchPhrase);
     if (results.length === 0) {
-      setMsg(`"${newGuess}" not found in database.`);
+      setMsg(
+        translate("Game19", `"${newGuess}" not found in database.`, {
+          guess: newGuess,
+        })
+      );
       return;
     }
     const topAnswer = results[0];
@@ -234,6 +245,7 @@ export default function (props: Props) {
   }
 
   function submitGuess(guess: string) {
+    console.log(`Submitting guess: ${guess}`);
     if (!guess) return setMsg("Enter your next guess.");
     const newCountry = findCountry(guess);
     if (!newCountry) return;
@@ -250,9 +262,19 @@ export default function (props: Props) {
         (name === "Namibia" && ansName === "Zimbabwe") ||
         (name === "Zimbabwe" && ansName === "Namibia")
       ) {
-        setMsg(`${name} is almost adjacent to the answer!`);
+        setMsg(
+          translate("Game15", "{{guess}} is almost adjacent to the answer!", {
+            guess: name,
+          })
+        );
       } else {
-        setMsg(`${name} is adjacent to the answer!`);
+        console.log(
+          setMsg(
+            translate("Game14", "{{guess}} is adjacent to the answer!", {
+              guess: name,
+            })
+          )
+        );
       }
       return;
     }

@@ -30,12 +30,10 @@ export default function () {
   // When "isConnected" changes, sign up for newlsetter if choice is true
   createEffect(() => {
     localStorage.setItem("twlNewsletter", choice().toString());
-    console.log("choice", choice());
   }, [choice()]);
 
   createEffect(() => {
     if (!isConnected() && google) {
-      console.log("Rendering google button");
       try {
         google.accounts.id.initialize({
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,

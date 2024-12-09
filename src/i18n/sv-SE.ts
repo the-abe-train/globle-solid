@@ -81,6 +81,7 @@ export const Swedish: Messages = {
   Game14: "{{guess}} ligger intill svaret!",
   Game15: "{{guess}} är nästan intill svaret!",
   Game18: "Visa svar",
+  Game19: `"{{guess}}" hittades inte i databasen.`,
   Settings12: "Färger",
   Settings13: "Etiketter på",
   Settings14: "Etiketter av",

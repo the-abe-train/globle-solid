@@ -81,10 +81,10 @@ export const Xhosa: Messages = {
   Practice3: "Umdlalo omtsha wokuziqhelanisa",
   Game16: "Hlela ngokolandelelwano loqikelelo",
   Game17: "Hlela ngomgama",
-
   Game14: "{{guess}} is adjacent to the answer!",
   Game15: "{{guess}} is almost adjacent to the answer!",
   Game18: "Reveal answer",
+  Game19: `"{{guess}}" not found in database.`,
   Practice4: "Yes",
   Practice5: "No",
   TWL1: "Connect a TWL Account to backup your stats.",

@@ -53,10 +53,12 @@ const resources = langMap.reduce((obj, lang) => {
   return obj;
 }, {} as Resource);
 
+type KeyWords = "guess" | "answer" | "Click" | "click" | "Côte d'Ivoire";
+
 export function translate(
   key: string,
   defaultValue: string,
-  interpolation?: Record<string, string>
+  interpolation?: Partial<Record<KeyWords, string>>
 ) {
   const parser = new UAParser();
   const isMobile = parser.getDevice().type === "mobile";

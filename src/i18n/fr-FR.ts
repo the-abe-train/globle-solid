@@ -53,6 +53,7 @@ export const French: Messages = {
   Game13: "La première tentative",
   Game14: "Rejouer",
   Game15: "Révéler la réponse",
+  Game19: `"{{guess}}" n'a pas été trouvé dans la base de données.`,
   StatsTitle: "Statistiques",
   Stats1: "Dernière victoire",
   Stats2: "Tentatives d'aujourd'hui",

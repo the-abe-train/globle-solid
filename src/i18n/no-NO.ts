@@ -47,6 +47,7 @@ export const Norwegian: Messages = {
   Game6: "Landet er allerede gjettet",
   Game7: "Mysterielandet er {{answer}}!",
   Game8: "Nærmeste grense",
+  Game19: `"{{guess}}" ble ikke funnet i databasen.`,
   StatsTitle: "Statistikk",
   Stats1: "Forrige vunnet",
   Stats2: "Gjetninger i dag",
