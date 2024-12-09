@@ -74,7 +74,7 @@ export const Portuguese: Messages = {
   Game13: "Chutados",
   Practice1: "Você está no modo de treino.",
   Practice2: "Sair do modo de treino",
-  Practice3: "Novo jogo de trino",
+  Practice3: "Novo jogo de treino",
   Game16: "Listar pela ordem dos chutes",
   Game17: "Ordenar pela distância",
   q8: "8. Por que meu amigo e eu recebemos países misteriosos diferentes?",

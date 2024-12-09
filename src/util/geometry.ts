@@ -100,7 +100,7 @@ export function polygonDistance(country1: Country, country2: Country) {
 //     `Distance between ${country1} and ${country2} is ${km} km, ${miles} miles`
 //   );
 // }
-// testDistance("Russia", "Australia");
+// testDistance("Zambia", "Botswana");
 
 export function altitudeFunction(area: number) {
   // This function may seem arbitrary but I made it with a spreadsheet
