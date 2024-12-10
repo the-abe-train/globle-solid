@@ -7,14 +7,22 @@ type E = {
 };
 
 export const onRequestPut: PagesFunction<E> = async (context) => {
-  // Parse email from token
   const { request, env } = context;
   const body = await request.json();
   const stats = body as DailyStats;
+  const { email, date } = stats;
+  // If not, check if TWL account exists
+  const json = await mongoApi(env, "accounts", "findOne", {
+    filter: { email },
+  });
+  // console.log("Exising TWL account:", json);
+  let twlId = json?.document?._id;
+  console.log({ twlId });
 
+  // Parse email from token
   const output = await mongoApi(env, "globle-daily", "updateOne", {
-    filter: { email: stats.email, date: stats.date },
-    update: { $set: stats },
+    filter: { email, date },
+    update: { $set: { ...stats, twlId: { $oid: twlId } } },
     upsert: true,
   });
   console.log("Daily stats update:", output);

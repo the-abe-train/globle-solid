@@ -80,7 +80,10 @@ function Inner(props: Props) {
     translatePage();
     const expiration = dayjs(context.storedGuesses().day);
     if (dayjs().isAfter(expiration)) context.resetGuesses();
-    if (win()) setTimeout(() => props.setShowStats(true), 3000);
+    if (win())
+      setTimeout(() => {
+        props.setShowStats(true);
+      }, 3000);
   });
 
   // When the player wins!
