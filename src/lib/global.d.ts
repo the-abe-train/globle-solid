@@ -21,6 +21,14 @@ declare global {
     emojiGuesses: string;
   };
 
+  type DailyStats = {
+    date: string;
+    email: string;
+    guesses: string[];
+    answers: string;
+    win: boolean;
+  };
+
   type Prompt = "Choice" | "Message";
 
   type Token = {

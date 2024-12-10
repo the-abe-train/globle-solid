@@ -59,7 +59,6 @@ export default function (props: Props) {
     const { properties } = props.ans;
     const name = langKey ? (properties[langKey()] as string) : properties.NAME;
     if (props.win() && name) {
-      console.log(`Win message for ${name}`);
       setMsg(
         translate("Game7", `The Mystery Country is ${name}!`, {
           answer: name,

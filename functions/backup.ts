@@ -5,6 +5,10 @@ import jwtDecode from "jwt-decode";
 // import { Db, MongoClient } from "mongodb";
 import invariant from "tiny-invariant";
 
+// TODO in addition to updating the running stats doc, PUT a doc to a new db
+// called globle with a collection globle or countries that tracks the score
+// like Metazooa, Linxicon, etc.
+
 type E = {
   MONGO_URL: string;
   DATABASE_NAME: string;

@@ -86,9 +86,10 @@ function Inner(props: Props) {
   // When the player wins!
   createEffect(
     on(win, async () => {
+      console.log("Win effect activated");
       // Sync local storage with account
       const email = context.user().email;
-      const endpoint = "/account" + "?email=" + email;
+      const accountEndpoint = "/account" + "?email=" + email;
 
       // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
@@ -116,7 +117,7 @@ function Inner(props: Props) {
 
         // Store new stats in account
         if (email) {
-          fetch(endpoint, {
+          fetch(accountEndpoint, {
             method: "PUT",
             body: JSON.stringify(newStats),
           });
@@ -124,6 +125,24 @@ function Inner(props: Props) {
 
         // Show stats
         setTimeout(() => props.setShowStats(true), 2000);
+      }
+      if (email) {
+        // TODO add new game to stats db
+        const dailyStatsBody = {
+          date: today.format("DD-MM-YYYY"),
+          email,
+          guesses: guesses.countries.map((c) => c.properties.NAME),
+          answer: props.ans.properties.NAME,
+          win: true,
+        };
+        try {
+          fetch("/dailyStats", {
+            method: "PUT",
+            body: JSON.stringify(dailyStatsBody),
+          });
+        } catch (e) {
+          console.error("Error storing daily stats", e);
+        }
       }
     })
   );
