@@ -138,7 +138,7 @@ function Inner(props: Props) {
         const dailyStatsBody = {
           date: today.format("DD-MM-YYYY"),
           email,
-          guesses: guesses.countries.map((c) => c.properties.NAME),
+          guesses: guessesNames,
           answer: props.ans.properties.NAME,
           win: true,
         };
