@@ -131,6 +131,10 @@ function Inner(props: Props) {
       }
       if (email) {
         // TODO add new game to stats db
+        let guessesNames = guesses.countries.map((c) => c.properties.NAME);
+        if (guessesNames.length === 0) {
+          guessesNames = context.storedGuesses().countries;
+        }
         const dailyStatsBody = {
           date: today.format("DD-MM-YYYY"),
           email,
