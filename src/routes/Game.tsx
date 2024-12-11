@@ -161,6 +161,28 @@ function Inner(props: Props) {
     context.storeGuesses((prev) => {
       return { ...prev, countries: [...prev.countries, countryName] };
     });
+    let guessesNames = guesses.countries.map((c) => c.properties.NAME);
+    if (guessesNames.length === 0) {
+      guessesNames = context.storedGuesses().countries;
+    }
+    try {
+      fetch("/dailyStats", {
+        method: "PUT",
+        body: JSON.stringify({
+          date: dayjs().format("DD-MM-YYYY"),
+          email: context.user().email,
+          guesses: guesses,
+          answer: props.ans.properties.NAME,
+          win: win(),
+        }),
+      }).then((res) => {
+        if (res.ok) {
+          console.log("Daily stats stored");
+        }
+      });
+    } catch (e) {
+      console.error("Error storing daily stats", e);
+    }
   }
 
   return (
