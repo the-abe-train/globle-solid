@@ -18,6 +18,14 @@ export const onRequestPut: PagesFunction<E> = async (context) => {
   // console.log("Exising TWL account:", json);
   let twlId = json?.document?._id;
   console.log({ twlId });
+  if (!twlId) {
+    return new Response(
+      JSON.stringify({
+        message: "TWL account not found",
+      }),
+      { status: 404, statusText: "TWL account not found" }
+    );
+  }
 
   // Parse email from token
   const output = await mongoApi(env, "globle-daily", "updateOne", {
