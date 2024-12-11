@@ -161,19 +161,19 @@ function Inner(props: Props) {
     context.storeGuesses((prev) => {
       return { ...prev, countries: [...prev.countries, countryName] };
     });
-    let guessesNames = guesses.countries.map((c) => c.properties.NAME);
-    if (guessesNames.length === 0) {
-      guessesNames = context.storedGuesses().countries;
-    }
     const email = context.user().email;
     if (email) {
+      let guessNames = guesses.countries.map((c) => c.properties.NAME);
+      if (guessNames.length === 0) {
+        guessNames = context.storedGuesses().countries;
+      }
       try {
         fetch("/dailyStats", {
           method: "PUT",
           body: JSON.stringify({
             date: dayjs().format("DD-MM-YYYY"),
             email,
-            guesses: guesses,
+            guesses: guessNames,
             answer: props.ans.properties.NAME,
             win: win(),
           }),
