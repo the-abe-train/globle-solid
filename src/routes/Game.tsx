@@ -89,7 +89,6 @@ function Inner(props: Props) {
   // When the player wins!
   createEffect(
     on(win, async () => {
-      console.log("Win effect activated");
       // Sync local storage with account
       const email = context.user().email;
       const accountEndpoint = "/account" + "?email=" + email;

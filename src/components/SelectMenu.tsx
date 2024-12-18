@@ -1,6 +1,11 @@
 import i18next from "i18next";
 import { Accessor, For, Setter, createSignal } from "solid-js";
 import { translate } from "../i18n";
+import {
+  ColourScheme,
+  translateColourScheme,
+  untranslateColourScheme,
+} from "../util/colour";
 
 type Option = { name: string; value: any };
 
@@ -13,8 +18,9 @@ type Props = {
 };
 
 export default function (props: Props) {
-  console.log("Choice", props.choice());
+  // console.log("Choice", props.choice(), translateColourScheme(props.choice()));
   // const [label, setLabel] = createSignal(i18next.t(props.i18n))
+
   const label = () => {
     if (props.choice()) {
       i18next.changeLanguage(props.choice());
@@ -59,7 +65,7 @@ export default function (props: Props) {
               class="py-2 px-4 text-sm text-gray-700 text-left
             hover:bg-gray-100 dark:hover:bg-gray-600 
             dark:hover:text-white bg-white"
-              value={item.value}
+              value={untranslateColourScheme(item.value)}
             >
               {item.name}
             </option>

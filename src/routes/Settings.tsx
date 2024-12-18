@@ -6,11 +6,16 @@ import SelectMenu from "../components/SelectMenu";
 import { langMap, translate, translatePage } from "../i18n";
 import NavGlobe from "../components/globes/NavGlobe";
 import { createPracticeAns } from "../util/practice";
-import { getColourScheme } from "../util/colour";
+import {
+  getColourScheme,
+  translateColourScheme,
+  untranslateColourScheme,
+} from "../util/colour";
 import TwlAccount from "../components/Twl/TwlAccount";
 import { combineStats, getAcctStats } from "../util/stats";
 import i18next from "i18next";
 import Prompt from "../components/Prompt";
+import { get } from "cypress/types/lodash";
 
 export default function () {
   const context = getContext();
@@ -32,13 +37,14 @@ export default function () {
   });
 
   const currentColours = context.colours().colours;
+  const currentColoursTranslated = translateColourScheme(currentColours);
   const [colours, setColours] = createSignal(currentColours);
   createEffect(() => {
     context?.setColours({ colours: colours() });
   });
-  const schemesList = Object.entries(getColourScheme(isDark())).map(
-    ([key, value]) => {
-      return { name: key, value: key };
+  const schemesList = Object.entries(getColourScheme(isDark(), true)).map(
+    ([key, _value]) => {
+      return { name: key, value: untranslateColourScheme(key) };
     }
   );
 
@@ -115,6 +121,8 @@ export default function () {
       setShowPrompt(false);
     }, 2000);
   }
+
+  console.log(`Colours: ${colours()}`);
 
   return (
     <div class="space-y-10">

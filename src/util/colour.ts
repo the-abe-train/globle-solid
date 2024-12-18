@@ -24,35 +24,72 @@ export type ColourScheme =
   | "Rainbow"
   | "Grayscale";
 
-export const getColourScheme = (isDark: boolean) => {
+export const getBaseColourScheme = (isDark: boolean) => {
   return {
-    [translate("Settings15", "Default")]: isDark
+    Default: isDark ? interpolateBuPu : interpolateOrRd,
+    Reds: interpolateOrRd,
+    Blues: interpolateBuPu,
+    Rainbow: interpolateTurbo,
+    Grayscale: interpolateGreys,
+  };
+};
+
+export const getColourScheme = (isDark: boolean, doTranslate: boolean) => {
+  return {
+    [doTranslate ? translate("Settings15", "Default") : "Default"]: isDark
       ? interpolateBuPu
       : interpolateOrRd,
-    [translate("Settings16", "Reds")]: interpolateOrRd,
-    [translate("Settings17", "Blues")]: interpolateBuPu,
-    [translate("Settings18", "Rainbow")]: interpolateTurbo,
-    [translate("Settings19", "Grayscale")]: interpolateGreys,
+    [doTranslate ? translate("Settings16", "Reds") : "Reds"]: interpolateOrRd,
+    [doTranslate ? translate("Settings17", "Blues") : "Blues"]: interpolateBuPu,
+    [doTranslate ? translate("Settings18", "Rainbow") : "Rainbow"]:
+      interpolateTurbo,
+    [doTranslate ? translate("Settings19", "Grayscale") : "Grayscale"]:
+      interpolateGreys,
   };
+};
+
+export const translateColourScheme = (scheme: ColourScheme) => {
+  return {
+    Default: translate("Settings15", "Default"),
+    Reds: translate("Settings16", "Reds"),
+    Blues: translate("Settings17", "Blues"),
+    Rainbow: translate("Settings18", "Rainbow"),
+    Grayscale: translate("Settings19", "Grayscale"),
+  }[scheme];
+};
+
+export const untranslateColourScheme = (
+  translatedScheme: string
+): ColourScheme => {
+  const translationMap = {
+    [translate("Settings15", "Default")]: "Default",
+    [translate("Settings16", "Reds")]: "Reds",
+    [translate("Settings17", "Blues")]: "Blues",
+    [translate("Settings18", "Rainbow")]: "Rainbow",
+    [translate("Settings19", "Grayscale")]: "Grayscale",
+  };
+  const englishScheme = translationMap[translatedScheme] || translatedScheme;
+  return englishScheme as ColourScheme;
 };
 
 export const getColour = (
   guess: Country | Territory,
   answer: Country,
   isDark: boolean,
-  colours: string
+  colours: ColourScheme
 ) => {
   if (isTerritory(guess)) return "#BBBBBB";
   if (guess.properties.NAME === answer.properties.NAME) return "green";
   const proximity = polygonDistance(guess, answer);
-  const gradient = getColourScheme(isDark)[colours];
+  const colourScheme = getBaseColourScheme(isDark);
+  const gradient = colourScheme[colours];
   const colorScale = scaleSequentialSqrt(gradient).domain([MAX_DISTANCE, 0]);
   const colour = colorScale(proximity);
   return colour;
 };
 
 export function getMaxColour(colours: string, isDark: boolean) {
-  const gradient = getColourScheme(isDark)[colours];
+  const gradient = getColourScheme(isDark, false)[colours];
   const maxColour = gradient(0.8);
   return maxColour;
 }
