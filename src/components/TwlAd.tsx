@@ -7,6 +7,7 @@ import metazooaLogo from "../images/other-games/metazooa-logo.png";
 import externalIcon from "../images/other-games/external.svg";
 import linxiconLogo from "../images/other-games/linxicon-logo.png";
 import globleLogo from "../images/no-bg-logos/globle.png";
+import elemingleLogo from "../images/other-games/elemingle-logo.png";
 import { translate } from "../i18n";
 
 export default function () {
@@ -68,6 +69,15 @@ export default function () {
       logo: linxiconLogo,
       weight: 10,
     },
+    {
+      name: "Elemingle",
+      style: "text-2xl mt-1 ml-1 mr-2",
+      url: "https://elemingle.com",
+      font: "Patrick Hand",
+      bg: "bg-cyan-50",
+      logo: elemingleLogo,
+      weight: 30,
+    },
   ];
 
   function pickWeightedRandomGame() {
@@ -100,7 +110,8 @@ export default function () {
       </p>
       <form action={game().url} class="w-max mx-auto block p-2" target="_blank">
         <input type="text" hidden name="utm_medium" value="game" />
-        <input type="text" hidden name="utm_source" value="Globle" />
+        <input type="text" hidden name="utm_source" value="globle" />
+        <input type="text" hidden name="utm_campaign" value="backlinks" />
         <button
           class={`rounded ${game().bg} flex border border-stone-500 
     px-2 py-1 items-center`}
