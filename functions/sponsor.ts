@@ -28,26 +28,21 @@ class Signer {
     return jwt;
   }
 
-  async getUserSubscription(userId: string) {
-    let response = await fetch(
-      `https://sponsor-api.nitropay.com/v1/users/${userId}/subscription`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: this.privateKey,
-        },
-      }
-    );
-
-    let body;
+  async getUserSubscribed(userId: string): Promise<boolean> {
+    console.log("Checking user subscription", userId);
+    const url = `https://sponsor-api.nitropay.com/v1/users/${userId}/subscription`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: this.privateKey,
+      },
+    });
     try {
-      body = await response.json();
-    } catch (ex) {}
-
-    if (!response.ok) {
-      throw new Error(response.statusText);
+      const body = (await response.json()) as SubscriptionInfo;
+      return body.status === "active";
+    } catch (_ex) {
+      return false;
     }
-    return body;
   }
 }
 
@@ -89,7 +84,7 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
   if (!email) {
     return new Response("No email found in token", { status: 400 });
   }
-  // console.log("Fetching token for user:", email);
+  console.log("Fetching token for user:", email);
 
   // Get TWL account ID
   const json = await mongoApi(env, "accounts", "findOne", {
@@ -109,7 +104,7 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
     });
 
     // If stats, return stats
-    const clubMember = json?.document?.subscription?.active;
+    const clubMember = signer.getUserSubscribed(twlId);
     return new Response(JSON.stringify({ token, clubMember }), {
       status: 200,
       statusText: "Stats found",

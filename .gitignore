@@ -11,3 +11,4 @@ answers_old.json
 wrangler.toml
 .dev.vars
 translate-text.txt
+src/.DS_Store
