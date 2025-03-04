@@ -40,7 +40,7 @@ export default function () {
       font: "Montserrat",
       logo: globleCapitalsLogo,
       bg: "bg-sky-50",
-      weight: 3,
+      weight: 4,
     },
     {
       name: "GLOBLE: LEAGUES",
@@ -49,7 +49,7 @@ export default function () {
       font: "Montserrat",
       logo: globleLogo,
       bg: "bg-sky-50",
-      weight: 3,
+      weight: 4,
     },
     {
       name: "Metazooa",
@@ -58,7 +58,7 @@ export default function () {
       font: "Gluten",
       logo: metazooaLogo,
       bg: "bg-green-50",
-      weight: 2,
+      weight: 3,
     },
     {
       name: "Linxicon",
@@ -67,7 +67,7 @@ export default function () {
       font: "McLaren",
       bg: "bg-stone-50",
       logo: linxiconLogo,
-      weight: 10,
+      weight: 2,
     },
     {
       name: "Elemingle",
@@ -76,7 +76,7 @@ export default function () {
       font: "Patrick Hand",
       bg: "bg-cyan-50",
       logo: elemingleLogo,
-      weight: 30,
+      weight: 2,
     },
   ];
 
