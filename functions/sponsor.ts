@@ -28,8 +28,7 @@ class Signer {
     return jwt;
   }
 
-  async getUserSubscribed(userId: string): Promise<boolean> {
-    console.log("Checking user subscription", userId);
+  async isSponsor(userId: string): Promise<boolean> {
     const url = `https://sponsor-api.nitropay.com/v1/users/${userId}/subscription`;
     const response = await fetch(url, {
       method: "GET",
@@ -96,16 +95,21 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
   }
 
   try {
-    // console.log(env);
     const signer = new Signer(env.NITROPAY_PRIVATE_KEY);
-    const token = await signer.sign({
-      userId: twlId,
-      siteId: "58",
-    });
+    const [teacherJson, token] = await Promise.all([
+      mongoApi(env, "teachers", "findOne", {
+        filter: { twlId: { $oid: twlId } },
+      }),
+      signer.sign({
+        userId: twlId,
+        siteId: "58",
+      }),
+    ]);
+    const isTeacher = !!teacherJson?.document;
 
     // If stats, return stats
-    const clubMember = signer.getUserSubscribed(twlId);
-    return new Response(JSON.stringify({ token, clubMember }), {
+    const clubMember = signer.isSponsor(twlId);
+    return new Response(JSON.stringify({ token, clubMember, isTeacher }), {
       status: 200,
       statusText: "Stats found",
     });

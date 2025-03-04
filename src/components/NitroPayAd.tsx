@@ -11,6 +11,7 @@ export default function () {
 
   let anchorAd: any;
   let leftSiderail: any;
+  let isTeacher = false;
 
   // Don't run in Dev mode
   // If localhost in URL, return
@@ -25,14 +26,18 @@ export default function () {
         const endpoint = "/sponsor" + "?email=" + email;
         const tokenResp = await fetch(endpoint);
         const tokenJson = (await tokenResp.json()) as {
-          token: string;
-          clubMember: boolean;
+          token?: string;
+          clubMember?: boolean;
+          isTeacher?: boolean;
         };
         if (!tokenJson.clubMember) return console.log("Not a club member.");
         const token = tokenJson?.token;
+        isTeacher = Boolean(tokenJson.isTeacher);
         // @ts-ignore
         if (!window["nitroSponsor"]) {
           console.log("NitroPay Sponsor not loaded.");
+        } else if (!token) {
+          console.log("No NitroPay sponsor token found.");
         } else {
           // @ts-ignore
           window["nitroSponsor"].init(
@@ -56,7 +61,7 @@ export default function () {
     }
 
     try {
-      if ("nitroAds" in window) {
+      if ("nitroAds" in window && !isTeacher) {
         console.log("Loading NitroPay Ads");
         [anchorAd, leftSiderail] = await Promise.all([
           // @ts-ignore
