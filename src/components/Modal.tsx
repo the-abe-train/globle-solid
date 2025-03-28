@@ -42,7 +42,7 @@ export default function Outer(props: ParentProps<Props>) {
 }
 
 function Inner(props: ParentProps<Props>) {
-  let innerRef: HTMLDivElement;
+  let innerRef!: HTMLDivElement;
   function triggerClose(e: Event) {
     if (innerRef && !innerRef.contains(e.target as Node)) {
       props.setTrigger(false);

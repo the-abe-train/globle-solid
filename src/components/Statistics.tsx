@@ -9,7 +9,6 @@ import { translatePage } from "../i18n";
 import i18next from "i18next";
 import TwlAd from "./TwlAd";
 import { createPracticeAns } from "../util/practice";
-import { set } from "cypress/types/lodash";
 
 type Props = {
   showStats: Accessor<boolean>;
@@ -152,7 +151,7 @@ https://globle-game.com
           })}
         </tbody>
       </table>
-      <div class="py-6 flex w-full justify-around">
+      <div class="py-6 flex w-full justify-around space-x-2">
         <button
           class="bg-blue-700 hover:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900
           text-white dark:text-gray-200 rounded-md px-8 py-2 block text-base font-medium 

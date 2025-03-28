@@ -31,7 +31,25 @@ export default function (props: Props) {
   const context = getContext();
   const locale = context.locale().locale;
   const langKey = createMemo(() => getLangKey(locale));
-  const mountMsg = () => {
+
+  // Combined message system
+  const [suggestion, setSuggestion] = createSignal("");
+  const msg = createMemo(() => {
+    // Check win state first
+    if (props.win()) {
+      const { properties } = props.ans;
+      const name = langKey
+        ? (properties[langKey()] as string)
+        : properties.NAME;
+      if (name) {
+        return translate("Game7", `The Mystery Country is ${name}!`, {
+          answer: name,
+        });
+      }
+      return "You win!";
+    }
+
+    // If not win, check guesses length for appropriate message
     if (props.guesses.length === 0) {
       return translate(
         "Game3",
@@ -44,9 +62,8 @@ export default function (props: Props) {
       );
     }
     return "";
-  };
-  const [msg, setMsg] = createSignal(mountMsg());
-  const [suggestion, setSuggestion] = createSignal("");
+  });
+
   const msgColour = () => {
     const green = context.theme().isDark
       ? "rgb(134 239 172)"
@@ -55,21 +72,10 @@ export default function (props: Props) {
     return props.win() ? green : neutral;
   };
 
-  createEffect(() => {
-    const { properties } = props.ans;
-    const name = langKey ? (properties[langKey()] as string) : properties.NAME;
-    if (props.win() && name) {
-      setMsg(
-        translate("Game7", `The Mystery Country is ${name}!`, {
-          answer: name,
-        })
-      );
-    } else if (props.win()) {
-      setMsg("You win!");
-    }
-  });
+  // Rest of function logic for setting messages in other scenarios
+  const [customMsg, setMsg] = createSignal("");
 
-  let formRef: HTMLFormElement;
+  let formRef!: HTMLFormElement;
 
   // Search indexes
   const answerIndex = createMemo(() => {
@@ -260,7 +266,7 @@ export default function (props: Props) {
     const ansName =
       props.ans.properties[locale === "en-CA" ? "NAME" : langKey()];
     if (newCountry.properties.NAME === ansName) return;
-    if (distance === 0) {
+    if (distance === 0 && !props.win()) {
       if (
         (name === "Namibia" && ansName === "Zimbabwe") ||
         (name === "Zimbabwe" && ansName === "Namibia")
@@ -281,7 +287,7 @@ export default function (props: Props) {
       }
       return;
     }
-    if (props.guesses.length <= 1) return setMsg(mountMsg);
+    if (props.guesses.length <= 1) return setMsg(""); // Clear custom message to allow default message to show
     const lastGuess = props.guesses.countries[props.guesses.length - 2];
     const lastDistance = lastGuess.proximity ?? 0;
     if (locale === "en-CA") {
@@ -326,10 +332,10 @@ export default function (props: Props) {
       </form>
 
       <Show
-        when={msg()?.includes("Did you mean")}
+        when={customMsg()?.includes("Did you mean")}
         fallback={
           <p class="text-center font-medium" style={{ color: msgColour() }}>
-            {msg()}
+            {customMsg() || msg()}
           </p>
         }
       >
