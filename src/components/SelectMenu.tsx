@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import { Accessor, For, Setter, createSignal } from "solid-js";
-import { translate } from "../i18n";
+import { Locale, translate } from "../i18n";
 import {
   ColourScheme,
   translateColourScheme,
@@ -11,8 +11,8 @@ type Option = { name: string; value: any };
 
 type Props = {
   name: string;
-  choice: Accessor<string>;
-  choose: Setter<string>;
+  choice: Accessor<string | Locale>;
+  choose: Setter<string | Locale>;
   list: Option[];
   i18n: string;
 };

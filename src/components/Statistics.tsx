@@ -1,4 +1,3 @@
-import { useNavigate } from "@solidjs/router";
 import dayjs from "dayjs";
 import { Accessor, createMemo, createSignal, onMount, Setter } from "solid-js";
 import Icon from "./Icon";
@@ -16,7 +15,6 @@ type Props = {
 };
 
 export default function (props: Props) {
-  const navigate = useNavigate();
   const context = getContext();
 
   onMount(translatePage);
@@ -106,7 +104,7 @@ https://globle-game.com
 
   function enterPractice() {
     createPracticeAns();
-    navigate("/practice");
+    window.location.href = "/practice";
     props.setShowStats(false);
   }
 

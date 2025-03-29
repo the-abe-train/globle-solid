@@ -8,11 +8,9 @@ import { GlobalContext, makeContext } from "./Context";
 
 render(
   () => (
-    <Router>
-      <GlobalContext.Provider value={makeContext("Stored")}>
-        <App />
-      </GlobalContext.Provider>
-    </Router>
+    <GlobalContext.Provider value={makeContext("Stored")}>
+      <App />
+    </GlobalContext.Provider>
   ),
   document.getElementById("root") as HTMLElement
 );

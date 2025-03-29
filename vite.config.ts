@@ -22,4 +22,9 @@ export default defineConfig({
   build: {
     target: "esnext",
   },
+  test: {
+    // Enable VS Code Test Explorer integration
+    reporters: ["default", "json"],
+    outputFile: "./tests/vitest-result.json",
+  },
 });

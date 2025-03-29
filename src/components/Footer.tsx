@@ -1,4 +1,3 @@
-import { A } from "@solidjs/router";
 import Icon from "./Icon";
 import trainwreckWhite from "../images/trainwreck-white.svg";
 import trainwreckBlack from "../images/trainwreck-black.svg";
@@ -58,14 +57,14 @@ export default function Footer() {
       <div class="space-y-3">
         <p data-i18n="Aux2">Have a question?</p>
         {/* <br class="sm:hidden" /> */}
-        <A
+        <a
           href="/faq"
           class="underline block"
           data-cy="faq-footer-link"
           data-i18n="Aux3"
         >
           Check out the FAQ.
-        </A>
+        </a>
         <p data-ccpa-link="1" class="underline" />
         <div id="ncmp-consent-link" class="underline" />
       </div>

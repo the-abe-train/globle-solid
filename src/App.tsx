@@ -1,5 +1,5 @@
 import { Component, createSignal, lazy, onMount } from "solid-js";
-import { Route, Routes } from "@solidjs/router";
+import { Route, Router } from "@solidjs/router";
 import { getContext } from "./Context";
 import "./background.css";
 import Footer from "./components/Footer";
@@ -37,16 +37,20 @@ const App: Component = () => {
         min-h-screen flex flex-col justify-between"
       >
         <Header showStats={showStats} setShowStats={setShowStats} />
-        <Routes>
+        <Router>
           <Route path="/" component={Home} />
-          <Route path="/game" element={<Game setShowStats={setShowStats} />} />
+          <Route
+            path="/game"
+            component={() => <Game setShowStats={setShowStats} />}
+          />
           <Route path="/practice" component={Practice} />
           <Route path="/settings" component={Settings} />
           <Route path="/faq" component={FAQ} />
           <Route path="/privacy-policy" component={PrivacyPolicy} />
-          <Route path="/discord" element={Discord} />
+          <Route path="/discord" component={Discord} />
           <Route path="*" component={Route404} />
-        </Routes>
+        </Router>
+
         <Footer />
       </main>
       <div
