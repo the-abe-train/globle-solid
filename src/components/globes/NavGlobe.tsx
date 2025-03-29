@@ -3,12 +3,12 @@ import { onCleanup, onMount } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 
 import UAParser from "ua-parser-js";
-import { getContext } from "../../Context";
+// import { getContext } from "../../Context";
 import { globeMinImg } from "../../util/globe";
 import { translatePage } from "../../i18n";
 
 export default function () {
-  const context = getContext();
+  // const context = getContext();
 
   let globeRef: HTMLDivElement | undefined;
   const globe = Globe({ animateIn: false });

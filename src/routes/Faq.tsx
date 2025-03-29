@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import { createSignal, For, onMount, Show } from "solid-js";
+import { createSignal, For, onMount } from "solid-js";
 import { translatePage } from "../i18n";
 
 type Link = { text: string; link: string };
@@ -29,10 +29,12 @@ function Item({ q, a, links, idx }: ItemProps) {
   );
   return (
     <div class="space-y-1">
-      <Show when={open()} fallback={question}>
-        {question}
-        <p innerHTML={answer} data-i18n={"a" + num} />
-      </Show>
+      {question}
+      <p
+        innerHTML={answer}
+        data-i18n={"a" + num}
+        class={open() ? "" : "hidden"}
+      />
     </div>
   );
 }
@@ -87,8 +89,8 @@ export default function () {
     },
     {
       q: "Does Globle have a privacy policy?",
-      a: "The Privacy Policy can be found here.",
-      links: [{ text: "here", link: "/privacy-policy" }],
+      a: "Check out Globle's privacy policy here.",
+      links: [{ text: "privacy policy here", link: "/privacy-policy" }],
     },
   ];
   return (

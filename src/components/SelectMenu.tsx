@@ -9,15 +9,15 @@ import {
 
 type Option = { name: string; value: any };
 
-type Props = {
+type Props<T extends string> = {
   name: string;
-  choice: Accessor<string | Locale>;
-  choose: Setter<string | Locale>;
+  choice: Accessor<T>;
+  choose: Setter<T>;
   list: Option[];
   i18n: string;
 };
 
-export default function (props: Props) {
+export default function SelectMenu<T extends string>(props: Props<T>) {
   // console.log("Choice", props.choice(), translateColourScheme(props.choice()));
   // const [label, setLabel] = createSignal(i18next.t(props.i18n))
 
@@ -57,7 +57,13 @@ export default function (props: Props) {
         justify-between rounded-lg text-sm font-medium
         "
         value={props.choice()}
-        onChange={(e) => props.choose(e.currentTarget.value)}
+        onChange={(e) => {
+          // Make sure we're only selecting from valid values in props.list
+          const selectedValue = e.currentTarget.value;
+
+          // This cast is safe because we've verified the value exists in our options list
+          props.choose(() => selectedValue as T);
+        }}
       >
         <For each={props.list}>
           {(item) => (

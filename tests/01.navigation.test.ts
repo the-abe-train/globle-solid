@@ -41,27 +41,6 @@ describe("Navigation tests", () => {
     expect(anchorText).toBe("by Trainwreck Labs");
     console.log("✅ Header and footer test completed");
   });
-});
-
-describe("Explore all navigation links", () => {
-  let browser: Browser;
-  let page: Page;
-
-  beforeAll(async () => {
-    console.log("🚀 Starting navigation links test - setting up browser");
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
-    page = await browser.newPage();
-    console.log("✅ Browser setup complete");
-  });
-
-  afterAll(async () => {
-    console.log("🧹 Cleaning up browser for navigation links test");
-    await browser.close();
-    console.log("✅ Browser closed");
-  });
 
   test("Visits every nav link", async () => {
     console.log("🧪 Starting navigation links journey test");
@@ -75,9 +54,9 @@ describe("Explore all navigation links", () => {
     console.log("📄 Page title is: " + title);
     expect(title).toBe("Globle");
 
-    const howToPlayText = await page.$eval("h2", (el) => el.textContent);
-    console.log("📝 How to Play text is: " + howToPlayText);
-    expect(howToPlayText).toBe("How to Play");
+    const h2Text = await page.$eval("h2", (el) => el.textContent);
+    console.log("📝 How to Play text is: " + h2Text);
+    expect(h2Text).toBe("How to Play");
 
     // Click Settings link
     console.log("🌐 Navigating to Settings page");
@@ -87,15 +66,19 @@ describe("Explore all navigation links", () => {
     ]);
     console.log("📄 Current URL: " + page.url());
     expect(page.url()).toContain("/settings");
+    const h1Test = await page.$eval("h1", (el) => el.textContent);
+    console.log("H1 test: " + h1Test);
     const settingsText = await page.$eval("h2", (el) => el.textContent);
 
     console.log("📝 Settings text found: " + settingsText);
-    expect(settingsText).toBe(true);
+    expect(settingsText).toBe("Settings");
 
     // Click Practice link
     console.log("🌐 Navigating to Practice page");
-    await page.click('[data-cy="practice-link"]');
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await Promise.all([
+      page.click('button[data-cy="practice-link"]'),
+      page.waitForNavigation({ waitUntil: "networkidle2" }),
+    ]);
     console.log("📄 Current URL: " + page.url());
     expect(page.url()).toContain("/practice");
     const practiceText = await page.evaluate(() => {
@@ -106,8 +89,10 @@ describe("Explore all navigation links", () => {
 
     // Click Game link
     console.log("🌐 Navigating to Game page");
-    await page.click('[data-cy="game-link"]');
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await Promise.all([
+      page.click('[data-cy="game-link"]'),
+      page.waitForNavigation({ waitUntil: "networkidle2" }),
+    ]);
     console.log("📄 Current URL: " + page.url());
     expect(page.url()).toContain("/game");
     const gameText = await page.evaluate(() => {
@@ -118,8 +103,10 @@ describe("Explore all navigation links", () => {
 
     // Click FAQ link
     console.log("🌐 Navigating to FAQ page");
-    await page.click('[data-cy="faq-footer-link"]');
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await Promise.all([
+      page.click('a[data-cy="faq-footer-link"]'),
+      page.waitForNavigation({ waitUntil: "networkidle2" }),
+    ]);
     console.log("📄 Current URL: " + page.url());
     expect(page.url()).toContain("/faq");
     const faqText = await page.evaluate(() => {
@@ -130,14 +117,11 @@ describe("Explore all navigation links", () => {
 
     // Click Privacy Policy link
     console.log("🌐 Navigating to Privacy Policy page");
-    await page.evaluate(() => {
-      const privacyLink = Array.from(document.querySelectorAll("a")).find(
-        (el) => el.textContent?.includes("privacy policy")
-      );
-      console.log("Found privacy policy link:", privacyLink ? true : false);
-      if (privacyLink) privacyLink.click();
-    });
-    await page.waitForNavigation({ waitUntil: "networkidle2" });
+    await page.click('[data-i18n="q9"]');
+    await Promise.all([
+      page.click('a[href="/privacy-policy"]'),
+      page.waitForNavigation({ waitUntil: "networkidle2" }),
+    ]);
     console.log("📄 Current URL: " + page.url());
     expect(page.url()).toContain("/privacy-policy");
     const privacyText = await page.evaluate(() => {

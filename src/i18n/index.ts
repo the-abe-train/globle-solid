@@ -41,7 +41,7 @@ export const langMap = [
   },
   { locale: "xh-ZA", langKey: "NAME_XH", resource: Xhosa, name: "isiXhosa" },
 ] as const;
-export type Locale = (typeof langMap)[number]["locale"];
+export type Locale = (typeof langMap)[number]["locale"] & string;
 
 export function getLangKey(locale: Locale) {
   const lang = langMap.find((lang) => lang.locale === locale);
