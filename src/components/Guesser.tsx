@@ -334,12 +334,20 @@ export default function (props: Props) {
       <Show
         when={customMsg()?.includes("Did you mean")}
         fallback={
-          <p class="text-center font-medium" style={{ color: msgColour() }}>
+          <p
+            class="text-center font-medium"
+            style={{ color: msgColour() }}
+            data-testid="guess-msg"
+          >
             {customMsg() || msg()}
           </p>
         }
       >
-        <p class="text-center font-medium" style={{ color: msgColour() }}>
+        <p
+          class="text-center font-medium"
+          style={{ color: msgColour() }}
+          data-testid="guess-msg"
+        >
           <Suggestion countryName={suggestion()} submitGuess={submitGuess} />
         </p>
       </Show>

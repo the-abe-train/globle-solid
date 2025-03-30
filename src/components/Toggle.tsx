@@ -33,8 +33,7 @@ export default function Toggle(props: Props) {
     >
       <p>
         {props.gap && <span class="opacity-0">|</span>}
-        {/* <span data-i18n={values().i18n}>{values().default}</span> */}
-        <span data-i18n={values().i18n}>
+        <span data-i18n={values().i18n} data-testid="toggle-text">
           {translate(values().i18n, values().default)}
         </span>
       </p>

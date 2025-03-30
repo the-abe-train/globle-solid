@@ -21,6 +21,7 @@
     "autoprefixer": "^10.4.13",
     "cypress": "^13.3.2",
     "dotenv": "^16.0.3",
+    "happy-dom": "^17.4.4",
     "jsdom": "^26.0.0",
     "postcss": "^8.4.19",
     "puppeteer": "^24.4.0",

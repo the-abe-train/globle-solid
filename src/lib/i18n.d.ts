@@ -106,6 +106,8 @@ declare global {
     TWL8: string;
     TWL9: string;
     TWL10: string;
+    km: string;
+    miles: string;
   };
 
   type LanguageName =

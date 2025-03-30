@@ -4,7 +4,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     // Test configuration
-    environment: "node", // Ensure we're running in Node.js environment
+    environment: "happy-dom", // Use happy-dom for DOM testing
     globals: true, // Enable global test functions
     watch: true,
   },

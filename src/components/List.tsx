@@ -19,7 +19,7 @@ import Toggle from "./Toggle";
 
 type Props = {
   guesses: GuessStore;
-  setPov: Setter<Coords>;
+  setPov: Setter<Coords | null>;
   ans: Country;
 };
 
@@ -109,7 +109,9 @@ export default function (props: Props) {
           <div class="flex items-center space-x-1">
             <p>
               <span data-i18n="Game8">Closest border</span>:{" "}
-              {formatKm(props.guesses.closest)}
+              <span data-testid="closest-border">
+                {formatKm(props.guesses.closest)}
+              </span>
             </p>
             <Toggle
               setToggle={setShowingKm}
