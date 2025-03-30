@@ -1,10 +1,4 @@
-import {
-  Accessor,
-  Show,
-  createEffect,
-  createMemo,
-  createSignal,
-} from "solid-js";
+import { Accessor, Show, createMemo, createSignal } from "solid-js";
 import rawAnswerData from "../data/country_data.json";
 import territories from "../data/territories.json";
 import Fuse from "fuse.js";
@@ -37,6 +31,7 @@ export default function (props: Props) {
   const msg = createMemo(() => {
     // Check win state first
     if (props.win()) {
+      setMsg("");
       const { properties } = props.ans;
       const name = langKey
         ? (properties[langKey()] as string)

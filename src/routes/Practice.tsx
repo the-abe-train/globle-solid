@@ -125,7 +125,7 @@ function Inner(props: InnerProps) {
       </Show>
       <Prompt
         promptType="Choice"
-        text={translate("Practice3", "Play again") + "?"}
+        text={translate("Practice3", "Play again")}
         showPrompt={showPrompt}
         setShowPrompt={setShowPrompt}
         yes={newGame}

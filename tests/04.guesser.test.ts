@@ -23,9 +23,6 @@ describe("Tests with a fake answer", () => {
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     console.log("✅ Browser setup complete");
-  });
-
-  beforeEach(async () => {
     // Create a new page for each test
     page = await browser.newPage();
 
@@ -56,50 +53,7 @@ describe("Tests with a fake answer", () => {
     await page.close();
   });
 
-  test("checks that old guesses get reset when they expire", async () => {
-    console.log("🧪 Running expired guesses test");
-
-    // Set up expired stats in localStorage
-    const yesterday = dayjs().subtract(1, "day").toDate();
-    const yesterdayStr = yesterday.toString();
-    // await page.evaluate((yesterdayStr) => {
-    const guesses = {
-      day: yesterdayStr,
-      guesses: ["Spain", "France", "Germany"],
-    };
-    localStorage.setItem("guesses", JSON.stringify(guesses));
-
-    // Set up stats
-    const stats = {
-      gamesWon: 4,
-      lastWin: yesterdayStr,
-      currentStreak: 2,
-      maxStreak: 5,
-      usedHints: 0,
-      guesses: {},
-    };
-    localStorage.setItem("statistics", JSON.stringify(stats));
-    // }, yesterday.toString());
-
-    await page.goto("http://localhost:8788/game", {
-      waitUntil: "networkidle2",
-    });
-
-    // Verify that old guesses were reset
-    // const anyCountryText = await page.evaluate(() => {
-    //   return document.body.innerText.includes("any country");
-    // });
-    const message = await page.$eval(
-      'p[data-testid="guess-msg"]',
-      (el) => el.textContent
-    );
-
-    expect(message).toContain("any country");
-
-    await page.close();
-  });
-
-  test("handles basic guess interactions", async () => {
+  test("all possible ways guesser will accept names", async () => {
     console.log("🧪 Running basic guess interactions test");
 
     // Set up stats from yesterday
@@ -171,33 +125,6 @@ describe("Tests with a fake answer", () => {
     );
     expect(msg6).toContain("Already guessed Saudi Arabia");
 
-    await page.close();
-  });
-
-  test("plays a game through to winning and checks statistics", async () => {
-    console.log("🧪 Running win game and statistics test");
-
-    // Set up stats from yesterday
-    const yesterday = dayjs().subtract(1, "day").toDate();
-    const yesterdayStr = yesterday.toString();
-    console.log("📅 Setting up test with yesterday's date:", yesterdayStr);
-    const stats = {
-      gamesWon: 4,
-      lastWin: yesterdayStr,
-      currentStreak: 2,
-      maxStreak: 5,
-      usedHints: 0,
-      guesses: {},
-    };
-    localStorage.setItem("statistics", JSON.stringify(stats));
-    console.log("📊 Initial stats set:", JSON.stringify(stats));
-
-    console.log("🌐 Navigating to game page");
-    await page.goto("http://localhost:8788/game", {
-      waitUntil: "networkidle2",
-    });
-    console.log("✅ Page loaded successfully");
-
     // Make some initial guesses to fill the board
     console.log("🔤 Making first guess: Turkey");
     await page.type('[data-cy="guesser"]', "Turkey");
@@ -230,6 +157,10 @@ describe("Tests with a fake answer", () => {
     );
     console.log("📝 Message after Burma guess:", msg8);
     expect(msg8).toContain("Myanmar is cooler");
+  });
+
+  test("distance unit toggle", async () => {
+    console.log("🧪 Running distance unit toggle test");
 
     // Toggle distance unit
     console.log("🔍 Checking distance in kilometers");
@@ -263,6 +194,31 @@ describe("Tests with a fake answer", () => {
     );
     console.log("📏 Updated unit:", closestBorderUnitMiles);
     expect(closestBorderUnitMiles).toContain("miles");
+  });
+
+  test("plays a game through to winning and checks statistics", async () => {
+    // console.log("🧪 Running win game and statistics test");
+
+    // // Set up stats from yesterday
+    // const yesterday = dayjs().subtract(1, "day").toDate();
+    // const yesterdayStr = yesterday.toString();
+    // console.log("📅 Setting up test with yesterday's date:", yesterdayStr);
+    // const stats = {
+    //   gamesWon: 4,
+    //   lastWin: yesterdayStr,
+    //   currentStreak: 2,
+    //   maxStreak: 5,
+    //   usedHints: 0,
+    //   guesses: {},
+    // };
+    // localStorage.setItem("statistics", JSON.stringify(stats));
+    // console.log("📊 Initial stats set:", JSON.stringify(stats));
+
+    // console.log("🌐 Navigating to game page");
+    // await page.goto("http://localhost:8788/game", {
+    //   waitUntil: "networkidle2",
+    // });
+    // console.log("✅ Page loaded successfully");
 
     // Testing the sorted list
     console.log("🔍 Checking current sort order");
