@@ -1,13 +1,5 @@
 import puppeteer, { Browser, Page } from "puppeteer";
-import {
-  test,
-  expect,
-  describe,
-  beforeAll,
-  afterAll,
-  beforeEach,
-} from "vitest";
-import dayjs from "dayjs";
+import { test, expect, describe, beforeAll, afterAll } from "vitest";
 import rawAnswerData from "../src/data/country_data.json";
 import crypto from "crypto-js";
 import dotenv from "dotenv";

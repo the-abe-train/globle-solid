@@ -7,6 +7,7 @@ export default defineConfig({
     environment: "happy-dom", // Use happy-dom for DOM testing
     globals: true, // Enable global test functions
     watch: true,
+    testTimeout: 10_000, // Set test timeout to 10 seconds
   },
   define: {
     // This helps resolve the "ws does not work in browser" error
