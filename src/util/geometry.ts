@@ -97,10 +97,10 @@ export function polygonDistance(country1: Country, country2: Country) {
 //   const km = formatKm(distance);
 //   const miles = formatKm(distance * 0.621371);
 //   console.log(
-//     `Distance between ${country1} and ${country2} is ${km} km, ${miles} miles`
+//     `Distance between ${country1} and ${country2} is ${km} km (${miles} miles)`
 //   );
 // }
-// testDistance("Zambia", "Botswana");
+// testDistance("Ghana", "Bulgaria");
 
 export function altitudeFunction(area: number) {
   // This function may seem arbitrary but I made it with a spreadsheet

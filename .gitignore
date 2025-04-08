@@ -12,3 +12,4 @@ wrangler.toml
 .dev.vars
 translate-text.txt
 src/.DS_Store
+.wrangler/
