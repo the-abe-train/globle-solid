@@ -1,4 +1,4 @@
-export const Zulu: Messages = {
+export const Zulu: i18nMessages = {
   name: "isiZulu",
   helpTitle: "Indlela Yokudlala",
   help1: `Nsuku zonke, kunoMbuso Omusha Wokuzuma. Umgomo wakho uwukucabanga ukuthi iyiphi izwe elisebenzisa inani elincane kakhulu lezibikezelo. Isibikezelo ngasinye esingalungile sizovela emhlabeni ngombala okhombisa ukuthi siseduze kangakanani noMbuso Wokuzuma. Umbala <b data-stylize="max-colour">oshisayo</b>, usondele kakhulu empendulweni.`,

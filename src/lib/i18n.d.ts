@@ -1,7 +1,7 @@
 declare global {
   type TextElement = HTMLHeadingElement | HTMLParagraphElement;
 
-  type Messages = {
+  type i18nMessages = {
     name: string;
     helpTitle: string;
     help1: string;

@@ -1,4 +1,4 @@
-export const Norwegian: Messages = {
+export const Norwegian: i18nMessages = {
   name: "Norsk",
   helpTitle: "Slik spiller du",
   help1: `Hver dag finnes det et nytt mysterieland. Ditt mål er å gjette

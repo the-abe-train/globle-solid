@@ -59,5 +59,3 @@ export default function () {
     </div>
   );
 }
-
-// #065F46

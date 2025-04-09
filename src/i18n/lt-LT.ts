@@ -1,4 +1,4 @@
-﻿export const Lithuanian: Messages = {
+﻿export const Lithuanian: i18nMessages = {
   name: "Lietuvių",
   helpTitle: "Kaip žaisti",
   help1: `Kasdien atsitiktiniu būdu parenkama šalis, kurią turi atspėti. Tavo spėjamos šalys gaublyje bus nuspalvintos tam tikromis spalvomis. Vadovaukis „šilta-šalta“ principu: kuo spalva <b data-stylize="max-colour">tamsesnė</b>, tuo arčiau tiesos esi. Ir kuo mažiau spėjimų, tuo geriau!`,

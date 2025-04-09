@@ -47,13 +47,22 @@ describe("Guesses", async () => {
     );
 
     console.log(`Number of child elements (Method 3): ${childCountMethod3}`);
+    expect(childCountMethod3).toBe(3);
 
-    // Verify that guesses are already in game
-    const firstItemText = await page.$eval(
-      "li",
-      (element) => element.textContent
+    // Verify that all countries are present in the list
+    const liTexts = await page.$$eval(
+      'ul[data-cy="countries-list"] li',
+      (elements) => elements.map((el) => el.textContent)
     );
-    expect(firstItemText).toContain("Canada");
+
+    // Check each country is present regardless of order
+    expect(
+      liTexts.some((text) => text && text.includes("Canada"))
+    ).toBeTruthy();
+    expect(
+      liTexts.some((text) => text && text.includes("Mexico"))
+    ).toBeTruthy();
+    expect(liTexts.some((text) => text && text.includes("Japan"))).toBeTruthy();
   });
 
   test("guesses persist after page reload", async () => {

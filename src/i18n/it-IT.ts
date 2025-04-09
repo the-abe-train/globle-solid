@@ -1,4 +1,4 @@
-export const Italian: Messages = {
+export const Italian: i18nMessages = {
   name: "Italiano",
   helpTitle: "Come giocare",
   help1: `Ogni giorno c'è un nuovo Paese Misterioso. Il tuo obiettivo è indovinare il

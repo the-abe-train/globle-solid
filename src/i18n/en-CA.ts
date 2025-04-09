@@ -1,5 +1,7 @@
-export const English: Messages = {
+export const English: i18nMessages = {
   name: "English",
+  km: "km",
+  miles: "miles",
   helpTitle: "How to Play",
   help1: `Every day, there is a new Mystery Country. Your goal is to guess which country it is using the fewest number of guesses. Each incorrect guess will appear on the globe with a colour indicating how close it is to the Mystery Country. The <b data-stylize="max-colour">hotter</b> the colour, the closer you are to the answer.`,
   help2: `For example, if the Mystery Country is <b>Japan</b>, then the following countries would appear with these colours if guessed:`,
@@ -97,7 +99,7 @@ export const English: Messages = {
   TWL2: "Sign in with Google",
   TWL3: "Sign in with Discord",
   TWL4: "Subscribe to Trainwreck Labs newsletter.",
-  TWL5: "Account",
+  TWL5: "Account:",
   TWL6: "Remove ads",
   TWL7: "Club member",
   TWL8: "Disconnect",

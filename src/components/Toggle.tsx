@@ -5,8 +5,8 @@ type Props = {
   toggleProp: Accessor<boolean>;
   setToggle: Setter<boolean>;
   values: {
-    on: { default: string; i18n: keyof Messages };
-    off: { default: string; i18n: keyof Messages };
+    on: { default: string; i18n: keyof i18nMessages };
+    off: { default: string; i18n: keyof i18nMessages };
   };
   gap?: boolean;
 };

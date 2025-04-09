@@ -1,4 +1,4 @@
-export const German: Messages = {
+export const German: i18nMessages = {
   name: "Deutsch",
   helpTitle: "Spielanleitung",
   help1: `Jeden Tag gibt es ein neues geheimes Land. Dein Ziel ist es, dieses Land

@@ -1,4 +1,4 @@
-export const Polish: Messages = {
+export const Polish: i18nMessages = {
   name: "Polski",
   helpTitle: "Jak grać",
   help1: `Każdego dnia pojawia się nowy Tajemniczy Kraj. Twoim zadaniem jest go odgadnąć przy jak najmniejszej liczbie prób. Każda nieprawidłowa odpowiedź pojawia się na kuli ziemskiej w kolorze wskazującym jak blisko jest do Tajemniczego Kraju. Im <b>cieplejszy</b> kolor, tym bliżej jesteś prawidłowej odpowiedzi.`,

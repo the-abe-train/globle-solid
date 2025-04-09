@@ -19,7 +19,6 @@ class Signer {
       email: userInfo.email || "",
       avatar: userInfo.avatar || "",
     };
-    // console.log("payload", payload);
 
     const jwt = await new jose.SignJWT(payload)
       .setProtectedHeader({ alg, typ: "JWT" })
@@ -83,7 +82,6 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
   if (!email) {
     return new Response("No email found in token", { status: 400 });
   }
-  console.log("Fetching token for user:", email);
 
   // Get TWL account ID
   const json = await mongoApi(env, "accounts", "findOne", {
@@ -108,7 +106,8 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
     const isTeacher = !!teacherJson?.document;
 
     // If stats, return stats
-    const clubMember = signer.isSponsor(twlId);
+    const clubMember = await signer.isSponsor(twlId);
+
     return new Response(JSON.stringify({ token, clubMember, isTeacher }), {
       status: 200,
       statusText: "Stats found",

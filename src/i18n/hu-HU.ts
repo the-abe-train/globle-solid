@@ -1,4 +1,4 @@
-export const Hungarian: Messages = {
+export const Hungarian: i18nMessages = {
   name: "Magyar",
   helpTitle: "Hogy játsszunk",
   help1: `Minden nap van egy új ország. A te dolgod, hogy a legkevesebb találgatással

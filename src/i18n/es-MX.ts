@@ -1,4 +1,4 @@
-export const Spanish: Messages = {
+export const Spanish: i18nMessages = {
   name: "Español",
   helpTitle: "Como jugar",
   help1: `Cada día habrá un País Secreto. Tu objetivo es adivinar el país secreto en el menor número de intentos posibles. Cada respuesta incorrrecta aparecerá en el globo con un color indicando que tan cerca se encuentra del País Secreto. Entre más <b>caliente</b> sea el color, más cerca estarás de la respuesta.`,
@@ -104,4 +104,6 @@ export const Spanish: Messages = {
   a6: "Hay muchos países con varios nombres aceptables. Se aceptan algunas ortografías alternativas y nombres anteriores, por ejemplo, Birmania para Myanmar. También se aceptan acrónimos para algunos países de varias palabras, por ejemplo, EAU para Emiratos Árabes Unidos.",
   q8: "8. ¿Por qué mi amigo y yo recibimos países misteriosos diferentes?",
   a8: "A veces las actualizaciones del juego no llegan al mismo tiempo a todos los navegadores/dispositivos. Para solucionar este problema, puedes obtener el código más reciente haciendo una actualización forzada (Ctrl + Shift + R en escritorio, las instrucciones varían en dispositivos móviles).",
+  km: "km",
+  miles: "millas",
 };

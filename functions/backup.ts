@@ -49,7 +49,6 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
   });
   try {
     const document = await mongoResponse.json();
-    console.log(document);
     if (document) {
       return new Response(JSON.stringify(document));
     }
@@ -106,7 +105,6 @@ export const onRequestPut: PagesFunction<E> = async (context) => {
   });
   try {
     const document = await mongoResponse.json();
-    console.log({ document });
     if (document) {
       return new Response(
         JSON.stringify({
@@ -151,7 +149,6 @@ export const onRequestDelete: PagesFunction<E> = async (context) => {
   });
   try {
     const document = await mongoResponse.json();
-    console.log({ document });
     if (document) {
       return new Response(
         JSON.stringify({

@@ -1,10 +1,11 @@
-import { createEffect, createResource } from "solid-js";
+import { createResource } from "solid-js";
 import { getContext } from "../../Context";
 import i18next from "i18next";
 
 type ResourceProps = {
   token: string;
   clubMember: boolean;
+  isTeacher: boolean;
 };
 
 export default function () {

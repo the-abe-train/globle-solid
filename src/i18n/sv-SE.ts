@@ -1,4 +1,4 @@
-export const Swedish: Messages = {
+export const Swedish: i18nMessages = {
   name: "Svenska",
   helpTitle: "Så här spelar du",
   help1: `Varje dag finns det ett nytt mysterieland. Ditt mål är att gissa mysterielandet med minst antal gissningar. Varje felaktig gissning kommer att dyka upp på jordklotet med en färg som visar hur nära den är mysterielandet. Ju <b>varmare</b> färgen är, desto närmare svaret är du.`,
