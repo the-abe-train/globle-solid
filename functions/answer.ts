@@ -858,7 +858,9 @@ const onRequest: PagesFunction<E> = async (context) => {
     // if (!dayCode) throw "Parameter error";
     // console.log(dayCode);
     // const answerKey = generateKey(listLength, dayCode, env.SHUFFLE_KEY);
-    const answerKey = pickAnswer(today);
+    // const answerKey = pickAnswer(today);
+    const china = { day: "2024-10-31", key: 9, name: "China" };
+    const answerKey = china.key;
     const answer = encrypt(`${answerKey}`, env.CRYPTO_KEY);
     console.log({ answerKey, answer });
     return new Response(
