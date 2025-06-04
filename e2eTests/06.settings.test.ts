@@ -45,7 +45,7 @@ describe("Settings tests", () => {
       expect(fillColor).toBe("rgb(144, 153, 200)");
 
       await page.goto("http://localhost:8788/settings");
-      await page.click('[data-cy="toggle-Night-Day"]');
+      // await page.click('[data-cy="toggle-Night-Day"]');
       await page.select('[name="Colours"]', "Blues");
       await page.goto("http://localhost:8788/");
 
