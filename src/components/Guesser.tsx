@@ -312,6 +312,7 @@ export default function (props: Props) {
           data-cy="guesser"
           minLength={2}
           required
+          autofocus
         />
         <button
           type="submit"
