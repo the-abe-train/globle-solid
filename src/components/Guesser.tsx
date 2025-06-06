@@ -1,4 +1,11 @@
-import { Accessor, Show, createMemo, createSignal } from "solid-js";
+import {
+  Accessor,
+  Show,
+  createMemo,
+  createSignal,
+  onMount,
+  onCleanup,
+} from "solid-js";
 import rawAnswerData from "../data/country_data.json";
 import territories from "../data/territories.json";
 import Fuse from "fuse.js";
@@ -71,6 +78,15 @@ export default function (props: Props) {
   const [customMsg, setMsg] = createSignal("");
 
   let formRef!: HTMLFormElement;
+  let inputRef!: HTMLInputElement;
+
+  // Focus management for SPA navigation
+  onMount(() => {
+    // Only focus on desktop (same condition as autofocus)
+    if (window.innerWidth >= 768 && !props.win() && props.ans) {
+      inputRef.focus();
+    }
+  });
 
   // Search indexes
   const answerIndex = createMemo(() => {
@@ -300,6 +316,7 @@ export default function (props: Props) {
         ref={formRef!}
       >
         <input
+          ref={inputRef!}
           type="text"
           name="guess"
           class="shadow px-2 py-1 md:py-0 w-full border rounded
@@ -312,7 +329,7 @@ export default function (props: Props) {
           data-cy="guesser"
           minLength={2}
           required
-          autofocus
+          autofocus={window.innerWidth >= 768}
         />
         <button
           type="submit"
