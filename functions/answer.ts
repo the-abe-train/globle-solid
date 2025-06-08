@@ -2412,7 +2412,7 @@ const answers = [
 ];
 
 function pickAnswer(day: string) {
-  const ans = answers.find((a) => a.day === day);
+  const ans = answers.find((a) => a.day === day || a.date === day);
   invariant(ans, "No answer found for provided date.");
   return ans.key;
 }
