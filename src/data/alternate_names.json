@@ -49,7 +49,10 @@
     { "real": "united arab emirates", "alternative": "émirats" },
     { "real": "czechia", "alternative": "république tchèque" }
   ],
-  "es-MX": [{ "real": "netherlands", "alternative": "holanda" }],
+  "es-MX": [
+    { "real": "netherlands", "alternative": "holanda" },
+    { "real": "united states", "alternative": "ee uu" }
+  ],
   "de-DE": [],
   "hu-HU": [],
   "no-NO": [],
