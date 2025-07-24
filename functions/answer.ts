@@ -801,12 +801,7 @@ const answers = [
     date: "2025-10-14",
     name: "Côte d'Ivoire",
   },
-  {
-    id: 99,
-    key: 136,
-    date: "2025-10-15",
-    name: "Lesotho",
-  },
+  { id: 99, key: 142, name: "Ghana", date: "2025-10-15" },
   {
     id: 100,
     key: 24,
@@ -1097,9 +1092,9 @@ const answers = [
   },
   {
     id: 148,
-    key: 142,
+    key: 136,
+    name: "Lesotho",
     date: "2025-12-03",
-    name: "Ghana",
   },
   {
     id: 149,
