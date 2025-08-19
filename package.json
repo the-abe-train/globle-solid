@@ -12,7 +12,8 @@
     "test:puppeteer": "vitest run --environment node --dir e2eTests",
     "test:puppeteer:list": "vitest list --dir e2eTests",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "deploy": "vite build && wrangler pages deploy dist"
   },
   "license": "MIT",
   "devDependencies": {
@@ -24,13 +25,10 @@
     "@types/node": "^24.3.0",
     "@types/ua-parser-js": "^0.7.36",
     "autoprefixer": "^10.4.13",
-    "concurrently": "^9.2.0",
     "dotenv": "^16.0.3",
     "happy-dom": "^17.4.4",
     "jsdom": "^26.0.0",
     "postcss": "^8.4.19",
-    "prettier": "^3.6.2",
-    "prettier-plugin-tailwindcss": "^0.6.14",
     "puppeteer": "^24.4.0",
     "tailwindcss": "^4.1.12",
     "typescript": "^5.9.2",

@@ -1,34 +1,38 @@
-import rawAnswerData from "../data/country_data.json";
-import crypto from "crypto-js";
-import dayjs from "dayjs";
-import advancedFormat from "dayjs/plugin/advancedFormat";
+import rawAnswerData from '../data/country_data.json';
+import crypto from 'crypto-js';
+import dayjs from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 dayjs.extend(advancedFormat);
 
-const key = import.meta.env.VITE_CRYPTO_KEY;
+const key: string | undefined = import.meta.env.VITE_CRYPTO_KEY;
 
-export function decrypt(encryptedAnsKey: string) {
+export function decrypt(encryptedAnsKey: string | undefined) {
+  if (!encryptedAnsKey) throw new Error('No encrypted answer provided');
+  if (!key) throw new Error('Missing VITE_CRYPTO_KEY at build time');
   const bytes = crypto.AES.decrypt(encryptedAnsKey, key);
   const originalText = bytes.toString(crypto.enc.Utf8);
   const answerKey = parseInt(originalText);
-  const answer = rawAnswerData["features"][answerKey] as Country;
+  if (Number.isNaN(answerKey)) throw new Error('Invalid decrypted answer');
+  const answer = rawAnswerData['features'][answerKey] as Country;
   return answer;
 }
 
-export const getDayCode = () => dayjs().endOf("day").format("X");
+export const getDayCode = () => dayjs().endOf('day').format('X');
 
 export async function getAnswer() {
-  const today = dayjs().format("YYYY-MM-DD");
-  const listLength = rawAnswerData["features"].length;
+  const today = dayjs().format('YYYY-MM-DD');
+  const listLength = rawAnswerData['features'].length;
   // const endpoint = `/.netlify/functions/answer?day=${today}`;
   const endpoint = `/answer?day=${today}&list=${listLength}`;
   try {
     const response = await fetch(endpoint);
-    if (response.status !== 200) throw "Server error";
-    const data = (await response.json()) as { answer: string };
-    const encryptedAnswer = data.answer;
-    const answer = decrypt(encryptedAnswer);
+    if (!response.ok) throw new Error(`Server error (${response.status})`);
+    const data = (await response.json()) as { answer?: string };
+    if (!data?.answer) throw new Error('No answer in server response');
+    const answer = decrypt(data.answer);
     return answer;
   } catch (e) {
-    console.error(e);
+    console.error('Failed to fetch or decrypt answer:', e);
+    return undefined;
   }
 }
