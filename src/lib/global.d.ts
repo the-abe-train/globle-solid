@@ -29,7 +29,7 @@ declare global {
     win: boolean;
   };
 
-  type Prompt = "Choice" | "Message";
+  type ModalPrompt = "Choice" | "Message";
 
   type Token = {
     iss: string;

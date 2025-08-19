@@ -1,13 +1,13 @@
-import dayjs from "dayjs";
-import puppeteer, { Browser, Page } from "puppeteer";
-import { describe, expect, beforeAll } from "vitest";
-import dotenv from "dotenv";
-import crypto from "crypto-js";
+import dayjs from 'dayjs';
+import puppeteer, { Browser, Page } from 'puppeteer';
+import { describe, expect, beforeAll, afterAll, test } from 'vitest';
+import dotenv from 'dotenv';
+import crypto from 'crypto-js';
 
 // let browser: Browser;
 // let page: Page;
 
-describe("Guesses", async () => {
+describe('Guesses', () => {
   let browser: Browser;
   let page: Page;
 
@@ -15,138 +15,152 @@ describe("Guesses", async () => {
     // Launch browser
     browser = await puppeteer.launch({
       headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     page = await browser.newPage();
   });
 
-  test("fabricate guesses in localStorage", async () => {
+  afterAll(async () => {
+    await page?.close().catch(() => {});
+    await browser?.close().catch(() => {});
+  });
+
+  test('fabricate guesses in localStorage', async () => {
     // Set up NEW guesses in localStorage
 
-    const todaysGuessExpiration = dayjs().endOf("day").toDate();
+    const todaysGuessExpiration = dayjs().endOf('day').toDate();
     // await page.evaluate((yesterdayStr) => {
     const guesses = {
       day: todaysGuessExpiration,
-      countries: ["Canada", "Mexico", "Japan"],
+      countries: ['Canada', 'Mexico', 'Japan'],
     };
 
     // Set localStorage BEFORE navigating to the page
-    console.log("Setting up localStorage with stats data:", guesses);
+    console.log('Setting up localStorage with stats data:', guesses);
     await page.evaluateOnNewDocument((guessesData) => {
-      localStorage.setItem("guesses", guessesData);
+      localStorage.setItem('guesses', guessesData);
     }, JSON.stringify(guesses));
 
     // Navigate to the game page
-    await page.goto("http://localhost:8788/game", {
-      waitUntil: "networkidle2",
+    await page.goto('http://localhost:8788/game', {
+      waitUntil: 'networkidle2',
     });
 
     const childCountMethod3 = await page.$eval(
       'ul[data-cy="countries-list"]',
-      (ul) => ul.querySelectorAll("li").length
+      (ul) => ul.querySelectorAll('li').length
     );
 
     console.log(`Number of child elements (Method 3): ${childCountMethod3}`);
     expect(childCountMethod3).toBe(3);
 
     // Verify that all countries are present in the list
-    const liTexts = await page.$$eval(
-      'ul[data-cy="countries-list"] li',
-      (elements) => elements.map((el) => el.textContent)
+    const liTexts = await page.$$eval('ul[data-cy="countries-list"] li', (elements) =>
+      elements.map((el) => el.textContent)
     );
 
     // Check each country is present regardless of order
-    expect(
-      liTexts.some((text) => text && text.includes("Canada"))
-    ).toBeTruthy();
-    expect(
-      liTexts.some((text) => text && text.includes("Mexico"))
-    ).toBeTruthy();
-    expect(liTexts.some((text) => text && text.includes("Japan"))).toBeTruthy();
+    expect(liTexts.some((text) => text && text.includes('Canada'))).toBeTruthy();
+    expect(liTexts.some((text) => text && text.includes('Mexico'))).toBeTruthy();
+    expect(liTexts.some((text) => text && text.includes('Japan'))).toBeTruthy();
   });
 
-  test("guesses persist after page reload", async () => {
+  test('guesses persist after page reload', async () => {
     // Check that the guesses remain when you leave and come back
-    console.log("🔄 Refreshing page to check persistence");
+    console.log('🔄 Refreshing page to check persistence');
     await page.reload({
-      waitUntil: "networkidle2",
+      waitUntil: 'networkidle2',
     });
-    console.log("✅ Page reloaded successfully");
+    console.log('✅ Page reloaded successfully');
     const childCountMethod3 = await page.$eval(
       'ul[data-cy="countries-list"]',
-      (ul) => ul.querySelectorAll("li").length
+      (ul) => ul.querySelectorAll('li').length
     );
     expect(childCountMethod3).toBe(3);
-    console.log("✅ Test completed successfully");
+    console.log('✅ Test completed successfully');
   });
 
-  test("checks that old guesses get reset when they expire", async () => {
-    console.log("🧪 Running expired guesses test");
+  test('checks that old guesses get reset when they expire', async () => {
+    console.log('🧪 Running expired guesses test');
 
     // Set up EXPIRED stats in localStorage
-    const yesterday = dayjs().subtract(1, "day").endOf("day").toDate();
+    const yesterday = dayjs().subtract(1, 'day').endOf('day').toDate();
     const yesterdayStr = yesterday.toString();
     // await page.evaluate((yesterdayStr) => {
     const guesses = {
       day: yesterdayStr,
-      countries: ["Spain", "France", "Germany"],
+      countries: ['Spain', 'France', 'Germany'],
     };
 
     // Set localStorage BEFORE navigating to the page
     await page.evaluateOnNewDocument((statsData) => {
-      localStorage.setItem("guesses", statsData);
+      localStorage.setItem('guesses', statsData);
     }, JSON.stringify(guesses));
 
     // Verify that the game has reset
-    await page.goto("http://localhost:8788/game", {
-      waitUntil: "networkidle2",
+    await page.goto('http://localhost:8788/game', {
+      waitUntil: 'networkidle2',
     });
-    const message = await page.$eval(
-      'p[data-testid="guess-msg"]',
-      (el) => el.textContent
-    );
-    expect(message).toContain("any country");
+    const message = await page.$eval('p[data-testid="guess-msg"]', (el) => el.textContent);
+    expect(message).toContain('any country');
   });
 });
 
-describe("Maintain a streak", async () => {
-  // Launch browser
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  const page = await browser.newPage();
+describe('Maintain a streak', () => {
+  let browser: Browser;
+  let page: Page;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     dotenv.config();
-    console.log("🚀 Starting Game play tests - setting up browser");
+    // Launch browser once for this suite
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    page = await browser.newPage();
 
     // Intercept the answer request and return a fixed answer (Madagascar - 159)
     await page.setRequestInterception(true);
     const cryptoKey = process.env.CRYPTO_KEY;
     if (!cryptoKey) {
-      throw new Error("CRYPTO_KEY is not defined in environment variables");
+      throw new Error('CRYPTO_KEY is not defined in environment variables');
     }
-    page.on("request", (request) => {
-      if (request.url().includes("/answer")) {
-        request.respond({
-          status: 200,
-          contentType: "application/json",
-          body: JSON.stringify({
-            answer: crypto.AES.encrypt("159", cryptoKey).toString(),
-          }),
-        });
-      } else {
-        request.continue();
+    // Ensure only one listener handles each request
+    page.on('request', (request) => {
+      try {
+        if (request.url().includes('/answer')) {
+          request
+            .respond({
+              status: 200,
+              contentType: 'application/json',
+              body: JSON.stringify({
+                answer: crypto.AES.encrypt('159', cryptoKey).toString(),
+              }),
+            })
+            .catch(() => {});
+        } else {
+          request.continue().catch(() => {});
+        }
+      } catch (e) {
+        // no-op: request might already be handled by Chromium under rare races
       }
     });
   });
 
-  test("fabricated stats, last win was yesterday", async () => {
-    console.log("🧪 Running win game and statistics test");
+  afterAll(async () => {
+    try {
+      page.removeAllListeners('request');
+      await page.setRequestInterception(false).catch(() => {});
+    } catch {}
+    await page?.close().catch(() => {});
+    await browser?.close().catch(() => {});
+  });
+
+  test('fabricated stats, last win was yesterday', async () => {
+    console.log('🧪 Running win game and statistics test');
 
     // Set up stats from yesterday
-    const yesterday = dayjs().subtract(1, "day").toDate();
+    const yesterday = dayjs().subtract(1, 'day').toDate();
     const yesterdayStr = yesterday.toString();
     console.log("📅 Setting up test with yesterday's date:", yesterdayStr);
     const stats = {
@@ -161,109 +175,111 @@ describe("Maintain a streak", async () => {
 
     // Set localStorage BEFORE navigating to the page
     await page.evaluateOnNewDocument((statsData) => {
-      localStorage.setItem("statistics", statsData);
+      localStorage.setItem('statistics', statsData);
     }, JSON.stringify(stats));
 
-    await page.goto("http://localhost:8788", {
-      waitUntil: "networkidle2",
+    await page.goto('http://localhost:8788', {
+      waitUntil: 'networkidle2',
     });
     const pageTitle = await page.title();
-    console.log("Loaded page:", pageTitle);
+    console.log('Loaded page:', pageTitle);
 
     await page.click('button[aria-label="Statistics"]');
     await page.waitForSelector('h2[data-i18n="StatsTitle"]');
-    const lastWinText1 = await page.$eval(
-      'td[data-cy="last-win"]',
-      (el) => el.textContent
-    );
-    console.log("Last win text:", lastWinText1);
+    const lastWinText1 = await page.$eval('td[data-cy="last-win"]', (el) => el.textContent);
+    console.log('Last win text:', lastWinText1);
     const lastWinDayjs1 = dayjs(lastWinText1);
     expect(lastWinDayjs1.toDate()).toBeInstanceOf(Date);
 
     // Format dates to only compare year-month-day without time
-    const formattedLastWin = lastWinDayjs1.format("YYYY-MM-DD");
-    const formattedYesterday = dayjs(yesterday).format("YYYY-MM-DD");
+    const formattedLastWin = lastWinDayjs1.format('YYYY-MM-DD');
+    const formattedYesterday = dayjs(yesterday).format('YYYY-MM-DD');
     expect(formattedLastWin).toBe(formattedYesterday);
   });
 
-  test("keep the streak going", async () => {
+  test('keep the streak going', async () => {
     // Beat the game
-    await page.goto("http://localhost:8788/game", {
-      waitUntil: "networkidle2",
+    await page.goto('http://localhost:8788/game', {
+      waitUntil: 'networkidle2',
     });
-    console.log("🎯 Submitting winning guess: madagascar");
-    await page.type('[data-cy="guesser"]', "madagascar");
-    await page.keyboard.press("Enter");
+    console.log('🎯 Submitting winning guess: madagascar');
+    await page.type('[data-cy="guesser"]', 'madagascar');
+    await page.keyboard.press('Enter');
     await new Promise((resolve) => setTimeout(resolve, 2_000));
-    const msgText = await page.$eval(
-      'p[data-testid="guess-msg"]',
-      (el) => el.textContent
-    );
-    console.log("🏆 Win message:", msgText);
-    expect(msgText).toContain("The Mystery Country is Madagascar");
+    const msgText = await page.$eval('p[data-testid="guess-msg"]', (el) => el.textContent);
+    console.log('🏆 Win message:', msgText);
+    expect(msgText).toContain('The Mystery Country is Madagascar');
 
     // Check the statistics
     await page.waitForSelector('h2[data-i18n="StatsTitle"]');
-    const lastWinText = await page.$eval(
-      'td[data-cy="last-win"]',
-      (el) => el.textContent
-    );
-    console.log("Last win text:", lastWinText);
+    const lastWinText = await page.$eval('td[data-cy="last-win"]', (el) => el.textContent);
+    console.log('Last win text:', lastWinText);
     const lastWinDayjs = dayjs(lastWinText);
     expect(lastWinDayjs.toDate()).toBeInstanceOf(Date);
-    const lastWinDate = lastWinDayjs.format("YYYY-MM-DD");
-    const today = dayjs().format("YYYY-MM-DD");
+    const lastWinDate = lastWinDayjs.format('YYYY-MM-DD');
+    const today = dayjs().format('YYYY-MM-DD');
     expect(lastWinDate).toBe(today);
     console.log("📊 Statistics updated with today's date:", lastWinDate);
 
     // Check that streak has increased
-    const currentStreak = await page.$eval(
-      '[data-cy="current-streak"]',
-      (el) => el.textContent
-    );
-    console.log("🔥 Current streak:", currentStreak);
-    expect(currentStreak).toContain("3");
+    const currentStreak = await page.$eval('[data-cy="current-streak"]', (el) => el.textContent);
+    console.log('🔥 Current streak:', currentStreak);
+    expect(currentStreak).toContain('3');
   });
 });
 
-describe("Break a streak", async () => {
-  // Launch browser
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
-  const page = await browser.newPage();
+describe('Break a streak', () => {
+  let browser: Browser;
+  let page: Page;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     dotenv.config();
-    console.log("🚀 Starting Game play tests - setting up browser");
+    // Launch browser once for this suite
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    page = await browser.newPage();
 
     // Intercept the answer request and return a fixed answer (Madagascar - 159)
     await page.setRequestInterception(true);
     const cryptoKey = process.env.CRYPTO_KEY;
     if (!cryptoKey) {
-      throw new Error("CRYPTO_KEY is not defined in environment variables");
+      throw new Error('CRYPTO_KEY is not defined in environment variables');
     }
-    page.on("request", (request) => {
-      if (request.url().includes("/answer")) {
-        request.respond({
-          status: 200,
-          contentType: "application/json",
-          body: JSON.stringify({
-            answer: crypto.AES.encrypt("159", cryptoKey).toString(),
-          }),
-        });
-      } else {
-        request.continue();
-      }
+    page.on('request', (request) => {
+      try {
+        if (request.url().includes('/answer')) {
+          request
+            .respond({
+              status: 200,
+              contentType: 'application/json',
+              body: JSON.stringify({
+                answer: crypto.AES.encrypt('159', cryptoKey).toString(),
+              }),
+            })
+            .catch(() => {});
+        } else {
+          request.continue().catch(() => {});
+        }
+      } catch {}
     });
   });
 
-  test("fabricate stats, last win 2 days ago", async () => {
-    console.log("🧪 Running win game and statistics test");
+  afterAll(async () => {
+    try {
+      page.removeAllListeners('request');
+      await page.setRequestInterception(false).catch(() => {});
+    } catch {}
+    await page?.close().catch(() => {});
+    await browser?.close().catch(() => {});
+  });
+
+  test('fabricate stats, last win 2 days ago', async () => {
+    console.log('🧪 Running win game and statistics test');
 
     // Set up stats from 2 days ago
-    const twoDaysAgo = dayjs().subtract(2, "day").toDate();
+    const twoDaysAgo = dayjs().subtract(2, 'day').toDate();
     const twoDaysAgoStr = twoDaysAgo.toString();
     console.log("📅 Setting up test with yesterday's date:", twoDaysAgoStr);
     const stats = {
@@ -278,52 +294,43 @@ describe("Break a streak", async () => {
 
     // Set localStorage BEFORE navigating to the page
     await page.evaluateOnNewDocument((statsData) => {
-      localStorage.setItem("statistics", statsData);
+      localStorage.setItem('statistics', statsData);
     }, JSON.stringify(stats));
 
-    await page.goto("http://localhost:8788", {
-      waitUntil: "networkidle2",
+    await page.goto('http://localhost:8788', {
+      waitUntil: 'networkidle2',
     });
     const pageTitle = await page.title();
-    console.log("Loaded page:", pageTitle);
+    console.log('Loaded page:', pageTitle);
   });
 
-  test("start a new streak", async () => {
+  test('start a new streak', async () => {
     // Beat the game
-    await page.goto("http://localhost:8788/game", {
-      waitUntil: "networkidle2",
+    await page.goto('http://localhost:8788/game', {
+      waitUntil: 'networkidle2',
     });
-    console.log("🎯 Submitting winning guess: madagascar");
-    await page.type('[data-cy="guesser"]', "madagascar");
-    await page.keyboard.press("Enter");
+    console.log('🎯 Submitting winning guess: madagascar');
+    await page.type('[data-cy="guesser"]', 'madagascar');
+    await page.keyboard.press('Enter');
     await new Promise((resolve) => setTimeout(resolve, 2_000));
-    const msgText = await page.$eval(
-      'p[data-testid="guess-msg"]',
-      (el) => el.textContent
-    );
-    console.log("🏆 Win message:", msgText);
-    expect(msgText).toContain("The Mystery Country is Madagascar");
+    const msgText = await page.$eval('p[data-testid="guess-msg"]', (el) => el.textContent);
+    console.log('🏆 Win message:', msgText);
+    expect(msgText).toContain('The Mystery Country is Madagascar');
 
     // Check the statistics
     await page.waitForSelector('h2[data-i18n="StatsTitle"]');
-    const lastWinText = await page.$eval(
-      'td[data-cy="last-win"]',
-      (el) => el.textContent
-    );
-    console.log("Last win text:", lastWinText);
+    const lastWinText = await page.$eval('td[data-cy="last-win"]', (el) => el.textContent);
+    console.log('Last win text:', lastWinText);
     const lastWinDayjs = dayjs(lastWinText);
     expect(lastWinDayjs.toDate()).toBeInstanceOf(Date);
-    const lastWinDate = lastWinDayjs.format("YYYY-MM-DD");
-    const today = dayjs().format("YYYY-MM-DD");
+    const lastWinDate = lastWinDayjs.format('YYYY-MM-DD');
+    const today = dayjs().format('YYYY-MM-DD');
     expect(lastWinDate).toBe(today);
     console.log("📊 Statistics updated with today's date:", lastWinDate);
 
     // Check that streak has increased
-    const currentStreak = await page.$eval(
-      '[data-cy="current-streak"]',
-      (el) => el.textContent
-    );
-    console.log("🔥 Current streak:", currentStreak);
-    expect(currentStreak).toContain("1");
+    const currentStreak = await page.$eval('[data-cy="current-streak"]', (el) => el.textContent);
+    console.log('🔥 Current streak:', currentStreak);
+    expect(currentStreak).toContain('1');
   });
 });

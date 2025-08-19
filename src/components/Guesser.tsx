@@ -322,7 +322,7 @@ export default function (props: Props) {
           class="shadow px-2 py-1 md:py-0 w-full border rounded
           text-gray-700 dark:bg-slate-200 dark:text-gray-900
           focus:outline-none focus:shadow-outline disabled:bg-slate-400
-          disabled:border-slate-400"
+          disabled:border-slate-400 bg-white"
           placeholder={translate("Game1", "Enter country name here.") ?? ""}
           autocomplete="off"
           disabled={props.win() || !props.ans}

@@ -1,7 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Custom dark mode variant for Tailwind CSS v4.1 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom CSS variables */
+:root {
+  --font-family-header: Montserrat, sans-serif;
+  --font-size-mobile-header: 1.4rem;
+  --line-height-mobile-header: 1.7rem;
+}
+
+body {
+  margin: 0;
+}
 
 #ncmp-consent-link button {
   text-decoration: underline;
+}
+
+.font-header {
+  font-family: var(--font-family-header);
+  font-weight: 600;
 }
