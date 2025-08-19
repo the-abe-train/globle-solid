@@ -1,11 +1,6 @@
-import i18next from "i18next";
-import { Accessor, For, Setter, createSignal } from "solid-js";
-import { Locale, translate } from "../i18n";
-import {
-  ColourScheme,
-  translateColourScheme,
-  untranslateColourScheme,
-} from "../util/colour";
+import i18next from 'i18next';
+import { Accessor, For, Setter } from 'solid-js';
+import { translate } from '../i18n';
 
 type Option = { name: string; value: any };
 
@@ -22,12 +17,9 @@ export default function SelectMenu<T extends string>(props: Props<T>) {
   // const [label, setLabel] = createSignal(i18next.t(props.i18n))
 
   const label = () => {
-    if (props.choice()) {
-      i18next.changeLanguage(props.choice());
-    }
-    return props.i18n === "Settings7" ? (
+    return props.i18n === 'Settings7' ? (
       <p class="flex">
-        {i18next.t("Settings7")}{" "}
+        {i18next.t('Settings7')}{' '}
         <svg
           width="22"
           height="22"
@@ -43,19 +35,15 @@ export default function SelectMenu<T extends string>(props: Props<T>) {
         </svg>
       </p>
     ) : (
-      <p data-i18n="Settings12">{translate("Settings12", "Colours")}</p>
+      <p data-i18n="Settings12">{translate('Settings12', 'Colours')}</p>
     );
   };
   return (
-    <div class="flex items-center justify-between space-x-4 min-w-[8rem]">
+    <div class="flex min-w-[8rem] items-center justify-between space-x-4">
       <label for={props.name}>{label()}</label>
       <select
         name={props.name}
-        class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900
-         dark:hover:bg-purple-900 disabled:bg-blue-900  text-white 
-        px-4 py-2.5 text-center inline-flex items-center min-w-[8rem]
-        justify-between rounded-lg text-sm font-medium
-        "
+        class="inline-flex min-w-[8rem] items-center justify-between rounded-lg bg-blue-700 px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-900 disabled:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900"
         value={props.choice()}
         onChange={(e) => {
           // Make sure we're only selecting from valid values in props.list
@@ -68,10 +56,8 @@ export default function SelectMenu<T extends string>(props: Props<T>) {
         <For each={props.list}>
           {(item) => (
             <option
-              class="py-2 px-4 text-sm text-gray-700 text-left
-            hover:bg-gray-100 dark:hover:bg-gray-600 
-            dark:hover:text-white bg-white"
-              value={untranslateColourScheme(item.value)}
+              class="bg-white px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+              value={item.value}
             >
               {item.name}
             </option>

@@ -6,13 +6,13 @@ type Props = {
 export default function (props: Props) {
   return (
     <p>
-      Did you mean{" "}
+      Did you mean{' '}
       <span
-        class="underline cursor-pointer"
+        class="cursor-pointer underline"
         tabIndex={0}
         onClick={() => props.submitGuess(props.countryName)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (e.key === 'Enter') {
             props.submitGuess(props.countryName);
           }
         }}

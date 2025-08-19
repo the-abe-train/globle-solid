@@ -1,22 +1,15 @@
-import {
-  Accessor,
-  Show,
-  createMemo,
-  createSignal,
-  onMount,
-  onCleanup,
-} from "solid-js";
-import rawAnswerData from "../data/country_data.json";
-import territories from "../data/territories.json";
-import Fuse from "fuse.js";
-import { getContext } from "../Context";
-import { polygonDistance } from "../util/geometry";
-import { GuessStore } from "../util/stores";
-import { getLangKey, translate } from "../i18n";
-import { isTerritory } from "../util/data";
-import alternateNames from "../data/alternate_names.json";
-import buggyNames from "../data/buggy_names.json";
-import Suggestion from "./Suggestion";
+import { Accessor, Show, createMemo, createSignal, onMount, onCleanup } from 'solid-js';
+import rawAnswerData from '../data/country_data.json';
+import territories from '../data/territories.json';
+import Fuse from 'fuse.js';
+import { getContext } from '../Context';
+import { polygonDistance } from '../util/geometry';
+import { GuessStore } from '../util/stores';
+import { getLangKey, translate } from '../i18n';
+import { isTerritory } from '../util/data';
+import alternateNames from '../data/alternate_names.json';
+import buggyNames from '../data/buggy_names.json';
+import Suggestion from './Suggestion';
 
 type Props = {
   guesses: GuessStore;
@@ -34,48 +27,41 @@ export default function (props: Props) {
   const langKey = createMemo(() => getLangKey(locale));
 
   // Combined message system
-  const [suggestion, setSuggestion] = createSignal("");
+  const [suggestion, setSuggestion] = createSignal('');
   const msg = createMemo(() => {
     // Check win state first
     if (props.win()) {
-      setMsg("");
+      setMsg('');
       const { properties } = props.ans;
-      const name = langKey
-        ? (properties[langKey()] as string)
-        : properties.NAME;
+      const name = langKey ? (properties[langKey()] as string) : properties.NAME;
       if (name) {
-        return translate("Game7", `The Mystery Country is ${name}!`, {
+        return translate('Game7', `The Mystery Country is ${name}!`, {
           answer: name,
         });
       }
-      return "You win!";
+      return 'You win!';
     }
 
     // If not win, check guesses length for appropriate message
     if (props.guesses.length === 0) {
-      return translate(
-        "Game3",
-        "Enter the name of any country to make your first guess!"
-      );
+      return translate('Game3', 'Enter the name of any country to make your first guess!');
     } else if (props.guesses.length === 1) {
       return translate(
-        "Game4",
-        "Drag, tap, and zoom in on the globe to help you find your next guess."
+        'Game4',
+        'Drag, tap, and zoom in on the globe to help you find your next guess.'
       );
     }
-    return "";
+    return '';
   });
 
   const msgColour = () => {
-    const green = context.theme().isDark
-      ? "rgb(134 239 172)"
-      : "rgb(22 101 52)";
-    const neutral = context.theme().isDark ? "rgb(229 231 235)" : "black";
+    const green = context.theme().isDark ? 'rgb(134 239 172)' : 'rgb(22 101 52)';
+    const neutral = context.theme().isDark ? 'rgb(229 231 235)' : 'black';
     return props.win() ? green : neutral;
   };
 
   // Rest of function logic for setting messages in other scenarios
-  const [customMsg, setMsg] = createSignal("");
+  const [customMsg, setMsg] = createSignal('');
 
   let formRef!: HTMLFormElement;
   let inputRef!: HTMLInputElement;
@@ -90,16 +76,16 @@ export default function (props: Props) {
 
   // Search indexes
   const answerIndex = createMemo(() => {
-    const answers = rawAnswerData["features"] as Country[];
-    const notAnswers = territories["features"] as Territory[];
+    const answers = rawAnswerData['features'] as Country[];
+    const notAnswers = territories['features'] as Territory[];
     const places = [...answers, ...notAnswers];
     const keys = [
-      "properties.NAME",
-      "properties.ADMIN",
-      "properties.NAME_SORT",
-      "properties.FORMAL_EN",
+      'properties.NAME',
+      'properties.ADMIN',
+      'properties.NAME_SORT',
+      'properties.FORMAL_EN',
     ];
-    if (locale !== "en-CA") {
+    if (locale !== 'en-CA') {
       keys.push(`properties.${langKey}`);
     }
     return new Fuse(places, {
@@ -108,10 +94,8 @@ export default function (props: Props) {
       includeScore: true,
       getFn: (obj) => {
         let { ABBREV, NAME, ADMIN, NAME_SORT } = obj.properties;
-        const abbrev =
-          ABBREV && NAME.includes(" ") ? ABBREV.replace(/\./g, "") : "";
-        const nameSort =
-          NAME_SORT && NAME.includes(" ") ? NAME_SORT.replace(/\./g, "") : "";
+        const abbrev = ABBREV && NAME.includes(' ') ? ABBREV.replace(/\./g, '') : '';
+        const nameSort = NAME_SORT && NAME.includes(' ') ? NAME_SORT.replace(/\./g, '') : '';
         const arr = [ADMIN, nameSort, ABBREV, abbrev];
         if (!isTerritory(obj)) {
           NAME = obj.properties[langKey()] as string;
@@ -134,32 +118,31 @@ export default function (props: Props) {
       return pair.alternative === guess.toLowerCase();
     });
     if (map) {
-      return map["real"];
+      return map['real'];
     }
   }
 
   function directSearch(guess: string) {
     const fixedGuess = guess.toLowerCase().trim();
-    const countries = rawAnswerData["features"] as Country[];
+    const countries = rawAnswerData['features'] as Country[];
     const foundCountry = countries.find((country) => {
       const { properties } = country;
-      const { NAME, NAME_LONG, ABBREV, ADMIN, BRK_NAME, NAME_SORT } =
-        properties;
+      const { NAME, NAME_LONG, ABBREV, ADMIN, BRK_NAME, NAME_SORT } = properties;
       const name = langKey ? (properties[langKey()] as string) : NAME;
       return (
         name.toLowerCase() === fixedGuess ||
         NAME_LONG.toLowerCase() === fixedGuess ||
         ADMIN.toLowerCase() === fixedGuess ||
         ABBREV.toLowerCase() === fixedGuess ||
-        ABBREV.replace(/\./g, "").toLowerCase() === fixedGuess ||
-        NAME.replace(/-/g, " ").toLowerCase() === fixedGuess ||
+        ABBREV.replace(/\./g, '').toLowerCase() === fixedGuess ||
+        NAME.replace(/-/g, ' ').toLowerCase() === fixedGuess ||
         BRK_NAME.toLowerCase() === fixedGuess ||
         NAME_SORT.toLowerCase() === fixedGuess
       );
     });
     if (!foundCountry) {
       setMsg(
-        translate("Game19", `"${guess}" not found in database.`, {
+        translate('Game19', `"${guess}" not found in database.`, {
           guess,
         })
       );
@@ -169,10 +152,10 @@ export default function (props: Props) {
       return foundCountry.properties.NAME === guess.properties.NAME;
     });
     if (existingGuess) {
-      if (locale === "en-CA") {
+      if (locale === 'en-CA') {
         setMsg(`Already guessed ${foundCountry.properties.NAME}.`);
       } else {
-        setMsg(translate("Game6", "Already guessed"));
+        setMsg(translate('Game6', 'Already guessed'));
       }
       return;
     }
@@ -180,11 +163,11 @@ export default function (props: Props) {
   }
 
   function findCountry(newGuess: string) {
-    const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, "");
+    const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, '');
 
     if (buggyNames?.includes(cleanedGuess.toLowerCase())) {
       setMsg(
-        translate("Game19", `"${newGuess}" not found in database.`, {
+        translate('Game19', `"${newGuess}" not found in database.`, {
           guess: newGuess,
         })
       );
@@ -192,15 +175,15 @@ export default function (props: Props) {
     }
 
     // Hardcoded exceptions
-    if (cleanedGuess.toLowerCase() === "namibia") {
-      return directSearch("Namibia");
-    } else if (cleanedGuess.toLowerCase() === "dem rep congo") {
-      return directSearch("Democratic Republic of the Congo");
-    } else if (cleanedGuess.toLowerCase() === "st vin and gren") {
-      return directSearch("Saint Vincent and the Grenadines");
-    } else if (cleanedGuess.toLowerCase() === "eq guinea") {
-      return directSearch("Equatorial Guinea");
-    } else if (cleanedGuess.toLowerCase() === "american samoa") {
+    if (cleanedGuess.toLowerCase() === 'namibia') {
+      return directSearch('Namibia');
+    } else if (cleanedGuess.toLowerCase() === 'dem rep congo') {
+      return directSearch('Democratic Republic of the Congo');
+    } else if (cleanedGuess.toLowerCase() === 'st vin and gren') {
+      return directSearch('Saint Vincent and the Grenadines');
+    } else if (cleanedGuess.toLowerCase() === 'eq guinea') {
+      return directSearch('Equatorial Guinea');
+    } else if (cleanedGuess.toLowerCase() === 'american samoa') {
       setMsg(`In Globle, American Samoa is a territory, not a country.`);
       return;
     }
@@ -214,7 +197,7 @@ export default function (props: Props) {
     const results = answerIndex().search(searchPhrase);
     if (results.length === 0) {
       setMsg(
-        translate("Game19", `"${newGuess}" not found in database.`, {
+        translate('Game19', `"${newGuess}" not found in database.`, {
           guess: newGuess,
         })
       );
@@ -222,30 +205,27 @@ export default function (props: Props) {
     }
     const topAnswer = results[0];
     if (isTerritory(topAnswer.item)) {
-      setMsg(
-        `In Globle, ${topAnswer.item.properties.NAME} is a territory, not a country.`
-      );
+      setMsg(`In Globle, ${topAnswer.item.properties.NAME} is a territory, not a country.`);
       return;
     }
     const topScore = topAnswer.score ?? 1;
-    const name =
-      topAnswer.item.properties[locale === "en-CA" ? "NAME" : langKey()];
+    const name = topAnswer.item.properties[locale === 'en-CA' ? 'NAME' : langKey()];
     if (topScore < CORRECT_THRESHHOLD) {
       const existingGuess = props.guesses.countries.find((guess) => {
         return topAnswer.item.properties.NAME === guess.properties.NAME;
       });
       if (existingGuess) {
-        if (locale === "en-CA") {
+        if (locale === 'en-CA') {
           setMsg(`Already guessed ${name}.`);
         } else {
-          setMsg(translate("Game6", "Already guessed"));
+          setMsg(translate('Game6', 'Already guessed'));
         }
         return;
       }
       return topAnswer.item;
     } else if (topScore < APPROX_THRESHHOLD) {
       setMsg(
-        translate("Game20", `Did you mean ${name}?`, {
+        translate('Game20', `Did you mean ${name}?`, {
           guess: name,
         })
       );
@@ -260,37 +240,36 @@ export default function (props: Props) {
     e.preventDefault();
     const formData = new FormData(formRef);
     formRef.reset();
-    const guess = formData.get("guess")?.toString().trim() || "";
+    const guess = formData.get('guess')?.toString().trim() || '';
     submitGuess(guess);
   }
 
   function submitGuess(guess: string) {
     console.log(`Submitting guess: ${guess}`);
-    if (!guess) return setMsg("Enter your next guess.");
+    if (!guess) return setMsg('Enter your next guess.');
     const newCountry = findCountry(guess);
     if (!newCountry) return;
 
-    const name = newCountry.properties[locale === "en-CA" ? "NAME" : langKey()];
+    const name = newCountry.properties[locale === 'en-CA' ? 'NAME' : langKey()];
     const distance = polygonDistance(newCountry, props.ans);
-    newCountry["proximity"] = distance;
+    newCountry['proximity'] = distance;
     props.addGuess(newCountry);
-    const ansName =
-      props.ans.properties[locale === "en-CA" ? "NAME" : langKey()];
+    const ansName = props.ans.properties[locale === 'en-CA' ? 'NAME' : langKey()];
     if (newCountry.properties.NAME === ansName) return;
     if (distance === 0 && !props.win()) {
       if (
-        (name === "Namibia" && ansName === "Zimbabwe") ||
-        (name === "Zimbabwe" && ansName === "Namibia")
+        (name === 'Namibia' && ansName === 'Zimbabwe') ||
+        (name === 'Zimbabwe' && ansName === 'Namibia')
       ) {
         setMsg(
-          translate("Game15", "{{guess}} is almost adjacent to the answer!", {
+          translate('Game15', '{{guess}} is almost adjacent to the answer!', {
             guess: name,
           })
         );
       } else {
         console.log(
           setMsg(
-            translate("Game14", "{{guess}} is adjacent to the answer!", {
+            translate('Game14', '{{guess}} is adjacent to the answer!', {
               guess: name,
             })
           )
@@ -298,13 +277,13 @@ export default function (props: Props) {
       }
       return;
     }
-    if (props.guesses.length <= 1) return setMsg(""); // Clear custom message to allow default message to show
+    if (props.guesses.length <= 1) return setMsg(''); // Clear custom message to allow default message to show
     const lastGuess = props.guesses.countries[props.guesses.length - 2];
     const lastDistance = lastGuess.proximity ?? 0;
-    if (locale === "en-CA") {
-      setMsg(`${name} ${distance < lastDistance ? "is warmer" : "is cooler"}`);
+    if (locale === 'en-CA') {
+      setMsg(`${name} ${distance < lastDistance ? 'is warmer' : 'is cooler'}`);
     } else {
-      setMsg("");
+      setMsg('');
     }
   }
 
@@ -312,18 +291,15 @@ export default function (props: Props) {
     <div class="my-4">
       <form
         onSubmit={enterGuess}
-        class="w-80 flex space-x-4 mx-auto my-2 justify-center"
+        class="mx-auto my-2 flex w-80 justify-center space-x-4"
         ref={formRef!}
       >
         <input
           ref={inputRef!}
           type="text"
           name="guess"
-          class="shadow px-2 py-1 md:py-0 w-full border rounded
-          text-gray-700 dark:bg-slate-200 dark:text-gray-900
-          focus:outline-none focus:shadow-outline disabled:bg-slate-400
-          disabled:border-slate-400 bg-white"
-          placeholder={translate("Game1", "Enter country name here.") ?? ""}
+          class="focus:shadow-outline w-full rounded border bg-white px-2 py-1 text-gray-700 shadow focus:outline-none disabled:border-slate-400 disabled:bg-slate-400 md:py-0 dark:bg-slate-200 dark:text-gray-900"
+          placeholder={translate('Game1', 'Enter country name here.') ?? ''}
           autocomplete="off"
           disabled={props.win() || !props.ans}
           data-cy="guesser"
@@ -333,10 +309,7 @@ export default function (props: Props) {
         />
         <button
           type="submit"
-          class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900 
-          dark:hover:bg-purple-900 dark:disabled:bg-purple-900 
-          disabled:bg-blue-900 text-white 
-          font-bold py-1 md:py-2 px-4 rounded focus:shadow-outline"
+          class="focus:shadow-outline rounded bg-blue-700 px-4 py-1 font-bold text-white hover:bg-blue-900 disabled:bg-blue-900 md:py-2 dark:bg-purple-800 dark:hover:bg-purple-900 dark:disabled:bg-purple-900"
           disabled={props.win() || !props.ans}
           data-i18n="Game2"
         >
@@ -345,22 +318,14 @@ export default function (props: Props) {
       </form>
 
       <Show
-        when={customMsg()?.includes("Did you mean")}
+        when={customMsg()?.includes('Did you mean')}
         fallback={
-          <p
-            class="text-center font-medium"
-            style={{ color: msgColour() }}
-            data-testid="guess-msg"
-          >
+          <p class="text-center font-medium" style={{ color: msgColour() }} data-testid="guess-msg">
             {customMsg() || msg()}
           </p>
         }
       >
-        <p
-          class="text-center font-medium"
-          style={{ color: msgColour() }}
-          data-testid="guess-msg"
-        >
+        <p class="text-center font-medium" style={{ color: msgColour() }} data-testid="guess-msg">
           <Suggestion countryName={suggestion()} submitGuess={submitGuess} />
         </p>
       </Show>

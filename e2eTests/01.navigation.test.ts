@@ -60,25 +60,23 @@ describe('Navigation tests', () => {
 
     // Click Settings link
     console.log('🌐 Navigating to Settings page');
-    await Promise.all([
-      page.click('[data-cy="settings-link"]'),
-      page.waitForNavigation({ waitUntil: 'networkidle2' }),
-    ]);
+    await page.click('[data-cy="settings-link"]');
+    // SPA navigation: wait for URL change and the settings header to appear
+    await page.waitForFunction(() => location.pathname.includes('/settings'));
+    await page.waitForSelector('h2[data-i18n="SettingsTitle"]');
     console.log('📄 Current URL: ' + page.url());
     expect(page.url()).toContain('/settings');
     const h1Test = await page.$eval('h1', (el) => el.textContent);
     console.log('H1 test: ' + h1Test);
-    const settingsText = await page.$eval('h2', (el) => el.textContent);
+    const settingsText = await page.$eval('h2[data-i18n="SettingsTitle"]', (el) => el.textContent);
 
     console.log('📝 Settings text found: ' + settingsText);
     expect(settingsText).toBe('Settings');
 
     // Click Practice link
     console.log('🌐 Navigating to Practice page');
-    await Promise.all([
-      page.click('button[data-cy="practice-link"]'),
-      page.waitForNavigation({ waitUntil: 'networkidle2' }),
-    ]);
+    await page.click('button[data-cy="practice-link"]');
+    await page.waitForFunction(() => location.pathname.includes('/practice'));
     console.log('📄 Current URL: ' + page.url());
     expect(page.url()).toContain('/practice');
     const practiceText = await page.evaluate(() => {
@@ -89,10 +87,9 @@ describe('Navigation tests', () => {
 
     // Click Game link
     console.log('🌐 Navigating to Game page');
-    await Promise.all([
-      page.click('[data-cy="game-link"]'),
-      page.waitForNavigation({ waitUntil: 'networkidle2' }),
-    ]);
+    await page.click('[data-cy="game-link"]');
+    await page.waitForFunction(() => location.pathname.includes('/game'));
+    await page.waitForSelector('[data-cy="guesser"]');
     console.log('📄 Current URL: ' + page.url());
     expect(page.url()).toContain('/game');
     const gameText = await page.evaluate(() => {
@@ -103,10 +100,9 @@ describe('Navigation tests', () => {
 
     // Click FAQ link
     console.log('🌐 Navigating to FAQ page');
-    await Promise.all([
-      page.click('a[data-cy="faq-footer-link"]'),
-      page.waitForNavigation({ waitUntil: 'networkidle2' }),
-    ]);
+    await page.click('a[data-cy="faq-footer-link"]');
+    await page.waitForFunction(() => location.pathname.includes('/faq'));
+    await page.waitForSelector('h2');
     console.log('📄 Current URL: ' + page.url());
     expect(page.url()).toContain('/faq');
     const faqText = await page.evaluate(() => {
@@ -118,10 +114,9 @@ describe('Navigation tests', () => {
     // Click Privacy Policy link
     console.log('🌐 Navigating to Privacy Policy page');
     await page.click('[data-i18n="q9"]');
-    await Promise.all([
-      page.click('a[href="/privacy-policy"]'),
-      page.waitForNavigation({ waitUntil: 'networkidle2' }),
-    ]);
+    await page.click('a[href="/privacy-policy"]');
+    await page.waitForFunction(() => location.pathname.includes('/privacy-policy'));
+    await page.waitForSelector('h1');
     console.log('📄 Current URL: ' + page.url());
     expect(page.url()).toContain('/privacy-policy');
     const privacyText = await page.evaluate(() => {

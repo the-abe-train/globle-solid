@@ -9,7 +9,7 @@ import {
   ParentProps,
   Setter,
   Show,
-} from "solid-js";
+} from 'solid-js';
 
 type Props = {
   trigger: Accessor<boolean>;
@@ -49,32 +49,27 @@ function Inner(props: ParentProps<Props>) {
     }
   }
   onMount(() => {
-    document.body.addEventListener("click", triggerClose);
+    document.body.addEventListener('click', triggerClose);
     // Has to run immediately after mount.
     setTimeout(() => {
-      innerRef.classList.remove("opacity-0");
-      innerRef.classList.add("opacity-100");
+      innerRef.classList.remove('opacity-0');
+      innerRef.classList.add('opacity-100');
     }, 0);
   });
   createEffect(() => {
     if (!props.trigger()) {
-      innerRef.classList.remove("opacity-100");
-      innerRef.classList.add("opacity-0");
+      innerRef.classList.remove('opacity-100');
+      innerRef.classList.add('opacity-0');
     }
   });
   onCleanup(() => {
-    document.body.removeEventListener("click", triggerClose);
+    document.body.removeEventListener('click', triggerClose);
     props.setTrigger(false);
   });
   const c = children(() => props.children);
   return (
     <div
-      class="border-4 border-sky-300 dark:border-slate-700 bg-sky-100 
-    dark:bg-slate-900 drop-shadow-xl 
-    z-40 w-fit inset-x-0 mx-auto m py-6 px-6 rounded-md space-y-2 
-    absolute top-20
-    transition-opacity ease-in-out duration-500 opacity-0 
-    "
+      class="m absolute inset-x-0 top-20 z-40 mx-auto w-fit space-y-2 rounded-md border-4 border-sky-300 bg-sky-100 px-6 py-6 opacity-0 drop-shadow-xl transition-opacity duration-500 ease-in-out dark:border-slate-700 dark:bg-slate-900"
       ref={innerRef!}
     >
       {c()}

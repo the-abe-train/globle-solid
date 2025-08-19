@@ -1,7 +1,7 @@
-import Icon from "./Icon";
-import trainwreckWhite from "../images/trainwreck-white.svg";
-import trainwreckBlack from "../images/trainwreck-black.svg";
-import { onMount } from "solid-js";
+import Icon from './Icon';
+import trainwreckWhite from '../images/trainwreck-white.svg';
+import trainwreckBlack from '../images/trainwreck-black.svg';
+import { onMount } from 'solid-js';
 
 declare global {
   interface Window {
@@ -13,17 +13,14 @@ declare global {
 export default function Footer() {
   onMount(() => {
     if (window.__uspapi) {
-      window.__uspapi("addLink", 1);
+      window.__uspapi('addLink', 1);
     }
-    if (window["__cmp"]) {
-      window["__cmp"]("addConsentLink");
+    if (window['__cmp']) {
+      window['__cmp']('addConsentLink');
     }
   });
   return (
-    <footer
-      class="pt-8 pb-4 text-xs flex items-end justify-between w-full 
-    flex-grow mb-24"
-    >
+    <footer class="mb-24 flex w-full flex-grow items-end justify-between pt-8 pb-4 text-xs">
       <div class="space-y-3">
         <a href="https://trainwrecklabs.com" data-i18n="Footer1">
           <span>by Trainwreck Labs</span>
@@ -38,7 +35,7 @@ export default function Footer() {
             src={trainwreckWhite}
             width={14}
             height={14}
-            class="mx-2 mb-[1px] hidden dark:inline "
+            class="mx-2 mb-[1px] hidden dark:inline"
             alt="trainwreck"
           />
         </a>
@@ -57,12 +54,7 @@ export default function Footer() {
       <div class="space-y-3">
         <p data-i18n="Aux2">Have a question?</p>
         {/* <br class="sm:hidden" /> */}
-        <a
-          href="/faq"
-          class="underline block"
-          data-cy="faq-footer-link"
-          data-i18n="Aux3"
-        >
+        <a href="/faq" class="block underline" data-cy="faq-footer-link" data-i18n="Aux3">
           Check out the FAQ.
         </a>
         <p data-ccpa-link="1" class="underline" />

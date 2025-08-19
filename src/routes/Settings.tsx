@@ -1,4 +1,4 @@
-import { createEffect, createSignal, onMount, Suspense } from 'solid-js';
+import { createEffect, createSignal, onMount, Suspense, Setter } from 'solid-js';
 import Toggle from '../components/Toggle';
 import { getContext } from '../Context';
 import { useNavigate, useSearchParams } from '@solidjs/router';
@@ -18,7 +18,14 @@ export default function () {
 
   const isAlreadyDark = context.theme().isDark;
   const [isDark, setDark] = createSignal(isAlreadyDark);
-  createEffect(() => context?.setTheme({ isDark: isDark() }));
+  // Persist theme changes immediately to avoid races on navigation
+  const setDarkAndPersist: Setter<boolean> = (value: boolean | ((prev: boolean) => boolean)) => {
+    const next =
+      typeof value === 'function' ? (value as (prev: boolean) => boolean)(isDark()) : value;
+    setDark(next);
+    context?.setTheme({ isDark: next });
+    return next;
+  };
 
   const labelsAlreadyOn = context.labelsOn().labelsOn;
   const [labelsOn, setLabelsOn] = createSignal(labelsAlreadyOn);
@@ -123,7 +130,7 @@ export default function () {
         </h2>
         <div class="mx-auto max-w-xs space-y-3">
           <Toggle
-            setToggle={setDark}
+            setToggle={setDarkAndPersist}
             toggleProp={isDark}
             values={{
               on: { default: 'Night', i18n: 'Settings2' },
@@ -149,7 +156,8 @@ export default function () {
             }))}
           />
           <SelectMenu
-            name={i18next.t('Settings12', 'Colours')}
+            // Keep a stable name attribute for tests/selectors; label still translated inside component
+            name={'Colours'}
             i18n="Settings12"
             choice={colours}
             choose={setColours}
