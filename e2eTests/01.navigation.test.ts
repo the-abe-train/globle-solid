@@ -1,130 +1,44 @@
-import puppeteer, { Browser, Page } from 'puppeteer';
-import { test, expect, describe, beforeAll, afterAll } from 'vitest';
+import { test, expect } from '@playwright/test';
 
-describe('Navigation tests', () => {
-  let browser: Browser;
-  let page: Page;
+test.describe('Navigation tests', () => {
+  test('should display header and footer', async ({ page }) => {
+    await page.goto('/');
 
-  beforeAll(async () => {
-    console.log('🚀 Starting Navigation tests - setting up browser');
-    // await startAppServer();
-    browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-    page = await browser.newPage();
-    console.log('✅ Browser setup complete');
+    await expect(page.getByRole('heading', { level: 1, name: 'GLOBLE' })).toBeVisible();
+    await expect(page.locator('a[href="https://trainwrecklabs.com"]')).toHaveText('by Trainwreck Labs');
   });
 
-  afterAll(async () => {
-    console.log('🧹 Cleaning up browser for Navigation tests');
-    await browser.close();
-    console.log('✅ Browser closed');
-  });
+  test('Visits every nav link', async ({ page }) => {
+    // Home
+    await page.goto('/');
+    await expect(page).toHaveTitle('Globle');
+    await expect(page.getByRole('heading', { level: 2, name: 'How to Play' })).toBeVisible();
 
-  test('should display header and footer', async () => {
-    console.log('🧪 Running header and footer test');
-    await page.goto('http://localhost:8788/', {
-      waitUntil: 'networkidle2',
-    });
-    console.log('📄 Page loaded: ' + (await page.title()));
+    // Settings
+    await page.getByTestId('settings-link').click();
+    await expect(page).toHaveURL(/\/settings/);
+    await expect(page.locator('h2[data-i18n="SettingsTitle"]')).toHaveText('Settings');
 
-    const h1Text = await page.$eval('h1', (el) => el.textContent);
-    console.log('📝 Found h1 text: ' + h1Text);
-    expect(h1Text).toBe('GLOBLE');
+    // Practice
+    await page.getByTestId('practice-link').click();
+    await expect(page).toHaveURL(/\/practice/);
+    await expect(page.getByText('playing a practice game', { exact: false })).toBeVisible();
 
-    const anchorText = await page.$eval(
-      'a[href="https://trainwrecklabs.com"]',
-      (el) => el.textContent
-    );
-    console.log('📝 Found footer link text: ' + anchorText);
-    expect(anchorText).toBe('by Trainwreck Labs');
-    console.log('✅ Header and footer test completed');
-  });
+    // Game
+    await page.getByTestId('game-link').click();
+    await expect(page).toHaveURL(/\/game/);
+    await expect(page.getByTestId('guesser')).toBeVisible();
+    await expect(page.getByText('first guess', { exact: false })).toBeVisible();
 
-  test('Visits every nav link', async () => {
-    console.log('🧪 Starting navigation links journey test');
+    // FAQ
+    await page.getByTestId('faq-footer-link').click();
+    await expect(page).toHaveURL(/\/faq/);
+    await expect(page.getByRole('heading', { level: 2, name: /faq/i })).toBeVisible();
 
-    // Visit homepage
-    console.log('🌐 Navigating to homepage');
-    await page.goto('http://localhost:8788/', {
-      waitUntil: 'networkidle2',
-    });
-    const title = await page.title();
-    console.log('📄 Page title is: ' + title);
-    expect(title).toBe('Globle');
-
-    const h2Text = await page.$eval('h2', (el) => el.textContent);
-    console.log('📝 How to Play text is: ' + h2Text);
-    expect(h2Text).toBe('How to Play');
-
-    // Click Settings link
-    console.log('🌐 Navigating to Settings page');
-    await page.click('[data-cy="settings-link"]');
-    // SPA navigation: wait for URL change and the settings header to appear
-    await page.waitForFunction(() => location.pathname.includes('/settings'));
-    await page.waitForSelector('h2[data-i18n="SettingsTitle"]');
-    console.log('📄 Current URL: ' + page.url());
-    expect(page.url()).toContain('/settings');
-    const h1Test = await page.$eval('h1', (el) => el.textContent);
-    console.log('H1 test: ' + h1Test);
-    const settingsText = await page.$eval('h2[data-i18n="SettingsTitle"]', (el) => el.textContent);
-
-    console.log('📝 Settings text found: ' + settingsText);
-    expect(settingsText).toBe('Settings');
-
-    // Click Practice link
-    console.log('🌐 Navigating to Practice page');
-    await page.click('button[data-cy="practice-link"]');
-    await page.waitForFunction(() => location.pathname.includes('/practice'));
-    console.log('📄 Current URL: ' + page.url());
-    expect(page.url()).toContain('/practice');
-    const practiceText = await page.evaluate(() => {
-      return document.body.innerText.includes('playing a practice game');
-    });
-    console.log('📝 Practice text found: ' + practiceText);
-    expect(practiceText).toBe(true);
-
-    // Click Game link
-    console.log('🌐 Navigating to Game page');
-    await page.click('[data-cy="game-link"]');
-    await page.waitForFunction(() => location.pathname.includes('/game'));
-    await page.waitForSelector('[data-cy="guesser"]');
-    console.log('📄 Current URL: ' + page.url());
-    expect(page.url()).toContain('/game');
-    const gameText = await page.evaluate(() => {
-      return document.body.innerText.includes('first guess');
-    });
-    console.log('📝 Game text found: ' + gameText);
-    expect(gameText).toBe(true);
-
-    // Click FAQ link
-    console.log('🌐 Navigating to FAQ page');
-    await page.click('a[data-cy="faq-footer-link"]');
-    await page.waitForFunction(() => location.pathname.includes('/faq'));
-    await page.waitForSelector('h2');
-    console.log('📄 Current URL: ' + page.url());
-    expect(page.url()).toContain('/faq');
-    const faqText = await page.evaluate(() => {
-      return document.body.innerText.includes('FAQ');
-    });
-    console.log('📝 FAQ text found: ' + faqText);
-    expect(faqText).toBe(true);
-
-    // Click Privacy Policy link
-    console.log('🌐 Navigating to Privacy Policy page');
-    await page.click('[data-i18n="q9"]');
-    await page.click('a[href="/privacy-policy"]');
-    await page.waitForFunction(() => location.pathname.includes('/privacy-policy'));
-    await page.waitForSelector('h1');
-    console.log('📄 Current URL: ' + page.url());
-    expect(page.url()).toContain('/privacy-policy');
-    const privacyText = await page.evaluate(() => {
-      return document.body.innerText.includes('Privacy Policy');
-    });
-    console.log('📝 Privacy Policy text found: ' + privacyText);
-    expect(privacyText).toBe(true);
-
-    console.log('✅ Navigation links test completed successfully');
+    // Privacy Policy
+    await page.locator('[data-i18n="q9"]').click();
+    await page.locator('a[href="/privacy-policy"]').click();
+    await expect(page).toHaveURL(/\/privacy-policy/);
+    await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy' })).toBeVisible();
   });
 });
