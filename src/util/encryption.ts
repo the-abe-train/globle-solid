@@ -1,5 +1,6 @@
 import rawAnswerData from '../data/country_data.json';
-import crypto from 'crypto-js';
+import AES from 'crypto-js/aes';
+import Utf8 from 'crypto-js/enc-utf8';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 dayjs.extend(advancedFormat);
@@ -9,8 +10,8 @@ const key: string | undefined = import.meta.env.VITE_CRYPTO_KEY;
 export function decrypt(encryptedAnsKey: string | undefined) {
   if (!encryptedAnsKey) throw new Error('No encrypted answer provided');
   if (!key) throw new Error('Missing VITE_CRYPTO_KEY at build time');
-  const bytes = crypto.AES.decrypt(encryptedAnsKey, key);
-  const originalText = bytes.toString(crypto.enc.Utf8);
+  const bytes = AES.decrypt(encryptedAnsKey, key);
+  const originalText = bytes.toString(Utf8);
   const answerKey = parseInt(originalText);
   if (Number.isNaN(answerKey)) throw new Error('Invalid decrypted answer');
   const answer = rawAnswerData['features'][answerKey] as Country;
