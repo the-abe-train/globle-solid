@@ -1,4 +1,4 @@
-import { test, expect, describe } from "vitest";
+import { test, expect } from '@playwright/test';
 
 type ResourceProps = {
   token: string;
@@ -6,28 +6,27 @@ type ResourceProps = {
   isTeacher: boolean;
 };
 
-describe("Authentication and membership tests", () => {
-  const url = (email: string) =>
-    `http://localhost:8788/sponsor?email=${encodeURIComponent(email)}`;
+test.describe('Authentication and membership tests', () => {
+  const url = (email: string) => `/sponsor?email=${encodeURIComponent(email)}`;
 
-  test("Club memeber", async () => {
-    const response = await fetch(url("abraham.train@gmail.com"));
-    const json = (await response.json()) as ResourceProps;
-    console.log(json);
+  test('Club member', async ({ request, baseURL }) => {
+    const resp = await request.get(`${baseURL}${url('abraham.train@gmail.com')}`);
+    expect(resp.ok()).toBeTruthy();
+    const json = (await resp.json()) as ResourceProps;
     expect(json.clubMember).toBe(true);
   });
 
-  test("Teacher", async () => {
-    const response = await fetch(url("rgennes@andovercsd.org"));
-    const json = (await response.json()) as ResourceProps;
+  test('Teacher', async ({ request, baseURL }) => {
+    const resp = await request.get(`${baseURL}${url('rgennes@andovercsd.org')}`);
+    expect(resp.ok()).toBeTruthy();
+    const json = (await resp.json()) as ResourceProps;
     expect(json.isTeacher).toBe(true);
   });
 
-  test("Not a club member", async () => {
-    const response = await fetch(url("annabellybug08@gmail.com"));
-    const json = (await response.json()) as ResourceProps;
+  test('Not a club member', async ({ request, baseURL }) => {
+    const resp = await request.get(`${baseURL}${url('annabellybug08@gmail.com')}`);
+    expect(resp.ok()).toBeTruthy();
+    const json = (await resp.json()) as ResourceProps;
     expect(json.clubMember).toBe(false);
   });
 });
-
-export default {};

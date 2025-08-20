@@ -2,7 +2,15 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: 'e2eTests',
-  testMatch: ['**/01.navigation.test.ts', '**/02.answer.test.ts', '**/03.localStorage.test.ts'],
+  testMatch: [
+    '**/01.navigation.test.ts',
+    '**/02.answer.test.ts',
+    '**/03.localStorage.test.ts',
+  '**/04.guesser.test.ts',
+  '**/05.practice.test.ts',
+  '**/06.settings.test.ts',
+  '**/07.authentication.test.ts',
+  ],
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
