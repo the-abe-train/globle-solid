@@ -23,7 +23,7 @@ export default function () {
       console.log('Subscribing to newsletter');
       const res = await fetch(
         SUBSCRIBE_ENDPOINT,
-        withGatewayHeaders({ method: 'POST', body: JSON.stringify({ email }) })
+        withGatewayHeaders({ method: 'POST', body: email }),
       );
       const text = await res.text();
       console.log('Newsletter response:', text);

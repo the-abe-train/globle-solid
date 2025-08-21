@@ -1,5 +1,6 @@
 import { onMount, onCleanup } from 'solid-js';
 import { getContext } from '../Context';
+import { MONGO_GATEWAY_BASE } from '../util/api';
 
 export default function () {
   if (import.meta.env.MODE === 'development') {
@@ -51,7 +52,7 @@ export default function () {
               // success callback
               console.log('NitroPay Sponsor success');
               console.log(res);
-            }
+            },
           );
         }
       }
