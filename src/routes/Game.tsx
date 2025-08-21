@@ -20,6 +20,7 @@ import { translatePage } from "../i18n";
 import { createGuessStore } from "../util/stores";
 import NitroPayAd from "../components/NitroPayAd";
 import { addGameToStats, combineStats, getAcctStats } from "../util/stats";
+import { accountEndpoint as mkAccountEndpoint, DAILY_STATS_ENDPOINT, withGatewayHeaders } from "../util/api";
 
 const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
 
@@ -90,8 +91,8 @@ function Inner(props: Props) {
   createEffect(
     on(win, async () => {
       // Sync local storage with account
-      const email = context.user().email;
-      const accountEndpoint = "/account" + "?email=" + email;
+  const email = context.user().email;
+  const accountEndpoint = mkAccountEndpoint(String(email));
 
       // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
@@ -119,10 +120,10 @@ function Inner(props: Props) {
 
         // Store new stats in account
         if (email) {
-          fetch(accountEndpoint, {
+          fetch(accountEndpoint, withGatewayHeaders({
             method: "PUT",
             body: JSON.stringify(newStats),
-          });
+          }));
         }
 
         // Show stats
@@ -142,10 +143,10 @@ function Inner(props: Props) {
           win: true,
         };
         try {
-          fetch("/dailyStats", {
+          fetch(DAILY_STATS_ENDPOINT, withGatewayHeaders({
             method: "PUT",
             body: JSON.stringify(dailyStatsBody),
-          });
+          }));
         } catch (e) {
           console.error("Error storing daily stats", e);
         }
@@ -167,7 +168,7 @@ function Inner(props: Props) {
         guessNames = context.storedGuesses().countries;
       }
       try {
-        fetch("/dailyStats", {
+        fetch(DAILY_STATS_ENDPOINT, withGatewayHeaders({
           method: "PUT",
           body: JSON.stringify({
             date: dayjs().format("DD-MM-YYYY"),
@@ -176,7 +177,7 @@ function Inner(props: Props) {
             answer: props.ans.properties.NAME,
             win: win(),
           }),
-        }).then((res) => {
+        })).then((res) => {
           if (res.ok) {
             console.log("Daily stats stored");
           }

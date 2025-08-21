@@ -11,6 +11,7 @@ import TwlAccount from '../components/Twl/TwlAccount';
 import { combineStats, getAcctStats } from '../util/stats';
 import i18next from 'i18next';
 import Prompt from '../components/Prompt';
+import { withGatewayHeaders, accountEndpoint } from '../util/api';
 
 export default function () {
   const context = getContext();
@@ -64,7 +65,7 @@ export default function () {
     // If connected, fetch backup
     try {
       if (email) {
-        const endpoint = '/account' + '?email=' + email;
+        const endpoint = accountEndpoint(String(email));
         const accountStats = await getAcctStats(context);
         if (typeof accountStats === 'string') {
           return;
@@ -79,10 +80,10 @@ export default function () {
           context.storeStats(combinedStats);
 
           // Store combined stats in account
-          await fetch(endpoint, {
+          await fetch(endpoint, withGatewayHeaders({
             method: 'PUT',
             body: JSON.stringify(combinedStats),
-          });
+          }));
         }
       }
     } catch (e) {
@@ -107,11 +108,11 @@ export default function () {
     // Store new stats in account
     const email = context.user().email;
     if (email) {
-      const endpoint = '/account' + '?email=' + email;
-      fetch(endpoint, {
+      const endpoint = accountEndpoint(String(email));
+      fetch(endpoint, withGatewayHeaders({
         method: 'PUT',
         body: JSON.stringify(emptyStats),
-      });
+      }));
     }
     setPromptType('Message');
     setPromptText('Stats reset.');

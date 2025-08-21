@@ -1,44 +1,19 @@
-import { mongoApi } from "./account";
+import { GATEWAY_GAME_NAME, MONGO_GATEWAY_BASE } from "../src/util/api";
 
-type E = {
-  MONGO_URL: string;
-  DATABASE_NAME: string;
-  MONGO_API_KEY: string;
-};
+export const onRequest: PagesFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const target = `${MONGO_GATEWAY_BASE}/dailyStats${url.search}`;
 
-export const onRequestPut: PagesFunction<E> = async (context) => {
-  const { request, env } = context;
-  const body = await request.json();
-  const stats = body as DailyStats;
-  const { email, date } = stats;
-  // If not, check if TWL account exists
-  const json = await mongoApi(env, "accounts", "findOne", {
-    filter: { email },
-  });
-  // console.log("Exising TWL account:", json);
-  let twlId = json?.document?._id;
-  console.log({ twlId });
-  if (!twlId) {
-    return new Response(
-      JSON.stringify({
-        message: "TWL account not found",
-      }),
-      { status: 404, statusText: "TWL account not found" }
-    );
+  const headers = new Headers(request.headers);
+  headers.set("X-Game-Name", GATEWAY_GAME_NAME);
+  const hasBody = request.method !== "GET" && request.method !== "HEAD";
+  if (hasBody && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
   }
 
-  // Parse email from token
-  const output = await mongoApi(env, "globle-daily", "updateOne", {
-    filter: { email, date },
-    update: { $set: { ...stats, twlId: { $oid: twlId } } },
-    upsert: true,
-  });
-  console.log("Daily stats update:", output);
+  const init: RequestInit = { method: request.method, headers };
+  if (hasBody) init.body = await request.arrayBuffer();
 
-  return new Response(
-    JSON.stringify({
-      message: "Stats updated",
-    }),
-    { status: 200, statusText: "Stats updated" }
-  );
+  return fetch(target, init);
 };
+

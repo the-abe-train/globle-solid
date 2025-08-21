@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import rawAnswerData from '../src/data/country_data.json';
+import rawAnswerData from '../../src/data/country_data.json';
 
 test.describe('Play a practice game', () => {
   async function checkMsgText(page: import('@playwright/test').Page, expectedText: string) {

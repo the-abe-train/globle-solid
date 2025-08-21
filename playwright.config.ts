@@ -1,15 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: 'e2eTests',
+  // Look for tests in both legacy e2eTests and new tests/e2e_tests folders
+  testDir: '.',
   testMatch: [
-    '**/01.navigation.test.ts',
-    '**/02.answer.test.ts',
-    '**/03.localStorage.test.ts',
-  '**/04.guesser.test.ts',
-  '**/05.practice.test.ts',
-  '**/06.settings.test.ts',
-  '**/07.authentication.test.ts',
+    'e2eTests/**/*.test.ts',
+    'tests/e2e_tests/**/*.test.ts',
   ],
   fullyParallel: false,
   forbidOnly: !!process.env.CI,

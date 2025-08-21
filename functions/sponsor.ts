@@ -1,5 +1,5 @@
 import * as jose from "jose";
-import { mongoApi } from "./account";
+import { MONGO_GATEWAY_BASE, GATEWAY_GAME_NAME } from "../src/util/api";
 
 class Signer {
   private privateKey: string;
@@ -19,6 +19,7 @@ class Signer {
       email: userInfo.email || "",
       avatar: userInfo.avatar || "",
     };
+    // console.log("payload", payload);
 
     const jwt = await new jose.SignJWT(payload)
       .setProtectedHeader({ alg, typ: "JWT" })
@@ -68,46 +69,71 @@ export interface SubscriptionInfo {
   subscribedUntil: string;
 }
 
-type E = {
-  MONGO_URL: string;
-  DATABASE_NAME: string;
-  MONGO_API_KEY: string;
+type ExtendedE = {
   NITROPAY_PRIVATE_KEY: string;
 };
 
-export const onRequestGet: PagesFunction<E> = async (context) => {
+export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
   const { request, env } = context;
   const url = new URL(request.url);
   const email = url.searchParams.get("email") || "";
   if (!email) {
     return new Response("No email found in token", { status: 400 });
   }
+  console.log("Fetching token for user:", email);
 
-  // Get TWL account ID
-  const json = await mongoApi(env, "accounts", "findOne", {
-    filter: { email },
+  // Get TWL account ID via gateway
+  const acctUrl = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(
+    email
+  )}`;
+  const acctResp = await fetch(acctUrl, {
+    headers: { "X-Game-Name": GATEWAY_GAME_NAME },
   });
-  const twlId = json?.document?._id;
+  if (!acctResp.ok) {
+    return new Response("Failed to look up account", { status: 400 });
+  }
+  let twlId: string | undefined;
+  try {
+    const a = (await acctResp.json()) as any;
+    // Accept possible shapes
+    if (a?.document?._id) twlId = a.document._id;
+    else if (Array.isArray(a?.documents) && a.documents[0]?._id)
+      twlId = a.documents[0]._id;
+    else if (Array.isArray(a) && a[0]?._id) twlId = a[0]._id;
+  } catch {}
   if (!twlId) {
     return new Response("No TWL account found", { status: 400 });
   }
 
   try {
     const signer = new Signer(env.NITROPAY_PRIVATE_KEY);
-    const [teacherJson, token] = await Promise.all([
-      mongoApi(env, "teachers", "findOne", {
-        filter: { twlId: { $oid: twlId } },
-      }),
-      signer.sign({
-        userId: twlId,
-        siteId: "58",
-      }),
-    ]);
-    const isTeacher = !!teacherJson?.document;
 
-    // If stats, return stats
-    const clubMember = await signer.isSponsor(twlId);
+    // Check teacher via gateway by email
+    const teacherUrl = `${MONGO_GATEWAY_BASE}/teachers?email=${encodeURIComponent(
+      email
+    )}`;
+    const teacherResp = await fetch(teacherUrl, {
+      headers: { "X-Game-Name": GATEWAY_GAME_NAME },
+    });
+    let isTeacher = false;
+    if (teacherResp.ok) {
+      try {
+        const t = (await teacherResp.json()) as {
+          exists?: boolean;
+          twlId?: string;
+          email?: string;
+          matchedBy?: "twlId" | "email";
+        };
+        isTeacher = Boolean(t?.exists);
+      } catch {}
+    }
 
+    const token = await signer.sign({
+      userId: twlId,
+      siteId: "58",
+    });
+
+    const clubMember = signer.isSponsor(twlId);
     return new Response(JSON.stringify({ token, clubMember, isTeacher }), {
       status: 200,
       statusText: "Stats found",
@@ -119,3 +145,4 @@ export const onRequestGet: PagesFunction<E> = async (context) => {
     });
   }
 };
+

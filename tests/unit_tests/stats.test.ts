@@ -1,7 +1,7 @@
 // sum.test.js
 import { expect, test } from "vitest";
-import { addGameToStats, combineStats } from "../src/util/stats";
-import { getCountry } from "../src/util/data";
+import { addGameToStats, combineStats } from "../../src/util/stats";
+import { getCountry } from "../../src/util/data";
 import dayjs from "dayjs";
 
 test("sync devices", () => {

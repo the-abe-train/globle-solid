@@ -1,6 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import { emojiString } from "./colour";
 import { getContext } from "../Context";
+import { accountEndpoint } from "./api";
 import { GuessStore } from "./stores";
 
 export function addGameToStats(
@@ -94,7 +95,7 @@ export async function getAcctStats(context: ReturnType<typeof getContext>) {
   // Dev: Use localhost when testing locally
   const email = context.user().email;
   // const stats = context.storedStats();
-  const endpoint = "/account" + "?email=" + email;
+  const endpoint = accountEndpoint(String(email));
   // const body = JSON.stringify(stats);
   const response = await fetch(endpoint);
 

@@ -2,6 +2,7 @@
 
 import { onMount } from 'solid-js';
 import { getContext } from '../../Context';
+import { SUBSCRIBE_ENDPOINT, withGatewayHeaders } from '../../util/api';
 import JoinClubBtn from './JoinClubBtn';
 
 // type Props = {
@@ -20,10 +21,10 @@ export default function () {
   onMount(async () => {
     if (localStorage.getItem('twlNewsletter') === 'true') {
       console.log('Subscribing to newsletter');
-      const res = await fetch(`/subscribe`, {
-        method: 'POST',
-        body: email,
-      });
+      const res = await fetch(
+        SUBSCRIBE_ENDPOINT,
+        withGatewayHeaders({ method: 'POST', body: JSON.stringify({ email }) })
+      );
       const text = await res.text();
       console.log('Newsletter response:', text);
     }

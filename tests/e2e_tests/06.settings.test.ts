@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import rawAnswerData from '../src/data/country_data.json';
+import rawAnswerData from '../../src/data/country_data.json';
 
 test.describe('Settings tests', () => {
   const getNepalFill = async (page: import('@playwright/test').Page) => {
