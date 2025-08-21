@@ -40,7 +40,9 @@
     "vite-plugin-solid": "^2.11.8",
     "vitest": "^3.2.4",
     "concurrently": "^9.2.0",
-    "wrangler": "^4.31.0"
+    "wrangler": "^4.31.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.8"
   },
   "dependencies": {
     "@solidjs/router": "^0.15.3",

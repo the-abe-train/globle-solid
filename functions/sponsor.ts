@@ -1,6 +1,13 @@
 import * as jose from "jose";
 import { MONGO_GATEWAY_BASE, GATEWAY_GAME_NAME } from "../src/util/api";
 
+function json(body: Record<string, any>, init?: ResponseInit) {
+  return new Response(JSON.stringify(body), {
+    headers: { "Content-Type": "application/json" },
+    ...init,
+  });
+}
+
 class Signer {
   private privateKey: string;
 
@@ -78,7 +85,7 @@ export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
   const url = new URL(request.url);
   const email = url.searchParams.get("email") || "";
   if (!email) {
-    return new Response("No email found in token", { status: 400 });
+  return json({ message: "No email provided" }, { status: 400 });
   }
   console.log("Fetching token for user:", email);
 
@@ -90,7 +97,7 @@ export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
     headers: { "X-Game-Name": GATEWAY_GAME_NAME },
   });
   if (!acctResp.ok) {
-    return new Response("Failed to look up account", { status: 400 });
+  return json({ message: "Failed to look up account" }, { status: 400 });
   }
   let twlId: string | undefined;
   try {
@@ -102,7 +109,7 @@ export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
     else if (Array.isArray(a) && a[0]?._id) twlId = a[0]._id;
   } catch {}
   if (!twlId) {
-    return new Response("No TWL account found", { status: 400 });
+  return json({ message: "No TWL account found" }, { status: 400 });
   }
 
   try {
@@ -133,16 +140,11 @@ export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
       siteId: "58",
     });
 
-    const clubMember = signer.isSponsor(twlId);
-    return new Response(JSON.stringify({ token, clubMember, isTeacher }), {
-      status: 200,
-      statusText: "Stats found",
-    });
+  const clubMember = await signer.isSponsor(twlId);
+  return json({ token, clubMember, isTeacher }, { status: 200 });
   } catch (ex) {
     console.error(ex);
-    return new Response(JSON.stringify({ message: "Error signing token" }), {
-      status: 400,
-    });
+  return json({ message: "Error signing token" }, { status: 400 });
   }
 };
 

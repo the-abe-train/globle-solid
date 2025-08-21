@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {
   createEffect,
   createResource,
@@ -9,20 +9,20 @@ import {
   Setter,
   Show,
   Suspense,
-} from "solid-js";
-import Guesser from "../components/Guesser";
-import List from "../components/List";
-import { getAnswer } from "../util/encryption";
-import { getContext } from "../Context";
-import { getCountry, getTerritories } from "../util/data";
-import { polygonDistance } from "../util/geometry";
-import { translatePage } from "../i18n";
-import { createGuessStore } from "../util/stores";
-import NitroPayAd from "../components/NitroPayAd";
-import { addGameToStats, combineStats, getAcctStats } from "../util/stats";
-import { accountEndpoint as mkAccountEndpoint, DAILY_STATS_ENDPOINT, withGatewayHeaders } from "../util/api";
+} from 'solid-js';
+import Guesser from '../components/Guesser';
+import List from '../components/List';
+import { getAnswer } from '../util/encryption';
+import { getContext } from '../Context';
+import { getCountry, getTerritories } from '../util/data';
+import { polygonDistance } from '../util/geometry';
+import { translatePage } from '../i18n';
+import { createGuessStore } from '../util/stores';
+import NitroPayAd from '../components/NitroPayAd';
+import { addGameToStats, combineStats, getAcctStats } from '../util/stats';
+import { DAILY_STATS_ENDPOINT, MONGO_GATEWAY_BASE, withGatewayHeaders } from '../util/api';
 
-const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
+const GameGlobe = lazy(() => import('../components/globes/GameGlobe'));
 
 type OuterProps = {
   setShowStats: Setter<boolean>;
@@ -56,7 +56,7 @@ function Inner(props: Props) {
       const countries = oldGuesses.countries.map((countryName) => {
         const country = getCountry(countryName);
         const proximity = polygonDistance(country, props.ans);
-        country["proximity"] = proximity;
+        country['proximity'] = proximity;
         return country;
       });
       const territories = countries.flatMap((c) => getTerritories(c));
@@ -72,7 +72,7 @@ function Inner(props: Props) {
   // Effects
   createEffect(() => {
     const winningGuess = guesses.countries.find(
-      (c) => c.properties.NAME === props.ans.properties.NAME
+      (c) => c.properties.NAME === props.ans.properties.NAME,
     );
     if (winningGuess) setWin(true);
   });
@@ -91,19 +91,19 @@ function Inner(props: Props) {
   createEffect(
     on(win, async () => {
       // Sync local storage with account
-  const email = context.user().email;
-  const accountEndpoint = mkAccountEndpoint(String(email));
+      const email = context.user().email;
+      const accountEndpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
 
       // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const lastWin = dayjs(context.storedStats().lastWin);
-      if (win() && lastWin.isBefore(today, "date")) {
+      if (win() && lastWin.isBefore(today, 'date')) {
         if (email) {
           const accountStats = await getAcctStats(context);
-          if (typeof accountStats !== "string") {
+          if (typeof accountStats !== 'string') {
             const localStats = context.storedStats();
             const combinedStats = combineStats(localStats, accountStats);
-            console.log("Storing stats", combinedStats);
+            console.log('Storing stats', combinedStats);
             context.storeStats(combinedStats);
           }
         }
@@ -111,7 +111,7 @@ function Inner(props: Props) {
         const newStats = addGameToStats(
           context.storedStats(),
           guesses.countries,
-          props.ans
+          props.ans,
           // lastWin,
           // today
         );
@@ -120,10 +120,13 @@ function Inner(props: Props) {
 
         // Store new stats in account
         if (email) {
-          fetch(accountEndpoint, withGatewayHeaders({
-            method: "PUT",
-            body: JSON.stringify(newStats),
-          }));
+          fetch(
+            accountEndpoint,
+            withGatewayHeaders({
+              method: 'PUT',
+              body: JSON.stringify(newStats),
+            }),
+          );
         }
 
         // Show stats
@@ -136,27 +139,30 @@ function Inner(props: Props) {
           guessesNames = context.storedGuesses().countries;
         }
         const dailyStatsBody = {
-          date: today.format("DD-MM-YYYY"),
+          date: today.format('DD-MM-YYYY'),
           email,
           guesses: guessesNames,
           answer: props.ans.properties.NAME,
           win: true,
         };
         try {
-          fetch(DAILY_STATS_ENDPOINT, withGatewayHeaders({
-            method: "PUT",
-            body: JSON.stringify(dailyStatsBody),
-          }));
+          fetch(
+            DAILY_STATS_ENDPOINT,
+            withGatewayHeaders({
+              method: 'PUT',
+              body: JSON.stringify(dailyStatsBody),
+            }),
+          );
         } catch (e) {
-          console.error("Error storing daily stats", e);
+          console.error('Error storing daily stats', e);
         }
       }
-    })
+    }),
   );
 
   function addNewGuess(newGuess: Country) {
     const territories = getTerritories(newGuess);
-    setGuesses("places", (prev) => [...prev, newGuess, ...territories]);
+    setGuesses('places', (prev) => [...prev, newGuess, ...territories]);
     const countryName = newGuess.properties.NAME;
     context.storeGuesses((prev) => {
       return { ...prev, countries: [...prev.countries, countryName] };
@@ -168,34 +174,32 @@ function Inner(props: Props) {
         guessNames = context.storedGuesses().countries;
       }
       try {
-        fetch(DAILY_STATS_ENDPOINT, withGatewayHeaders({
-          method: "PUT",
-          body: JSON.stringify({
-            date: dayjs().format("DD-MM-YYYY"),
-            email,
-            guesses: guessNames,
-            answer: props.ans.properties.NAME,
-            win: win(),
+        fetch(
+          DAILY_STATS_ENDPOINT,
+          withGatewayHeaders({
+            method: 'PUT',
+            body: JSON.stringify({
+              date: dayjs().format('DD-MM-YYYY'),
+              email,
+              guesses: guessNames,
+              answer: props.ans.properties.NAME,
+              win: win(),
+            }),
           }),
-        })).then((res) => {
+        ).then((res) => {
           if (res.ok) {
-            console.log("Daily stats stored");
+            console.log('Daily stats stored');
           }
         });
       } catch (e) {
-        console.error("Error storing daily stats", e);
+        console.error('Error storing daily stats', e);
       }
     }
   }
 
   return (
     <div>
-      <Guesser
-        addGuess={addNewGuess}
-        guesses={guesses}
-        win={win}
-        ans={props.ans}
-      />
+      <Guesser addGuess={addNewGuess} guesses={guesses} win={win} ans={props.ans} />
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
       </Suspense>

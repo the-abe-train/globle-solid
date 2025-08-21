@@ -9,9 +9,8 @@ import { createPracticeAns } from '../util/practice';
 import { getColourScheme, translateColourScheme, untranslateColourScheme } from '../util/colour';
 import TwlAccount from '../components/Twl/TwlAccount';
 import { combineStats, getAcctStats } from '../util/stats';
-import i18next from 'i18next';
 import Prompt from '../components/Prompt';
-import { withGatewayHeaders, accountEndpoint } from '../util/api';
+import { MONGO_GATEWAY_BASE, withGatewayHeaders, } from '../util/api';
 
 export default function () {
   const context = getContext();
@@ -65,21 +64,22 @@ export default function () {
     // If connected, fetch backup
     try {
       if (email) {
-        const endpoint = accountEndpoint(String(email));
         const accountStats = await getAcctStats(context);
         if (typeof accountStats === 'string') {
           return;
         }
         const localStats = context.storedStats();
-
+        
         if (localStats.gamesWon === 0) {
           context.storeStats(accountStats);
         } else {
           // Combine local and account stats
           const combinedStats = combineStats(localStats, accountStats);
           context.storeStats(combinedStats);
-
+          
           // Store combined stats in account
+    const email = context.user().email;
+         const endpoint =    `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`
           await fetch(endpoint, withGatewayHeaders({
             method: 'PUT',
             body: JSON.stringify(combinedStats),
@@ -108,7 +108,7 @@ export default function () {
     // Store new stats in account
     const email = context.user().email;
     if (email) {
-      const endpoint = accountEndpoint(String(email));
+          const endpoint =    `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`
       fetch(endpoint, withGatewayHeaders({
         method: 'PUT',
         body: JSON.stringify(emptyStats),
