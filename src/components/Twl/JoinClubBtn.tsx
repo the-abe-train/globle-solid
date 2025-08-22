@@ -15,8 +15,10 @@ export default function () {
     const url = new URL(window.location.href);
     url.pathname = '/sponsor';
     url.searchParams.set('email', context.user().email);
+    console.log(`Fetching sponsor data from ${url}`);
     const res = await fetch(url);
     const json = await res.json();
+    console.log(`Fetched sponsor data: ${JSON.stringify(json)}`);
     return json as ResourceProps;
   });
 

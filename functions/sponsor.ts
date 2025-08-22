@@ -26,7 +26,7 @@ class Signer {
       email: userInfo.email || '',
       avatar: userInfo.avatar || '',
     };
-    // console.log("payload", payload);
+    console.log('payload', payload);
 
     const jwt = await new jose.SignJWT(payload)
       .setProtectedHeader({ alg, typ: 'JWT' })
@@ -45,6 +45,7 @@ class Signer {
     });
     try {
       const body = (await response.json()) as SubscriptionInfo;
+      console.log('Subscription info:', body);
       return body.status === 'active';
     } catch (_ex) {
       return false;
@@ -103,6 +104,7 @@ export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
     // console.log('Account data:', a);
     // Accept possible shapes
     twlId = a.twlId;
+    console.log('Found TWL ID:', twlId);
   } catch {}
   if (!twlId) {
     return json({ message: 'No TWL account found' }, { status: 400 });
@@ -133,8 +135,12 @@ export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
       userId: twlId,
       siteId: '58',
     });
+    console.log(`Generated token for user ${email}: ${token}`);
 
     const clubMember = await signer.isSponsor(twlId);
+    console.log(
+      `User ${email} (TWL ID: ${twlId}) club member: ${clubMember}, teacher: ${isTeacher}`,
+    );
     return json({ token, clubMember, isTeacher }, { status: 200 });
   } catch (ex) {
     console.error(ex);
