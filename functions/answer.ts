@@ -2414,7 +2414,7 @@ const onRequest: PagesFunction<E> = async (context) => {
       JSON.stringify({
         message: 'Mystery country retrieved.',
         answer,
-      })
+      }),
     );
   } catch (error) {
     console.error(error);
@@ -2424,7 +2424,7 @@ const onRequest: PagesFunction<E> = async (context) => {
         message,
         error,
       }),
-      { status: 500 }
+      { status: 500 },
     );
   }
 };

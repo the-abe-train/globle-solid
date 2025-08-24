@@ -18,16 +18,14 @@ export default function (props: Props) {
 
   onMount(translatePage);
 
-  const { gamesWon, lastWin, currentStreak, maxStreak, usedGuesses, emojiGuesses } =
-    context.storedStats();
-
   const wonToday = createMemo(() => {
     const lastWin = dayjs(context.storedStats().lastWin);
     return lastWin.isSame(dayjs(), 'date');
   });
 
   const statsTable = createMemo(() => {
-    const sumGuesses = usedGuesses.reduce((a, b) => a + b, 0);
+    const { gamesWon, lastWin, currentStreak, maxStreak, usedGuesses } = context.storedStats();
+    const sumGuesses = usedGuesses.reduce((a: number, b: number) => a + b, 0);
     const avgGuesses = Math.round((sumGuesses / usedGuesses.length) * 100) / 100;
     const showAvgGuesses = usedGuesses.length === 0 ? '--' : avgGuesses;
     const todaysGuesses = wonToday() ? usedGuesses[usedGuesses.length - 1] : '--';
@@ -53,8 +51,9 @@ export default function (props: Props) {
 
   // Share score
   async function copyToClipboard() {
+    const { lastWin, currentStreak, usedGuesses, emojiGuesses } = context.storedStats();
     const date = dayjs(lastWin);
-    const sumGuesses = usedGuesses.reduce((a, b) => a + b, 0);
+    const sumGuesses = usedGuesses.reduce((a: number, b: number) => a + b, 0);
     const avgGuesses = Math.round((sumGuesses / usedGuesses.length) * 100) / 100;
     const showAvgGuesses = usedGuesses.length === 0 ? '--' : avgGuesses;
     const todaysGuesses = wonToday() ? usedGuesses[usedGuesses.length - 1] : '--';
