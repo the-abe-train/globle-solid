@@ -98,24 +98,22 @@ function Inner(props: Props) {
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const lastWin = dayjs(context.storedStats().lastWin);
       if (win() && lastWin.isBefore(today, 'date')) {
+        let currentStats = context.storedStats();
+
+        // First, sync with account stats if user is logged in
         if (email) {
           const accountStats = await getAcctStats(context);
           if (typeof accountStats !== 'string') {
-            const localStats = context.storedStats();
-            const combinedStats = combineStats(localStats, accountStats);
-            console.log('Storing stats', combinedStats);
-            context.storeStats(combinedStats);
+            const combinedStats = combineStats(currentStats, accountStats);
+            console.log('Storing combined stats', combinedStats);
+            currentStats = combinedStats;
           }
         }
-        // Store new stats in local storage
-        const newStats = addGameToStats(
-          context.storedStats(),
-          guesses.countries,
-          props.ans,
-          // lastWin,
-          // today
-        );
 
+        // Then add the current game win to the stats
+        const newStats = addGameToStats(currentStats, guesses.countries, props.ans);
+
+        console.log("Storing final stats with today's win", newStats);
         context.storeStats(newStats);
 
         // Store new stats in account
