@@ -6,11 +6,12 @@ import SelectMenu from '../components/SelectMenu';
 import { langMap, translate, translatePage } from '../i18n';
 import NavGlobe from '../components/globes/NavGlobe';
 import { createPracticeAns } from '../util/practice';
+import { subscribeToNewsletter } from '../util/newsletter';
 import { getColourScheme, translateColourScheme, untranslateColourScheme } from '../util/colour';
 import TwlAccount from '../components/Twl/TwlAccount';
 import { combineStats, getAcctStats } from '../util/stats';
 import Prompt from '../components/Prompt';
-import { MONGO_GATEWAY_BASE, withGatewayHeaders, } from '../util/api';
+import { MONGO_GATEWAY_BASE, withGatewayHeaders } from '../util/api';
 
 export default function () {
   const context = getContext();
@@ -53,6 +54,8 @@ export default function () {
   const email = searchParams.email || context.user().email;
   if (email && typeof email === 'string') {
     context.setUser({ email });
+    // Subscribe to newsletter if user opted in (for Discord auth)
+    subscribeToNewsletter(email);
   }
 
   function enterPractice1() {
@@ -69,21 +72,24 @@ export default function () {
           return;
         }
         const localStats = context.storedStats();
-        
+
         if (localStats.gamesWon === 0) {
           context.storeStats(accountStats);
         } else {
           // Combine local and account stats
           const combinedStats = combineStats(localStats, accountStats);
           context.storeStats(combinedStats);
-          
+
           // Store combined stats in account
-    const email = context.user().email;
-         const endpoint =    `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`
-          await fetch(endpoint, withGatewayHeaders({
-            method: 'PUT',
-            body: JSON.stringify(combinedStats),
-          }));
+          const email = context.user().email;
+          const endpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
+          await fetch(
+            endpoint,
+            withGatewayHeaders({
+              method: 'PUT',
+              body: JSON.stringify(combinedStats),
+            }),
+          );
         }
       }
     } catch (e) {
@@ -108,11 +114,14 @@ export default function () {
     // Store new stats in account
     const email = context.user().email;
     if (email) {
-          const endpoint =    `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`
-      fetch(endpoint, withGatewayHeaders({
-        method: 'PUT',
-        body: JSON.stringify(emptyStats),
-      }));
+      const endpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
+      fetch(
+        endpoint,
+        withGatewayHeaders({
+          method: 'PUT',
+          body: JSON.stringify(emptyStats),
+        }),
+      );
     }
     setPromptType('Message');
     setPromptText('Stats reset.');

@@ -1,8 +1,7 @@
 // import JoinClubBtn from "./JoinClubBtn.tsx";
 
-import { onMount } from 'solid-js';
 import { getContext } from '../../Context';
-import { SUBSCRIBE_ENDPOINT, withGatewayHeaders } from '../../util/api';
+import { isEmailSubscribed } from '../../util/newsletter';
 import JoinClubBtn from './JoinClubBtn';
 
 // type Props = {
@@ -12,29 +11,20 @@ import JoinClubBtn from './JoinClubBtn';
 export default function () {
   const context = getContext();
   const email = context.user().email;
+  const isSubscribed = isEmailSubscribed(email);
 
   function logout() {
     context.setUser({ email: '' });
   }
-
-  // Sign up for newsletter
-  onMount(async () => {
-    if (localStorage.getItem('twlNewsletter') === 'true') {
-      console.log('Subscribing to newsletter');
-      const res = await fetch(
-        SUBSCRIBE_ENDPOINT,
-        withGatewayHeaders({ method: 'POST', body: email }),
-      );
-      const text = await res.text();
-      console.log('Newsletter response:', text);
-    }
-  });
 
   return (
     <div>
       <p class="text-center">
         <span data-i18n="TWL5">Account:</span> <span>{email}</span>
       </p>
+      {isSubscribed && (
+        <p class="mt-2 text-center text-sm text-green-600">✓ Subscribed to newsletter</p>
+      )}
       <div class="mx-auto my-4 flex w-full justify-center space-x-6">
         <JoinClubBtn />
         <button

@@ -2,6 +2,7 @@ import Icon from '../Icon';
 import { createEffect, createSignal, onMount } from 'solid-js';
 import { getContext } from '../../Context';
 import jwtDecode from 'jwt-decode';
+import { subscribeToNewsletter } from '../../util/newsletter';
 
 export default function () {
   const url = new URL(window.location.href);
@@ -21,9 +22,14 @@ export default function () {
     // Add email to context
     const email = jwtDecode<Token>(googleToken).email;
     context.setUser({ email });
+
+    // Subscribe to newsletter if user opted in
+    await subscribeToNewsletter(email);
   }
 
-  const [choice, setChoice] = createSignal(true);
+  const [choice, setChoice] = createSignal(
+    localStorage.getItem('twlNewsletter') === 'false' ? false : true, // Default to true if not set or 'true'
+  );
 
   // Persist newsletter choice
   createEffect(() => {
@@ -40,7 +46,12 @@ export default function () {
           auto_select: true,
         });
         if (googleBtn) {
-          google.accounts.id.renderButton(googleBtn, { type: 'standard' });
+          google.accounts.id.renderButton(googleBtn, {
+            type: 'standard',
+            theme: 'outline',
+            size: 'large',
+            width: '208', // Fixed width to match our container (w-52 = 208px)
+          });
         }
       }
     } catch (err) {
@@ -51,28 +62,55 @@ export default function () {
 
   return (
     <div class="mt-6">
+      <style>{`
+        /* Force Google button to maintain consistent width */
+        [data-credential-picker-iframe] {
+          width: 208px !important;
+          min-width: 208px !important;
+          max-width: 208px !important;
+        }
+        .g_id_signin {
+          width: 208px !important;
+          min-width: 208px !important;
+          max-width: 208px !important;
+        }
+        .g_id_signin iframe {
+          width: 208px !important;
+          min-width: 208px !important;
+          max-width: 208px !important;
+        }
+      `}</style>
       <p class="my-5 text-center text-sm" data-i18n="TWL1">
         Connect a TWL Account to backup your stats.
       </p>
-      <div class="mx-auto flex w-52 justify-center">
-        <div ref={(el) => (googleBtn = el)} class="my-1 flex h-10 w-full flex-col justify-center" />
+      <div class="mx-auto w-52 space-y-2">
+        <div class="flex h-10 w-full justify-center">
+          <div
+            ref={(el) => (googleBtn = el)}
+            class="flex h-full w-full flex-col justify-center"
+            style={{
+              'min-width': '208px',
+              'max-width': '208px',
+            }}
+          />
+        </div>
+        <form action="https://discord.com/api/oauth2/authorize">
+          <input hidden type="text" name="client_id" value={DISCORD_CLIENT_ID} />
+          <input hidden type="text" name="redirect_uri" value={discordRedirectUri} />
+          <input hidden type="text" name="response_type" value="code" />
+          <input hidden type="text" name="scope" value="identify email" />
+          <input hidden type="text" name="state" value={DISCORD_STATE} />
+          <button class="flex h-10 w-full max-w-[208px] min-w-[208px] items-center justify-center space-x-3 rounded border border-gray-100 bg-white p-1 align-middle shadow transition-shadow hover:shadow-md">
+            <span class="p-1 text-sm" data-i18n="TWL3">
+              Sign in with Discord
+            </span>
+            <div class="mt-1">
+              <Icon shape="discord" size={20} />
+            </div>
+          </button>
+        </form>
       </div>
-      <form action="https://discord.com/api/oauth2/authorize" class="mx-auto mb-3 w-52">
-        <input hidden type="text" name="client_id" value={DISCORD_CLIENT_ID} />
-        <input hidden type="text" name="redirect_uri" value={discordRedirectUri} />
-        <input hidden type="text" name="response_type" value="code" />
-        <input hidden type="text" name="scope" value="identify email" />
-        <input hidden type="text" name="state" value={DISCORD_STATE} />
-        <button class="my-2 flex h-10 w-full items-center justify-center space-x-3 rounded border bg-white p-1 align-middle shadow">
-          <span class="p-1 text-sm" data-i18n="TWL3">
-            Sign in with Discord
-          </span>
-          <div class="mt-1">
-            <Icon shape="discord" size={20} />
-          </div>
-        </button>
-      </form>
-      <form action="" class="mt-3 flex items-center justify-center space-x-1">
+      <form action="" class="mt-4 flex items-center justify-center space-x-1">
         <input
           type="checkbox"
           name="check"
