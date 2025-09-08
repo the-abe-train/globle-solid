@@ -1,5 +1,9 @@
 declare global {
-  type Unit = "km" | "miles";
+  // Version information injected by Vite
+  const __APP_VERSION__: string;
+  const __BUILD_TIME__: string;
+
+  type Unit = 'km' | 'miles';
 
   type Coords = {
     lat: number;
@@ -29,7 +33,7 @@ declare global {
     win: boolean;
   };
 
-  type ModalPrompt = "Choice" | "Message";
+  type ModalPrompt = 'Choice' | 'Message';
 
   type Token = {
     iss: string;
@@ -114,11 +118,11 @@ declare global {
     bbox: number[];
     geometry:
       | {
-          type: "Polygon";
+          type: 'Polygon';
           coordinates: number[][][];
         }
       | {
-          type: "MultiPolygon";
+          type: 'MultiPolygon';
           coordinates: number[][][][];
         };
   };
@@ -134,11 +138,11 @@ declare global {
     };
     geometry:
       | {
-          type: "Polygon";
+          type: 'Polygon';
           coordinates: number[][][];
         }
       | {
-          type: "MultiPolygon";
+          type: 'MultiPolygon';
           coordinates: number[][][][];
         };
   };

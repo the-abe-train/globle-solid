@@ -2,6 +2,7 @@ import Icon from './Icon';
 import trainwreckWhite from '../images/trainwreck-white.svg';
 import trainwreckBlack from '../images/trainwreck-black.svg';
 import { onMount } from 'solid-js';
+import VersionDisplay from './VersionDisplay';
 
 declare global {
   interface Window {
@@ -59,6 +60,7 @@ export default function Footer() {
         </a>
         <p data-ccpa-link="1" class="underline" />
         <div id="ncmp-consent-link" class="underline" />
+        <VersionDisplay className="mt-2" />
       </div>
     </footer>
   );
