@@ -172,6 +172,7 @@ function Inner(props: Props) {
         guessNames = context.storedGuesses().countries;
       }
       try {
+        // Update daily stats
         fetch(
           DAILY_STATS_ENDPOINT,
           withGatewayHeaders({
@@ -189,6 +190,17 @@ function Inner(props: Props) {
             console.log('Daily stats stored');
           }
         });
+
+        // Also sync account stats to keep them up to date
+        const accountEndpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
+        const currentStats = context.storedStats();
+        fetch(
+          accountEndpoint,
+          withGatewayHeaders({
+            method: 'PUT',
+            body: JSON.stringify(currentStats),
+          }),
+        );
       } catch (e) {
         console.error('Error storing daily stats', e);
       }

@@ -1,7 +1,6 @@
 // import JoinClubBtn from "./JoinClubBtn.tsx";
 
 import { getContext } from '../../Context';
-import { isEmailSubscribed } from '../../util/newsletter';
 import JoinClubBtn from './JoinClubBtn';
 
 // type Props = {
@@ -11,7 +10,6 @@ import JoinClubBtn from './JoinClubBtn';
 export default function () {
   const context = getContext();
   const email = context.user().email;
-  const isSubscribed = isEmailSubscribed(email);
 
   function logout() {
     context.setUser({ email: '' });
@@ -22,9 +20,6 @@ export default function () {
       <p class="text-center">
         <span data-i18n="TWL5">Account:</span> <span>{email}</span>
       </p>
-      {isSubscribed && (
-        <p class="mt-2 text-center text-sm text-green-600">✓ Subscribed to newsletter</p>
-      )}
       <div class="mx-auto my-4 flex w-full justify-center space-x-6">
         <JoinClubBtn />
         <button
