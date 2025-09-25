@@ -122,7 +122,10 @@ function Inner(props: Props) {
             accountEndpoint,
             withGatewayHeaders({
               method: 'PUT',
-              body: JSON.stringify(newStats),
+              body: JSON.stringify({
+                ...newStats,
+                lastWin: new Date(newStats.lastWin).toISOString(),
+              }),
             }),
           );
         }
@@ -131,7 +134,6 @@ function Inner(props: Props) {
         setTimeout(() => props.setShowStats(true), 2000);
       }
       if (email) {
-        // TODO add new game to stats db
         let guessesNames = guesses.countries.map((c) => c.properties.NAME);
         if (guessesNames.length === 0) {
           guessesNames = context.storedGuesses().countries;
