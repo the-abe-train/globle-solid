@@ -72,6 +72,7 @@ export default function () {
             format: 'anchor',
             anchor: 'bottom',
             anchorPersistClose: false,
+            anchorClose: true,
             mediaQuery: '(min-width: 0px)',
             report: {
               enabled: true,
