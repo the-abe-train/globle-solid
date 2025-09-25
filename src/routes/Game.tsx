@@ -90,16 +90,18 @@ function Inner(props: Props) {
   // When the player wins!
   createEffect(
     on(win, async () => {
+      console.log('Running win effect');
       // Sync local storage with account
       const email = context.user().email;
       const accountEndpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
-
       // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const lastWin = dayjs(context.storedStats().lastWin);
-      if (win() && lastWin.isBefore(today, 'date')) {
+      const answer = props.ans;
+      console.log('Last win:', lastWin.format('YYYY-MM-DD'));
+      console.log('Today:', today.format('YYYY-MM-DD'));
+      if (win() && lastWin.isBefore(today, 'date') && answer) {
         let currentStats = context.storedStats();
-
         // First, sync with account stats if user is logged in
         if (email) {
           const accountStats = await getAcctStats(context);
@@ -109,13 +111,11 @@ function Inner(props: Props) {
             currentStats = combinedStats;
           }
         }
-
         // Then add the current game win to the stats
+        console.log('Storing new game stats locally');
         const newStats = addGameToStats(currentStats, guesses.countries, props.ans);
-
         console.log("Storing final stats with today's win", newStats);
         context.storeStats(newStats);
-
         // Store new stats in account
         if (email) {
           fetch(
@@ -129,32 +129,33 @@ function Inner(props: Props) {
             }),
           );
         }
-
         // Show stats
         setTimeout(() => props.setShowStats(true), 2000);
-      }
-      if (email) {
-        let guessesNames = guesses.countries.map((c) => c.properties.NAME);
-        if (guessesNames.length === 0) {
-          guessesNames = context.storedGuesses().countries;
-        }
-        const dailyStatsBody = {
-          date: today.format('DD-MM-YYYY'),
-          email,
-          guesses: guessesNames,
-          answer: props.ans.properties.NAME,
-          win: true,
-        };
-        try {
-          fetch(
-            DAILY_STATS_ENDPOINT,
-            withGatewayHeaders({
-              method: 'PUT',
-              body: JSON.stringify(dailyStatsBody),
-            }),
-          );
-        } catch (e) {
-          console.error('Error storing daily stats', e);
+
+        // Update the daily stats
+        if (email) {
+          let guessesNames = guesses.countries.map((c) => c.properties.NAME);
+          if (guessesNames.length === 0) {
+            guessesNames = context.storedGuesses().countries;
+          }
+          const dailyStatsBody = {
+            date: today.format('YYYY-MM-DD'),
+            email,
+            guesses: guessesNames,
+            answer: props.ans.properties.NAME,
+            win: true,
+          };
+          try {
+            fetch(
+              DAILY_STATS_ENDPOINT,
+              withGatewayHeaders({
+                method: 'PUT',
+                body: JSON.stringify(dailyStatsBody),
+              }),
+            );
+          } catch (e) {
+            console.error('Error storing daily stats', e);
+          }
         }
       }
     }),
