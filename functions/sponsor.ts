@@ -96,6 +96,7 @@ export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
     headers: { 'X-Game-Name': GATEWAY_GAME_NAME },
   });
   if (!acctResp.ok) {
+    console.error('Failed to fetch account:', acctResp.status, acctResp.statusText);
     return json({ message: 'Failed to look up account' }, { status: 400 });
   }
   let twlId: string | undefined;

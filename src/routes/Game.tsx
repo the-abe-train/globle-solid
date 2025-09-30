@@ -96,11 +96,9 @@ function Inner(props: Props) {
       const accountEndpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
       // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
-      const lastWin = dayjs(context.storedStats().lastWin);
       const answer = props.ans;
-      console.log('Last win:', lastWin.format('YYYY-MM-DD'));
-      console.log('Today:', today.format('YYYY-MM-DD'));
-      if (win() && lastWin.isBefore(today, 'date') && answer) {
+      console.log('Player won, updating stats');
+      if (win() && answer) {
         let currentStats = context.storedStats();
         // First, sync with account stats if user is logged in
         if (email) {
@@ -118,6 +116,7 @@ function Inner(props: Props) {
         context.storeStats(newStats);
         // Store new stats in account
         if (email) {
+          console.log('Sending PUT request to account endpoint for:', email);
           fetch(
             accountEndpoint,
             withGatewayHeaders({
@@ -127,7 +126,23 @@ function Inner(props: Props) {
                 lastWin: new Date(newStats.lastWin).toISOString(),
               }),
             }),
-          );
+          )
+            .then((response) => {
+              if (response.ok) {
+                console.log('Successfully updated account stats');
+              } else {
+                console.error(
+                  'Failed to update account stats:',
+                  response.status,
+                  response.statusText,
+                );
+              }
+            })
+            .catch((error) => {
+              console.error('Error updating account stats:', error);
+            });
+        } else {
+          console.log('No email found, skipping account stats update');
         }
         // Show stats
         setTimeout(() => props.setShowStats(true), 2000);

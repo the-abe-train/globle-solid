@@ -1,6 +1,6 @@
 {
   "name": "vite-template-solid",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "packageManager": "pnpm@10.17.1",
   "scripts": {

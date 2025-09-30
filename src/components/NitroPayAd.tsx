@@ -126,8 +126,6 @@ export default function () {
         if (anchorAd) anchorAd.onNavigate();
         if (leftSiderail) leftSiderail.onNavigate();
 
-        // @ts-ignore
-        window['nitroAds'].stop();
         return console.log('NitroPay ad stopped.');
       }
     } catch (e) {
