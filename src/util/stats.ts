@@ -32,10 +32,23 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
   let mostWins = localStats.gamesWon > accountStats.gamesWon ? localStats : accountStats;
   // const gamesWonError = localStats.gamesWon > 1000;
   // if (gamesWonError) mostWins = accountStats;
+
+  const localLastWin = new Date(localStats.lastWin);
+  const accountLastWin = new Date(accountStats.lastWin);
+
+  // Determine latest stats: prioritize most recent date, then database on tie
   const latestStats =
-    new Date(localStats.lastWin) > new Date(accountStats.lastWin) ? localStats : accountStats;
+    localLastWin > accountLastWin
+      ? localStats
+      : accountLastWin > localLastWin
+        ? accountStats
+        : accountStats; // If equal, prefer database
   const olderStats =
-    new Date(localStats.lastWin) > new Date(accountStats.lastWin) ? accountStats : localStats;
+    localLastWin > accountLastWin
+      ? accountStats
+      : accountLastWin > localLastWin
+        ? localStats
+        : localStats; // If equal, the other one is local
   // const latestStats = localStats;
   // const olderStats = accountStats;
   const prevWin = dayjs(olderStats.lastWin);
