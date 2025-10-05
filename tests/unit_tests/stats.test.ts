@@ -192,6 +192,28 @@ test('add game to stats', () => {
   });
 });
 
+test('addGameToStats should not add duplicate if game already won today', () => {
+  const todayStr = dayjs().toString();
+  const statsWithTodayWin: Stats = {
+    lastWin: todayStr,
+    currentStreak: 6,
+    emojiGuesses: '🟩🟩',
+    gamesWon: 17,
+    maxStreak: 6,
+    usedGuesses: [...new Array(17).fill(1)],
+  };
+
+  // Try to add another game on the same day
+  const guesses = [getCountry('Ghana'), getCountry('Togo')];
+  const ans = getCountry('Benin');
+  const newStats = addGameToStats(statsWithTodayWin, guesses, ans);
+
+  // Stats should remain unchanged
+  expect(newStats).toEqual(statsWithTodayWin);
+  expect(newStats.gamesWon).toBe(17); // Should NOT increment
+  expect(newStats.usedGuesses.length).toBe(17); // Should NOT add new guess count
+});
+
 test('multiple refreshes should not increase gamesWon', () => {
   const todayDate = '2023-08-25';
   const localStats: Stats = {

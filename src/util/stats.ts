@@ -5,10 +5,17 @@ import { GuessStore } from './stores';
 import { MONGO_GATEWAY_BASE, withGatewayHeaders } from './api';
 
 export function addGameToStats(storedStats: Stats, guesses: Country[], ans: Country) {
-  // Store new stats in local storage
-  const gamesWon = storedStats.gamesWon + 1;
   const today = dayjs();
   const lastWin = dayjs(storedStats.lastWin);
+
+  // Check if user has already won today - if so, don't add duplicate game
+  if (today.isSame(lastWin, 'date')) {
+    console.log('Game already won today - not adding duplicate');
+    return storedStats;
+  }
+
+  // Store new stats in local storage
+  const gamesWon = storedStats.gamesWon + 1;
   const streakBroken = !dayjs().subtract(1, 'day').isSame(lastWin, 'date');
   const currentStreak = streakBroken ? 1 : storedStats.currentStreak + 1;
   const maxStreak = currentStreak > storedStats.maxStreak ? currentStreak : storedStats.maxStreak;
