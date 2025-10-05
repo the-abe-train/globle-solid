@@ -29,26 +29,23 @@ export function addGameToStats(storedStats: Stats, guesses: Country[], ans: Coun
 // On Oct 5, games won > 1000 was 612 (oops)
 
 export function combineStats(localStats: Stats, accountStats: Stats) {
+  const localLastWin = dayjs(localStats.lastWin);
+  const accountLastWin = dayjs(accountStats.lastWin);
+
+  // If both stats are from the same day, this is a duplicate - return database version
+  // Compare dates only (not timestamps) to avoid issues with different time formats
+  if (localLastWin.isSame(accountLastWin, 'date')) {
+    console.log('Same lastWin date detected - using database stats to avoid duplication');
+    return accountStats;
+  }
+
   let mostWins = localStats.gamesWon > accountStats.gamesWon ? localStats : accountStats;
   // const gamesWonError = localStats.gamesWon > 1000;
   // if (gamesWonError) mostWins = accountStats;
 
-  const localLastWin = new Date(localStats.lastWin);
-  const accountLastWin = new Date(accountStats.lastWin);
-
-  // Determine latest stats: prioritize most recent date, then database on tie
-  const latestStats =
-    localLastWin > accountLastWin
-      ? localStats
-      : accountLastWin > localLastWin
-        ? accountStats
-        : accountStats; // If equal, prefer database
-  const olderStats =
-    localLastWin > accountLastWin
-      ? accountStats
-      : accountLastWin > localLastWin
-        ? localStats
-        : localStats; // If equal, the other one is local
+  // Determine latest stats: prioritize most recent date
+  const latestStats = localLastWin.isAfter(accountLastWin, 'date') ? localStats : accountStats;
+  const olderStats = localLastWin.isAfter(accountLastWin, 'date') ? accountStats : localStats;
   // const latestStats = localStats;
   // const olderStats = accountStats;
   const prevWin = dayjs(olderStats.lastWin);

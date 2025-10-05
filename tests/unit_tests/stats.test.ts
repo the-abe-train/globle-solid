@@ -191,3 +191,96 @@ test('add game to stats', () => {
     usedGuesses: [...new Array(16).fill(1), 2],
   });
 });
+
+test('multiple refreshes should not increase gamesWon', () => {
+  const todayDate = '2023-08-25';
+  const localStats: Stats = {
+    lastWin: todayDate,
+    currentStreak: 5,
+    emojiGuesses: '🟩🟩',
+    gamesWon: 10,
+    maxStreak: 5,
+    usedGuesses: [...new Array(10).fill(1)],
+  };
+  const accountStats: Stats = {
+    lastWin: todayDate,
+    currentStreak: 5,
+    emojiGuesses: '🟩🟩',
+    gamesWon: 10,
+    maxStreak: 5,
+    usedGuesses: [...new Array(10).fill(1)],
+  };
+
+  // First refresh
+  const combinedStats1 = combineStats(localStats, accountStats);
+  expect(combinedStats1.gamesWon).toBe(10);
+
+  // Second refresh (simulating another page load)
+  const combinedStats2 = combineStats(combinedStats1, accountStats);
+  expect(combinedStats2.gamesWon).toBe(10);
+
+  // Third refresh
+  const combinedStats3 = combineStats(combinedStats2, accountStats);
+  expect(combinedStats3.gamesWon).toBe(10);
+
+  // Games won should remain stable across refreshes
+  expect(combinedStats1.gamesWon).toBe(localStats.gamesWon);
+  expect(combinedStats2.gamesWon).toBe(localStats.gamesWon);
+  expect(combinedStats3.gamesWon).toBe(localStats.gamesWon);
+});
+
+test('streak should not reset when syncing same-day stats', () => {
+  const todayDate = '2023-08-25';
+  const localStats: Stats = {
+    lastWin: todayDate,
+    currentStreak: 10,
+    emojiGuesses: '🟩🟩',
+    gamesWon: 25,
+    maxStreak: 12,
+    usedGuesses: [...new Array(25).fill(1)],
+  };
+  const accountStats: Stats = {
+    lastWin: todayDate,
+    currentStreak: 10,
+    emojiGuesses: '🟩🟩',
+    gamesWon: 25,
+    maxStreak: 12,
+    usedGuesses: [...new Array(25).fill(1)],
+  };
+
+  // Sync stats - this should preserve the streak
+  const combinedStats = combineStats(localStats, accountStats);
+
+  // Streak should be maintained, not reset to 1
+  expect(combinedStats.currentStreak).toBe(10);
+  expect(combinedStats.maxStreak).toBe(12);
+  expect(combinedStats.gamesWon).toBe(25);
+});
+
+test('streak should not reset with different timestamp formats for same day', () => {
+  // Simulate different date formats that represent the same calendar day
+  const localStats: Stats = {
+    lastWin: 'Fri Aug 25 2023 09:30:00 GMT-0400',
+    currentStreak: 7,
+    emojiGuesses: '🟩🟩',
+    gamesWon: 15,
+    maxStreak: 8,
+    usedGuesses: [...new Array(15).fill(1)],
+  };
+  const accountStats: Stats = {
+    lastWin: '2023-08-25T13:30:00.000Z', // Same day but ISO format, different time
+    currentStreak: 7,
+    emojiGuesses: '🟩🟩',
+    gamesWon: 15,
+    maxStreak: 8,
+    usedGuesses: [...new Array(15).fill(1)],
+  };
+
+  // Should recognize these as the same day despite different formats/times
+  const combinedStats = combineStats(localStats, accountStats);
+
+  // Streak should be preserved
+  expect(combinedStats.currentStreak).toBe(7);
+  expect(combinedStats.maxStreak).toBe(8);
+  expect(combinedStats.gamesWon).toBe(15);
+});
