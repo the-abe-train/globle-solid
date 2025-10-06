@@ -1,8 +1,23 @@
 import dayjs, { Dayjs } from 'dayjs';
+import { z } from 'zod';
 import { emojiString } from './colour';
 import { getContext } from '../Context';
 import { GuessStore } from './stores';
 import { MONGO_GATEWAY_BASE, withGatewayHeaders } from './api';
+
+// Zod schema for Stats validation
+const StatsSchema = z.object({
+  gamesWon: z.number(),
+  lastWin: z.string(),
+  currentStreak: z.number(),
+  maxStreak: z.number(),
+  usedGuesses: z.array(z.number()),
+  emojiGuesses: z.string(),
+});
+
+const AccountDataSchema = z.object({
+  stats: StatsSchema,
+});
 
 export function addGameToStats(storedStats: Stats, guesses: Country[], ans: Country) {
   const today = dayjs();
@@ -131,24 +146,21 @@ export async function getAcctStats(context: ReturnType<typeof getContext>) {
       return 'Account created!';
     }
 
-    // Parse response
-    const accountData = (await response.json()) as any;
-    console.log('Account data received:', accountData);
+    // Parse and validate response with Zod
+    const rawData = await response.json();
+    console.log('Account data received:', rawData);
 
-    // Validate stats structure
-    const accountStats = accountData.stats as Stats;
-    if (!accountStats) {
-      console.error('No stats found in account data');
-      return 'No stats found in account';
+    // Validate the entire account data structure
+    const validationResult = AccountDataSchema.safeParse(rawData);
+
+    if (!validationResult.success) {
+      console.error('Invalid account data structure:', validationResult.error.format());
+      return 'Invalid stats structure received from server';
     }
 
-    // Validate required fields
-    if (typeof accountStats.gamesWon !== 'number' || !Array.isArray(accountStats.usedGuesses)) {
-      console.error('Invalid stats structure:', accountStats);
-      return 'Invalid stats structure';
-    }
+    const accountStats = validationResult.data.stats;
 
-    console.log('Successfully fetched account stats:', {
+    console.log('Successfully fetched and validated account stats:', {
       gamesWon: accountStats.gamesWon,
       lastWin: accountStats.lastWin,
       currentStreak: accountStats.currentStreak,

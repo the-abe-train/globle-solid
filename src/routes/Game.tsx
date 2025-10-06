@@ -77,14 +77,36 @@ function Inner(props: Props) {
     if (winningGuess) setWin(true);
   });
 
-  onMount(() => {
+  onMount(async () => {
     translatePage();
     const expiration = dayjs(context.storedGuesses().day);
     if (dayjs().isAfter(expiration)) context.resetGuesses();
-    if (win())
+
+    // Sync stats on page load for logged-in users
+    const email = context.user().email;
+    if (email) {
+      console.log('Game page loaded - syncing stats for logged-in user');
+      try {
+        const accountStats = await getAcctStats(context);
+        if (typeof accountStats !== 'string') {
+          const localStats = context.storedStats();
+          const combinedStats = combineStats(localStats, accountStats);
+          console.log('Synced stats on game page load:', combinedStats);
+          context.storeStats(combinedStats);
+        } else {
+          console.warn('Failed to sync stats on game page load:', accountStats);
+        }
+      } catch (error) {
+        console.error('Error syncing stats on game page load:', error);
+      }
+    }
+
+    // If game is already won, show stats modal
+    if (win()) {
       setTimeout(() => {
         props.setShowStats(true);
       }, 3000);
+    }
   });
 
   // When the player wins!
