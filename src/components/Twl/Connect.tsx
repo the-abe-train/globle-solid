@@ -3,6 +3,7 @@ import { createEffect, createSignal, onMount } from 'solid-js';
 import { getContext } from '../../Context';
 import jwtDecode from 'jwt-decode';
 import { subscribeToNewsletter } from '../../util/newsletter';
+import { getAcctStats, combineStats } from '../../util/stats';
 
 export default function () {
   const url = new URL(window.location.href);
@@ -25,6 +26,28 @@ export default function () {
 
     // Subscribe to newsletter if user opted in
     await subscribeToNewsletter(email);
+
+    // Immediately sync stats after sign-in
+    console.log('Google sign-in successful - syncing stats');
+    try {
+      const accountStats = await getAcctStats(context);
+      if (typeof accountStats !== 'string') {
+        const localStats = context.storedStats();
+        if (localStats.gamesWon === 0) {
+          console.log('Local stats empty - using account stats from Google sign-in');
+          context.storeStats(accountStats);
+        } else {
+          console.log('Combining local and account stats after Google sign-in');
+          const combinedStats = combineStats(localStats, accountStats);
+          context.storeStats(combinedStats);
+        }
+        console.log('Stats synced successfully after Google sign-in');
+      } else {
+        console.error('Failed to sync stats after Google sign-in:', accountStats);
+      }
+    } catch (error) {
+      console.error('Error syncing stats after Google sign-in:', error);
+    }
   }
 
   const [choice, setChoice] = createSignal(

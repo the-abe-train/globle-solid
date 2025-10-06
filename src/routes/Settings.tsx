@@ -52,10 +52,38 @@ export default function () {
   // Get email from search params after Discord sign in
   const [searchParams] = useSearchParams();
   const email = searchParams.email || context.user().email;
+  const isNewDiscordSignIn = searchParams.email && typeof searchParams.email === 'string';
+
   if (email && typeof email === 'string') {
     context.setUser({ email });
     // Subscribe to newsletter if user opted in (for Discord auth)
     subscribeToNewsletter(email);
+
+    // If this is a new Discord sign-in (email came from URL params), sync stats immediately
+    if (isNewDiscordSignIn) {
+      console.log('Discord sign-in successful - syncing stats immediately');
+      (async () => {
+        try {
+          const accountStats = await getAcctStats(context);
+          if (typeof accountStats !== 'string') {
+            const localStats = context.storedStats();
+            if (localStats.gamesWon === 0) {
+              console.log('Local stats empty - using account stats from Discord sign-in');
+              context.storeStats(accountStats);
+            } else {
+              console.log('Combining local and account stats after Discord sign-in');
+              const combinedStats = combineStats(localStats, accountStats);
+              context.storeStats(combinedStats);
+            }
+            console.log('Stats synced successfully after Discord sign-in');
+          } else {
+            console.error('Failed to sync stats after Discord sign-in:', accountStats);
+          }
+        } catch (error) {
+          console.error('Error syncing stats after Discord sign-in:', error);
+        }
+      })();
+    }
   }
 
   function enterPractice1() {
@@ -67,33 +95,45 @@ export default function () {
     // If connected, fetch backup
     try {
       if (email) {
+        console.log('Settings mounted - syncing stats for:', email);
         const accountStats = await getAcctStats(context);
         if (typeof accountStats === 'string') {
+          console.error('Failed to fetch account stats in Settings:', accountStats);
+          // Don't sync if we can't fetch - keep local stats
           return;
         }
         const localStats = context.storedStats();
 
         if (localStats.gamesWon === 0) {
+          console.log('Local stats empty - using account stats');
           context.storeStats(accountStats);
         } else {
           // Combine local and account stats
+          console.log('Combining local and account stats');
           const combinedStats = combineStats(localStats, accountStats);
           context.storeStats(combinedStats);
 
           // Store combined stats in account
           const email = context.user().email;
           const endpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
-          await fetch(
+          console.log('Sending combined stats to database');
+          const response = await fetch(
             endpoint,
             withGatewayHeaders({
               method: 'PUT',
               body: JSON.stringify(combinedStats),
             }),
           );
+
+          if (!response.ok) {
+            console.error('Failed to save combined stats to database:', response.status);
+          } else {
+            console.log('Successfully saved combined stats to database');
+          }
         }
       }
     } catch (e) {
-      console.error('Failed to combine local and account stats.');
+      console.error('Failed to combine local and account stats:', e);
     }
   });
   // Add reset stats functionality

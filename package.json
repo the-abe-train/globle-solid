@@ -2,7 +2,7 @@
   "name": "globle",
   "version": "1.4.0",
   "description": "",
-  "packageManager": "pnpm@10.17.1",
+  "packageManager": "pnpm@10.18.1",
   "scripts": {
     "start": "vite",
     "dev": "concurrently \"vite build --watch --outDir dist\" \"wrangler pages dev dist\"",
@@ -42,7 +42,7 @@
     "vite-plugin-pwa": "^1.0.2",
     "vite-plugin-solid": "^2.11.8",
     "vitest": "^3.2.4",
-    "wrangler": "^4.40.1"
+    "wrangler": "^4.42.0"
   },
   "dependencies": {
     "@solidjs/router": "^0.15.3",

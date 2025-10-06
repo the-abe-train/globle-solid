@@ -107,6 +107,10 @@ function Inner(props: Props) {
             const combinedStats = combineStats(currentStats, accountStats);
             console.log('Storing combined stats', combinedStats);
             currentStats = combinedStats;
+          } else {
+            // Log the error but continue with local stats
+            console.warn('Failed to fetch account stats on win:', accountStats);
+            console.warn('Continuing with local stats only. Stats may be out of sync.');
           }
         }
         // Then add the current game win to the stats

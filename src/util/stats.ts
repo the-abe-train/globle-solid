@@ -67,7 +67,6 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
   const maxStreak = Math.max(currentStreak, olderStats.maxStreak, latestStats.maxStreak);
 
   // If no overlap, combine usedGuesses
-  // TODO if browser guesses is over 600, use the stats in the db instead
   let usedGuesses = streakContnues
     ? [...olderStats.usedGuesses, ...latestStats.usedGuesses]
     : mostWins.usedGuesses;
@@ -96,23 +95,73 @@ export async function getAcctStats(context: ReturnType<typeof getContext>) {
   // Dev: Use localhost when testing locally
   // const stats = context.storedStats();
   const email = context.user().email;
+
+  if (!email) {
+    console.error('getAcctStats called without email');
+    return 'No email provided';
+  }
+
   const endpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
-  // const body = JSON.stringify(stats);
-  const response = await fetch(endpoint, withGatewayHeaders());
 
-  // If failed to create account, show error
-  if (response.status !== 200) {
-    return 'Failed to connect to Google account.';
+  try {
+    console.log('Fetching account stats for:', email);
+
+    // Add timeout to prevent hanging
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+
+    const response = await fetch(endpoint, {
+      ...withGatewayHeaders(),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    console.log('Account stats response status:', response.status, response.statusText);
+
+    // If failed to fetch account, show error
+    if (response.status !== 200) {
+      console.error('Failed to fetch account stats. Status:', response.status);
+      return `Failed to connect to account. Status: ${response.status}`;
+    }
+
+    // If status is "Account created", then all is well.
+    if (response.statusText === 'Account created') {
+      console.log('New account created');
+      return 'Account created!';
+    }
+
+    // Parse response
+    const accountData = (await response.json()) as any;
+    console.log('Account data received:', accountData);
+
+    // Validate stats structure
+    const accountStats = accountData.stats as Stats;
+    if (!accountStats) {
+      console.error('No stats found in account data');
+      return 'No stats found in account';
+    }
+
+    // Validate required fields
+    if (typeof accountStats.gamesWon !== 'number' || !Array.isArray(accountStats.usedGuesses)) {
+      console.error('Invalid stats structure:', accountStats);
+      return 'Invalid stats structure';
+    }
+
+    console.log('Successfully fetched account stats:', {
+      gamesWon: accountStats.gamesWon,
+      lastWin: accountStats.lastWin,
+      currentStreak: accountStats.currentStreak,
+    });
+
+    return accountStats;
+  } catch (error: any) {
+    // Handle specific error types
+    if (error.name === 'AbortError') {
+      console.error('Account stats fetch timed out after 10 seconds');
+      return 'Request timed out';
+    }
+    console.error('Error fetching account stats:', error);
+    return `Error: ${error.message || 'Unknown error'}`;
   }
-
-  // If status is "Account created", then all is well.
-  if (response.statusText === 'Account created') {
-    return 'Account created!';
-  }
-
-  // If status is "Stats found", and no local stats, use account stats
-  const accountData = (await response.json()) as any;
-  const accountStats = accountData.stats as Stats;
-  if (!accountStats) return 'Failed to connect to Google account.';
-  return accountStats;
 }
