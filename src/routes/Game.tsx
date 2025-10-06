@@ -235,16 +235,9 @@ function Inner(props: Props) {
           }
         });
 
-        // Also sync account stats to keep them up to date
-        const accountEndpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
-        const currentStats = context.storedStats();
-        fetch(
-          accountEndpoint,
-          withGatewayHeaders({
-            method: 'PUT',
-            body: JSON.stringify(currentStats),
-          }),
-        );
+        // Note: We don't sync account stats here anymore
+        // Stats are synced in the win effect after combining with account stats
+        // to avoid race conditions and duplicate games
       } catch (e) {
         console.error('Error storing daily stats', e);
       }
