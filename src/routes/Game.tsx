@@ -139,34 +139,47 @@ function Inner(props: Props) {
         console.log('Storing new game stats locally');
         const newStats = addGameToStats(currentStats, guesses.countries, props.ans);
         console.log("Storing final stats with today's win", newStats);
+        console.log('newStats.lastWin value:', newStats.lastWin, 'type:', typeof newStats.lastWin);
         context.storeStats(newStats);
         // Store new stats in account
         if (email) {
           console.log('Sending PUT request to account endpoint for:', email);
-          fetch(
-            accountEndpoint,
-            withGatewayHeaders({
-              method: 'PUT',
-              body: JSON.stringify({
-                ...newStats,
-                lastWin: new Date(newStats.lastWin).toISOString(),
+          try {
+            // Safely convert lastWin to ISO format
+            let lastWinDate = new Date(newStats.lastWin);
+            if (isNaN(lastWinDate.getTime())) {
+              console.warn('Invalid lastWin date:', newStats.lastWin);
+              console.warn("Using today's date as fallback");
+              lastWinDate = new Date();
+            }
+
+            fetch(
+              accountEndpoint,
+              withGatewayHeaders({
+                method: 'PUT',
+                body: JSON.stringify({
+                  ...newStats,
+                  lastWin: lastWinDate.toISOString(),
+                }),
               }),
-            }),
-          )
-            .then((response) => {
-              if (response.ok) {
-                console.log('Successfully updated account stats');
-              } else {
-                console.error(
-                  'Failed to update account stats:',
-                  response.status,
-                  response.statusText,
-                );
-              }
-            })
-            .catch((error) => {
-              console.error('Error updating account stats:', error);
-            });
+            )
+              .then((response) => {
+                if (response.ok) {
+                  console.log('Successfully updated account stats');
+                } else {
+                  console.error(
+                    'Failed to update account stats:',
+                    response.status,
+                    response.statusText,
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error('Error updating account stats:', error);
+              });
+          } catch (error) {
+            console.error('Error preparing account stats update:', error);
+          }
         } else {
           console.log('No email found, skipping account stats update');
         }
