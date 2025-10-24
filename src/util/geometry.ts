@@ -1,7 +1,7 @@
-import * as geometry from "spherical-geometry-js";
-import { getCountry } from "./data";
-import { format } from "d3";
-import { formatKm } from "./text";
+import * as geometry from 'spherical-geometry-js';
+import { getCountry } from './data';
+import { format } from 'd3';
+import { formatKm } from './text';
 
 function pointToCoordinates(point: Array<number>) {
   // In the data, coordinates are [E/W (lng), N/S (lat)]
@@ -25,16 +25,16 @@ function samplePoints(points: number[][]) {
 function polygonPoints(country: Country) {
   const { geometry } = country;
   switch (geometry.type) {
-    case "Polygon":
+    case 'Polygon':
       return samplePoints(geometry.coordinates[0]);
-    case "MultiPolygon":
+    case 'MultiPolygon':
       let points: number[][] = [];
       for (const polygon of geometry.coordinates) {
         points = [...points, ...polygon[0]];
       }
       return samplePoints(points);
     default:
-      throw new Error("Country data error");
+      throw new Error('Country data error');
   }
 }
 
@@ -64,15 +64,15 @@ export function polygonDistance(country1: Country, country2: Country) {
   const name2 = country2.properties.NAME;
 
   const adjacentCountries: [string, string, number][] = [
-    ["South Africa", "Lesotho", 0],
-    ["Israel", "Jordan", 0],
-    ["Israel", "Lebanon", 0],
-    ["Israel", "Syria", 0],
-    ["Israel", "Egypt", 0],
-    ["Italy", "Vatican", 0],
-    ["Italy", "Vatican City", 0],
-    ["Italy", "San Marino", 0],
-    ["Italy", "Monaco", 10_000],
+    ['South Africa', 'Lesotho', 0],
+    ['Israel', 'Jordan', 0],
+    ['Israel', 'Lebanon', 0],
+    ['Israel', 'Syria', 0],
+    ['Israel', 'Egypt', 0],
+    ['Italy', 'Vatican', 0],
+    ['Italy', 'Vatican City', 0],
+    ['Italy', 'San Marino', 0],
+    ['Italy', 'Monaco', 10_000],
   ];
 
   for (const [m1, m2, distance] of adjacentCountries) {
@@ -85,22 +85,6 @@ export function polygonDistance(country1: Country, country2: Country) {
   const points2 = polygonPoints(country2);
   return calcProximity(points1, points2);
 }
-
-// function testDistance(country1: string, country2: string) {
-//   // find country objects by their names
-//   const c1 = getCountry(country1);
-//   const c2 = getCountry(country2);
-//   if (!c1 || !c2) {
-//     throw new Error("Country not found");
-//   }
-//   const distance = polygonDistance(c1, c2);
-//   const km = formatKm(distance);
-//   const miles = formatKm(distance * 0.621371);
-//   console.log(
-//     `Distance between ${country1} and ${country2} is ${km} km (${miles} miles)`
-//   );
-// }
-// testDistance("Ghana", "Bulgaria");
 
 export function altitudeFunction(area: number) {
   // This function may seem arbitrary but I made it with a spreadsheet

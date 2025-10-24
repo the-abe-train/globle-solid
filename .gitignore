@@ -13,3 +13,4 @@ wrangler.toml
 translate-text.txt
 src/.DS_Store
 .wrangler/
+test-results/
