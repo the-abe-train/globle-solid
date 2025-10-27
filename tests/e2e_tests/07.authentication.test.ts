@@ -23,6 +23,7 @@ test.describe('Authentication and membership tests', () => {
     expect(json.isTeacher).toBe(true);
   });
 
+  // Note: Will fail if dev server is not running.
   test('Not a club member', async ({ request, baseURL }) => {
     const resp = await request.get(`${baseURL}${url('annabellybug08@gmail.com')}`);
     expect(resp.ok()).toBeTruthy();

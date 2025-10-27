@@ -1,8 +1,7 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { z } from 'zod';
 import { emojiString } from './colour';
 import { getContext } from '../Context';
-import { GuessStore } from './stores';
 import { MONGO_GATEWAY_BASE, withGatewayHeaders } from './api';
 
 // Zod schema for Stats validation
