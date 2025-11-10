@@ -64,6 +64,7 @@ export default function (props: Props) {
   const parser = new UAParser();
   const device = parser.getDevice();
   const size = device.type === 'mobile' ? 320 : 600; // px on one side
+  const isMobile = device.type === 'mobile';
 
   // Turn globe on click
   // TODO if turning from click, don't use alt from arguments!
@@ -97,6 +98,7 @@ export default function (props: Props) {
           .backgroundColor('#00000000')
           .globeImageUrl(globeImg())
           .atmosphereColor(context.theme().isDark ? 'rgba(63, 201, 255)' : 'lightskyblue')
+          .atmosphereAltitude(isMobile ? 0.15 : 0.15) // Atmosphere thickness
           .onGlobeReady(() => setIsLoaded(true))
           .onGlobeClick(turnGlobe)
 
@@ -127,7 +129,9 @@ export default function (props: Props) {
         const controls = globe.controls();
         controls.autoRotate = true;
         controls.autoRotateSpeed = 1;
-        globe.pointOfView({ lat: 0, lng: 0, altitude: 1.5 });
+        // Zoom in more on mobile to make the globe appear larger and better lit
+        const initialAltitude = isMobile ? 1.8 : 1.5;
+        globe.pointOfView({ lat: 0, lng: 0, altitude: initialAltitude });
       } catch (error) {
         console.error('[GameGlobe] ERROR creating or configuring globe:', error);
       }
