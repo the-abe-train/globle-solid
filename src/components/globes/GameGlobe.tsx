@@ -88,44 +88,49 @@ export default function (props: Props) {
   onMount(() => {
     translatePage();
     if (globeRef) {
-      globe = new Globe(globeRef);
+      try {
+        globe = new Globe(globeRef);
 
-      globe
-        .width(size)
-        .height(size)
-        .backgroundColor('#00000000')
-        .globeImageUrl(globeImg())
-        .atmosphereColor(context.theme().isDark ? 'rgba(63, 201, 255)' : 'lightskyblue')
-        .onGlobeReady(() => setIsLoaded(true))
-        .onGlobeClick(turnGlobe)
+        globe
+          .width(size)
+          .height(size)
+          .backgroundColor('#00000000')
+          .globeImageUrl(globeImg())
+          .atmosphereColor(context.theme().isDark ? 'rgba(63, 201, 255)' : 'lightskyblue')
+          .onGlobeReady(() => setIsLoaded(true))
+          .onGlobeClick(turnGlobe)
 
-        .htmlElementsData(labels())
-        .htmlElement('element')
+          .htmlElementsData(labels())
+          .htmlElement('element')
 
-        .onPolygonClick((_p: object, _e: MouseEvent, { lat, lng }: { lat: number; lng: number }) =>
-          turnGlobe({ lat, lng }),
-        )
-        .polygonsData(unwrap(props.guesses.places))
-        .polygonCapColor((c: object) => getColour(c as Country, props.ans, isDark, colours))
-        .polygonAltitude(0.015)
-        .polygonSideColor(() => 'black')
-        .polygonLabel((c: object) =>
-          !labelsOn
-            ? `<p
+          .onPolygonClick(
+            (_p: object, _e: MouseEvent, { lat, lng }: { lat: number; lng: number }) =>
+              turnGlobe({ lat, lng }),
+          )
+          .polygonsData(unwrap(props.guesses.places))
+          .polygonCapColor((c: object) => getColour(c as Country, props.ans, isDark, colours))
+          .polygonAltitude(0.015)
+          .polygonSideColor(() => 'black')
+          .polygonLabel((c: object) =>
+            !labelsOn
+              ? `<p
         class="text-black py-1 px-2 text-center font-bold bg-yellow-50"
         style="background-color: ${labelBg};"
         >${formatName(c as Country, locale)}</p>`
-            : '',
-        )
-        .polygonStrokeColor(() => 'black')
+              : '',
+          )
+          .polygonStrokeColor(() => 'black')
 
-        .onZoom(overrideZoom);
+          .onZoom(overrideZoom);
 
-      // Initial settings
-      const controls = globe.controls();
-      controls.autoRotate = true;
-      controls.autoRotateSpeed = 1;
-      globe.pointOfView({ lat: 0, lng: 0, altitude: 1.5 });
+        // Initial settings
+        const controls = globe.controls();
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1;
+        globe.pointOfView({ lat: 0, lng: 0, altitude: 1.5 });
+      } catch (error) {
+        console.error('[GameGlobe] ERROR creating or configuring globe:', error);
+      }
     }
   });
 

@@ -1,39 +1,43 @@
-import { UAParser } from "ua-parser-js";
+import { UAParser } from 'ua-parser-js';
 
-import earthDay from "../images/earth-day.webp";
-import earthNight from "../images/earth-night.webp";
-import earthDayNoBg from "../images/earth-day-no-bg.webp";
-import earthNightNoBg from "../images/earth-night-no-bg.webp";
-import earthDaySafari from "../images/safari-14-earth-day.jpg";
-import earthNightSafari from "../images/safari-14-earth-night.jpg";
-import earthDayMin from "../images/earth-day-min.jpg";
-import earthNightMin from "../images/earth-night-min.jpg";
+import earthDay from '../images/earth-day.webp';
+import earthNight from '../images/earth-night.webp';
+import earthDayNoBg from '../images/earth-day-no-bg.webp';
+import earthNightNoBg from '../images/earth-night-no-bg.webp';
+import earthDaySafari from '../images/safari-14-earth-day.jpg';
+import earthNightSafari from '../images/safari-14-earth-night.jpg';
+import earthDayMin from '../images/earth-day-min.jpg';
+import earthNightMin from '../images/earth-night-min.jpg';
 
-import { getContext } from "../Context";
-import { getColour } from "./colour";
-import { formatName } from "./text";
+import { getContext } from '../Context';
+import { getColour } from './colour';
+import { formatName } from './text';
 
 function isSafari() {
   const parser = new UAParser();
   const browser = parser.getBrowser();
-  return browser.name === "Safari";
+  return browser.name === 'Safari';
+}
+
+function isMobile() {
+  const parser = new UAParser();
+  const device = parser.getDevice();
+  return device.type === 'mobile' || device.type === 'tablet';
 }
 
 export const globeImg = () => {
   const { theme } = getContext();
   const isDark = theme().isDark;
+
+  // Use smaller textures on mobile to avoid WebGL memory issues
+  if (isMobile()) {
+    return isDark ? earthNightMin : earthDayMin;
+  }
+
   if (isSafari()) {
-    if (isDark) {
-      return earthNightSafari;
-    } else {
-      return earthDaySafari;
-    }
+    return isDark ? earthNightSafari : earthDaySafari;
   } else {
-    if (isDark) {
-      return earthNight;
-    } else {
-      return earthDay;
-    }
+    return isDark ? earthNight : earthDay;
   }
 };
 
@@ -41,18 +45,15 @@ export const globePreviewImg = () => {
   const { theme } = getContext();
   const isDark = theme().isDark;
 
+  // Use smaller textures on mobile to avoid WebGL memory issues
+  if (isMobile()) {
+    return isDark ? earthNightMin : earthDayMin;
+  }
+
   if (isSafari()) {
-    if (isDark) {
-      return earthNightSafari;
-    } else {
-      return earthDaySafari;
-    }
+    return isDark ? earthNightSafari : earthDaySafari;
   } else {
-    if (isDark) {
-      return earthNightNoBg;
-    } else {
-      return earthDayNoBg;
-    }
+    return isDark ? earthNightNoBg : earthDayNoBg;
   }
 };
 
@@ -66,7 +67,7 @@ export function createPolygon(country: Country, ans: Country) {
   const { isDark } = getContext().theme();
   const { colours } = getContext().colours();
   const { locale } = getContext().locale();
-  const labelBg = isDark ? "#F3E2F1" : "#FEFCE8";
+  const labelBg = isDark ? '#F3E2F1' : '#FEFCE8';
   const output = {
     geometry: country?.geometry,
     colour: getColour(country, ans, isDark, colours),

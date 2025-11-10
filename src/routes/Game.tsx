@@ -112,14 +112,12 @@ function Inner(props: Props) {
   // When the player wins!
   createEffect(
     on(win, async () => {
-      console.log('Running win effect');
       // Sync local storage with account
       const email = context.user().email;
       const accountEndpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
       // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const answer = props.ans;
-      console.log('Player won, updating stats');
       if (win() && answer) {
         let currentStats = context.storedStats();
         // First, sync with account stats if user is logged in
