@@ -21,41 +21,47 @@ export default function Footer() {
     }
   });
   return (
-    <footer class="mb-24 flex w-full flex-grow items-end justify-between pt-8 pb-4 text-xs">
-      <div class="space-y-3">
-        <a href="https://trainwrecklabs.com" data-i18n="Footer1">
+    <footer class="mb-24 flex w-full flex-grow items-end justify-between gap-8 pt-8 pb-4 text-xs sm:px-0">
+      <div class="flex flex-col gap-3">
+        <a
+          href="https://trainwrecklabs.com"
+          data-i18n="Footer1"
+          class="flex items-center transition-opacity hover:opacity-80"
+        >
           <span>by Trainwreck Labs</span>
           <img
             src={trainwreckBlack}
             width={14}
             height={14}
-            class="mx-2 mb-[1px] inline dark:hidden"
+            class="mx-2 inline dark:hidden"
             alt="trainwreck"
           />
           <img
             src={trainwreckWhite}
             width={14}
             height={14}
-            class="mx-2 mb-[1px] hidden dark:inline"
+            class="mx-2 hidden dark:inline"
             alt="trainwreck"
           />
         </a>
         <a
           href="https://discord.gg/Xpyy8dCr9g"
           aria-label="Discord"
-          class="flex items-center space-x-2"
+          class="flex items-center gap-2 transition-opacity hover:opacity-80"
           target="_blank"
         >
-          <span class="mb-1" data-i18n="Footer3">
-            Find TWL on Discord
-          </span>
-          <Icon shape="discord" size={18} />
+          <span data-i18n="Footer3">Find TWL on Discord</span>
+          <Icon shape="discord" size={18} class="mt-1" />
         </a>
       </div>
-      <div class="space-y-3">
+      <div class="text-right">
         <p data-i18n="Aux2">Have a question?</p>
-        {/* <br class="sm:hidden" /> */}
-        <a href="/faq" class="block underline" data-cy="faq-footer-link" data-i18n="Aux3">
+        <a
+          href="/faq"
+          class="underline transition-opacity hover:opacity-80"
+          data-cy="faq-footer-link"
+          data-i18n="Aux3"
+        >
           Check out the FAQ.
         </a>
         <p data-ccpa-link="1" class="underline" />

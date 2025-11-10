@@ -17,7 +17,7 @@ export const English: i18nMessages = {
   Aux3: 'Check out the FAQ',
   Footer1: 'by Trainwreck Labs',
   Footer2: 'Enjoying the game?',
-  Footer3: 'Find Trainwreck Labs on Discord',
+  Footer3: 'Find TWL on Discord',
   Loading: 'Loading...',
   FAQTitle: 'FAQ',
   q1: '1. How is the distance between the answer and my guess calculated?',

@@ -14,18 +14,20 @@ const shapes = {
 
 type Props = {
   shape: keyof typeof shapes;
+  class?: string;
   size: number;
 };
 
 export default function (props: Props) {
   const path = shapes[props.shape];
+  const classProp = props.class ? props.class : '';
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`0 0 24 24`}
       height={props.size}
       width={props.size}
-      class="dark:fill-gray-200"
+      class={`dark:fill-gray-200 ${classProp}`}
     >
       <path fill="black dark:white" d={path} />
     </svg>
