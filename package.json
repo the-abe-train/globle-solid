@@ -1,6 +1,6 @@
 {
   "name": "globle",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "description": "",
   "packageManager": "pnpm@10.19.0",
   "scripts": {

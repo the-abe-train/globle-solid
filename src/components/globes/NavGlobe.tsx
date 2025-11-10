@@ -24,13 +24,13 @@ export default function () {
         globeInstance = new Globe(globeRef, { animateIn: true });
 
         globeInstance
+          .width(100)
+          .height(100)
           .globeImageUrl(globeMinImg())
           .backgroundColor('#00000000')
           .enablePointerInteraction(false)
           .showAtmosphere(false)
-          .pauseAnimation()
-          .width(100)
-          .height(100);
+          .pauseAnimation();
 
         const controls = globeInstance.controls();
         globeInstance.pointOfView({ lat: 0, lng: 0, altitude: 1.5 });

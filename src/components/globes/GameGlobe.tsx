@@ -91,10 +91,10 @@ export default function (props: Props) {
       globe = new Globe(globeRef);
 
       globe
-        .globeImageUrl(globeImg())
         .width(size)
         .height(size)
         .backgroundColor('#00000000')
+        .globeImageUrl(globeImg())
         .atmosphereColor(context.theme().isDark ? 'rgba(63, 201, 255)' : 'lightskyblue')
         .onGlobeReady(() => setIsLoaded(true))
         .onGlobeClick(turnGlobe)
