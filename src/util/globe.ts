@@ -6,7 +6,8 @@ import earthDayNoBg from '../images/earth-day-no-bg.webp';
 import earthNightNoBg from '../images/earth-night-no-bg.webp';
 import earthDaySafari from '../images/safari-14-earth-day.jpg';
 import earthNightSafari from '../images/safari-14-earth-night.jpg';
-import earthDayMin from '../images/earth-day-min.jpg';
+// import earthDayMin from '../images/earth-day-min.jpg';
+import earthDayMin from '../images/earth-day-small.webp';
 import earthNightMin from '../images/earth-night-min.jpg';
 
 import { getContext } from '../Context';

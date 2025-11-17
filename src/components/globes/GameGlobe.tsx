@@ -98,7 +98,6 @@ export default function (props: Props) {
           .backgroundColor('#00000000')
           .globeImageUrl(globeImg())
           .atmosphereColor(context.theme().isDark ? 'rgba(63, 201, 255)' : 'lightskyblue')
-          .atmosphereAltitude(isMobile ? 0.15 : 0.15) // Atmosphere thickness
           .onGlobeReady(() => setIsLoaded(true))
           .onGlobeClick(turnGlobe)
 
