@@ -233,7 +233,7 @@ function Inner(props: Props) {
           withGatewayHeaders({
             method: 'PUT',
             body: JSON.stringify({
-              date: dayjs().format('DD-MM-YYYY'),
+              date: dayjs().format('YYYY-MM-DD'),
               email,
               guesses: guessNames,
               answer: props.ans.properties.NAME,
