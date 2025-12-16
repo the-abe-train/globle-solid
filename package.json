@@ -1,8 +1,8 @@
 {
   "name": "globle",
   "version": "1.6.5",
-  "description": "",
-  "packageManager": "pnpm@10.19.0",
+  "description": "Use your geography knowledge to figure out the mystery country in as few guesses as possible!",
+  "packageManager": "pnpm@10.22.0",
   "scripts": {
     "dev": "vite build && wrangler pages dev dist",
     "dev:watch": "concurrently \"vite build --watch --outDir dist\" \"wrangler pages dev dist --live-reload\"",
@@ -44,7 +44,7 @@
     "vite-plugin-pwa": "^1.0.2",
     "vite-plugin-solid": "^2.11.8",
     "vitest": "^3.2.4",
-    "wrangler": "^4.46.0",
+    "wrangler": "^4.47.0",
     "zod": "^4.1.11"
   },
   "dependencies": {

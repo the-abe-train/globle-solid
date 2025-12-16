@@ -8,7 +8,9 @@ import externalIcon from '../images/other-games/external.svg';
 import linxiconLogo from '../images/other-games/linxicon-logo.png';
 import globleLogo from '../images/no-bg-logos/globle.png';
 import elemingleLogo from '../images/other-games/elemingle-logo.png';
+import stocktangleLogo from '../images/other-games/stocktangle-logo.png';
 import { translate } from '../i18n';
+import { useGoogleFont } from '../util/fonts';
 
 export default function () {
   const parser = new UAParser();
@@ -78,6 +80,15 @@ export default function () {
       logo: elemingleLogo,
       weight: 2,
     },
+    {
+      name: 'Stocktangle',
+      style: 'text-2xl mt-1 ml-1 mr-2',
+      url: 'https://stocktangle.com',
+      font: 'Lilita One',
+      bg: 'bg-amber-50',
+      logo: stocktangleLogo,
+      weight: 40,
+    },
   ];
 
   function pickWeightedRandomGame() {
@@ -96,6 +107,7 @@ export default function () {
   }
 
   const game = createMemo(() => pickWeightedRandomGame());
+  useGoogleFont(game().font);
 
   return (
     <div>
