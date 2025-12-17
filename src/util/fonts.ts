@@ -5,7 +5,8 @@ export function useGoogleFont(fontFamily: string) {
     if (!fontFamily) return;
 
     const link = document.createElement('link');
-    link.href = `https://fonts.googleapis.com/css2?family=${fontFamily}&display=swap`;
+    const encodedFont = fontFamily.replace(/ /g, '+');
+    link.href = `https://fonts.googleapis.com/css2?family=${encodedFont}&display=swap`;
     link.rel = 'stylesheet';
 
     // Defer appending to avoid blocking the main thread during mount
