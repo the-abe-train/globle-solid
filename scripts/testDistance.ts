@@ -16,5 +16,5 @@ function testDistance(country1: string, country2: string) {
 }
 
 // Get countries from command line arguments or use defaults
-const [country1 = 'Ghana', country2 = 'Bulgaria'] = process.argv.slice(2);
+const [country1 = 'United States of America', country2 = 'Cuba'] = process.argv.slice(2);
 testDistance(country1, country2);

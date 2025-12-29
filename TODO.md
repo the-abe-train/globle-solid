@@ -1,0 +1,1 @@
+- [ ] Fix disappearing labels in Firefox: Investigate and fix the issue where labels disappear after every guess or two in Firefox. The 'Labels' setting remains active, but the labels vanish from the globe. Reloading the page temporarily restores them. Issue does not occur in Chrome.
