@@ -39,7 +39,27 @@ export default function (props: Props) {
   const [isLoaded, setIsLoaded] = createSignal(false);
   const labelBg = isDark ? '#F3E2F1' : '#FEFCE8';
 
-  // function generateLabel
+  // Create a real DOM element for each label (not JSX)
+  // This is required because globe.gl expects HTMLElement instances,
+  // and Firefox is stricter about this than Chrome.
+  function createLabelElement(c: Country): HTMLElement {
+    const p = document.createElement('p');
+    p.className = 'bg-yellow-50 px-2 py-1 text-center text-sm text-black';
+    p.style.backgroundColor = labelBg;
+
+    const nameText = document.createTextNode(formatName(c as Country, locale));
+    p.appendChild(nameText);
+    p.appendChild(document.createElement('br'));
+
+    if (c.proximity) {
+      const distanceText = document.createTextNode(
+        `${formatKm(c.proximity)} ${context.distanceUnit().unit}`,
+      );
+      p.appendChild(distanceText);
+    }
+
+    return p;
+  }
 
   const labels = createMemo(() => {
     if (!labelsOn) return [];
@@ -48,15 +68,7 @@ export default function (props: Props) {
       return {
         lat,
         lng,
-        element: (
-          <p
-            class="bg-yellow-50 px-2 py-1 text-center text-sm text-black"
-            style={{ 'background-color': labelBg }}
-          >
-            {formatName(c as Country, locale)} <br />
-            {c.proximity ? `${formatKm(c.proximity)} ${context.distanceUnit().unit}` : ''}
-          </p>
-        ),
+        element: createLabelElement(c),
       };
     });
   });
