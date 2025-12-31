@@ -31,7 +31,32 @@ type OuterProps = {
 export default function Outer(props: OuterProps) {
   const [ans] = createResource(getAnswer);
   return (
-    <Show when={ans()} keyed>
+    <Show
+      when={ans()}
+      keyed
+      fallback={
+        <Show when={ans.error || (ans.state === 'ready' && !ans())}>
+          <div class="flex flex-col items-center justify-center p-8 text-center">
+            <h2 class="mb-4 text-xl font-bold text-red-500">Unable to load today's puzzle</h2>
+            <p class="mb-4 text-gray-600 dark:text-gray-300">
+              This is usually caused by an ad blocker, browser extension, or network restriction.
+            </p>
+            <ul class="mb-4 list-disc pl-5 text-left text-sm text-gray-500 dark:text-gray-400">
+              <li>Try disabling ad blockers or privacy extensions</li>
+              <li>Clear your browser cache and refresh</li>
+              <li>Try a different browser or incognito mode</li>
+              <li>If on a work/school network, try a personal network</li>
+            </ul>
+            <button
+              class="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </button>
+          </div>
+        </Show>
+      }
+    >
       {(ans) => {
         return <Inner setShowStats={props.setShowStats} ans={ans} />;
       }}
