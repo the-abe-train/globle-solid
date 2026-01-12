@@ -87,7 +87,7 @@ export default function () {
       font: 'Lilita One',
       bg: 'bg-amber-50',
       logo: stocktangleLogo,
-      weight: 40,
+      weight: 2,
     },
   ];
 
