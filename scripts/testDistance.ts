@@ -13,6 +13,12 @@ function testDistance(country1: string, country2: string) {
   const km = formatKm(distance);
   const miles = formatKm(distance * 0.621371);
   console.log(`Distance between ${country1} and ${country2} is ${km} km (${miles} miles)`);
+
+  if (distance === 0) {
+    console.log('These countries are adjacent!');
+  } else {
+    console.log(`Raw distance: ${distance} meters`);
+  }
 }
 
 // Get countries from command line arguments or use defaults
