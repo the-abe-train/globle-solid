@@ -142,6 +142,8 @@ export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
     console.log(
       `User ${email} (TWL ID: ${twlId}) club member: ${clubMember}, teacher: ${isTeacher}`,
     );
+    // "isTeacher" will return true if the player is in the "teachers" collection but also if they have the new trainwreck subscription.
+    // The existing clubMember field will become completely depracated when the NitroPay subscription is fully depracated.
     return json({ token, clubMember, isTeacher }, { status: 200 });
   } catch (ex) {
     console.error(ex);
