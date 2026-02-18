@@ -20,7 +20,7 @@ export default defineConfig({
         enabled: true,
       },
       workbox: {
-        navigateFallbackDenylist: [/^\/ads\.txt/],
+        navigateFallbackDenylist: [/^\/ads\.txt/, /^\/assets\//],
       },
     }),
   ],
