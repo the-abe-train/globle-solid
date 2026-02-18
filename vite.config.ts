@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
-import { VitePWA } from 'vite-plugin-pwa';
 import { readFileSync } from 'fs';
 
 // Read version from package.json
@@ -11,19 +10,7 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(packageJson.version),
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
-  plugins: [
-    solidPlugin(),
-    VitePWA({
-      injectRegister: 'auto',
-      registerType: 'autoUpdate',
-      devOptions: {
-        enabled: true,
-      },
-      workbox: {
-        navigateFallbackDenylist: [/^\/ads\.txt/, /^\/assets\//],
-      },
-    }),
-  ],
+  plugins: [solidPlugin()],
   server: {
     port: 3000,
   },

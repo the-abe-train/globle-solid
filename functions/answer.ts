@@ -2415,6 +2415,7 @@ const onRequest: PagesFunction<E> = async (context) => {
         message: 'Mystery country retrieved.',
         answer,
       }),
+      { headers: { 'Content-Type': 'application/json' } },
     );
   } catch (error) {
     console.error(error);
@@ -2424,7 +2425,7 @@ const onRequest: PagesFunction<E> = async (context) => {
         message,
         error,
       }),
-      { status: 500 },
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   }
 };

@@ -3,12 +3,10 @@ import {
   createEffect,
   createResource,
   createSignal,
-  lazy,
   on,
   onMount,
   Setter,
   Show,
-  Suspense,
 } from 'solid-js';
 import Guesser from '../components/Guesser';
 import List from '../components/List';
@@ -22,7 +20,7 @@ import NitroPayAd from '../components/NitroPayAd';
 import { addGameToStats, combineStats, getAcctStats } from '../util/stats';
 import { DAILY_STATS_ENDPOINT, MONGO_GATEWAY_BASE, withGatewayHeaders } from '../util/api';
 
-const GameGlobe = lazy(() => import('../components/globes/GameGlobe'));
+import GameGlobe from '../components/globes/GameGlobe';
 
 type OuterProps = {
   setShowStats: Setter<boolean>;
@@ -283,9 +281,7 @@ function Inner(props: Props) {
   return (
     <div>
       <Guesser addGuess={addNewGuess} guesses={guesses} win={win} ans={props.ans} />
-      <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
-        <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
-      </Suspense>
+      <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
       <List guesses={guesses} setPov={setPov} ans={props.ans} />
       <NitroPayAd />
     </div>
