@@ -114,8 +114,7 @@ test.describe('Stats Sync with Database', () => {
     await page.waitForTimeout(300);
 
     // Refresh the page to ensure stats persist
-    await page.reload();
-    await page.waitForLoadState('networkidle');
+    await Promise.all([page.waitForLoadState('networkidle'), page.reload()]);
 
     // Check stats again after refresh
     await page.getByRole('button', { name: 'Statistics' }).click();
