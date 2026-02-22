@@ -12,16 +12,6 @@ import Route404 from './routes/Route404';
 import Discord from './routes/Discord';
 import { logVersionInfo } from './util/version';
 
-// Unregister any stale service workers left from the old VitePWA setup.
-// These caused broken dynamic imports by serving HTML for JS asset requests.
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then((registrations) => {
-    for (const registration of registrations) {
-      registration.unregister();
-    }
-  });
-}
-
 const Home = lazy(() => import('./routes/Home'));
 const Settings = lazy(() => import('./routes/Settings'));
 const Game = lazy(() => import('./routes/Game'));
