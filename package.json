@@ -1,6 +1,6 @@
 {
   "name": "globle",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "Use your geography knowledge to figure out the mystery country in as few guesses as possible!",
   "packageManager": "pnpm@10.22.0",
   "scripts": {
@@ -16,7 +16,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "deploy": "vite build && wrangler pages deploy dist",
-    "test-distance": "tsx scripts/testDistance.ts"
+    "test-distance": "tsx scripts/testDistance.ts",
+    "check:version-bump": "node scripts/check-version-bump.cjs",
+    "prepare": "husky"
   },
   "license": "MIT",
   "devDependencies": {
@@ -32,6 +34,7 @@
     "concurrently": "^9.2.0",
     "dotenv": "^16.0.3",
     "happy-dom": "^17.4.4",
+    "husky": "^9.1.7",
     "jsdom": "^26.0.0",
     "postcss": "^8.4.19",
     "prettier": "^3.3.3",

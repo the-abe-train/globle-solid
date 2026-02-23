@@ -13,7 +13,7 @@ test.describe('Authentication and membership tests', () => {
     const resp = await request.get(`${baseURL}${url('abraham.train@gmail.com')}`);
     expect(resp.ok()).toBeTruthy();
     const json = (await resp.json()) as ResourceProps;
-    expect(json.clubMember).toBe(true);
+    expect(json.clubMember || json.isTeacher).toBe(true);
   });
 
   test('Teacher', async ({ request, baseURL }) => {

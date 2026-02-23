@@ -6,13 +6,29 @@ import App from './App';
 import { Router } from '@solidjs/router';
 import { GlobalContext, makeContext } from './Context';
 
-const SW_CLEANUP_SESSION_KEY = 'sw-cleanup-v2';
+const SW_CLEANUP_SESSION_KEY = 'sw-cleanup-v3';
+let cleanupInProgress = false;
+let cleanupCompleted = false;
 
-void (async () => {
-  if (!('serviceWorker' in navigator)) return;
+const cleanupLegacyServiceWorker = async () => {
+  if (cleanupInProgress || cleanupCompleted) return;
+  cleanupInProgress = true;
+
+  if (!('serviceWorker' in navigator)) {
+    cleanupCompleted = true;
+    cleanupInProgress = false;
+    return;
+  }
 
   try {
-    const registrations = await navigator.serviceWorker.getRegistrations();
+    let registrations: ServiceWorkerRegistration[] = [];
+    if (typeof navigator.serviceWorker.getRegistrations === 'function') {
+      registrations = await navigator.serviceWorker.getRegistrations();
+    } else {
+      const registration = await navigator.serviceWorker.getRegistration();
+      registrations = registration ? [registration] : [];
+    }
+
     const hadController = Boolean(navigator.serviceWorker.controller);
 
     const unregisterResults = await Promise.all(
@@ -34,10 +50,31 @@ void (async () => {
       sessionStorage.setItem(SW_CLEANUP_SESSION_KEY, '1');
       window.location.reload();
     }
+
+    try {
+      const readyRegistration = await navigator.serviceWorker.ready;
+      if (readyRegistration) {
+        await readyRegistration.unregister();
+      }
+    } catch {
+      // ignore ready failures
+    }
+
+    cleanupCompleted = true;
   } catch (error) {
     console.warn('Service worker cleanup failed', error);
+  } finally {
+    cleanupInProgress = false;
   }
-})();
+};
+
+void cleanupLegacyServiceWorker();
+window.addEventListener('load', () => {
+  void cleanupLegacyServiceWorker();
+});
+window.addEventListener('pageshow', () => {
+  void cleanupLegacyServiceWorker();
+});
 
 render(
   () => (
