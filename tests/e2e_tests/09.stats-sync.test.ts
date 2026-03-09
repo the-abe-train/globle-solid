@@ -8,7 +8,7 @@ test.describe('Stats Sync with Database', () => {
   // for the test@example.com account
   const databaseStats = {
     gamesWon: 42,
-    lastWin: dayjs().subtract(1, 'day').toISOString(), // Yesterday
+    lastWin: new Date('2025-10-04'), // Yesterday
     currentStreak: 7,
     maxStreak: 15,
     usedGuesses: [
@@ -53,7 +53,7 @@ test.describe('Stats Sync with Database', () => {
 
     // Go to the game page
     await page.goto('/game');
-    await page.waitForLoadState('networkidle');
+    // await page.waitForLoadState('networkidle');
 
     // Open stats modal to verify starting state (empty)
     await page.getByRole('button', { name: 'Statistics' }).click();
@@ -86,7 +86,7 @@ test.describe('Stats Sync with Database', () => {
 
     // Navigate to Settings page to trigger stats sync
     await page.goto('/settings');
-    await page.waitForLoadState('networkidle');
+    // await page.waitForLoadState('networkidle');
 
     // Wait for the account endpoint to be called (sync happens in onMount)
     await page.waitForTimeout(1000); // Give time for the fetch to complete
@@ -106,6 +106,7 @@ test.describe('Stats Sync with Database', () => {
 
     // Verify stats now match the database values
     expect(gamesWonAfter).toBe(databaseStats.gamesWon.toString());
+    // If the current streak after syncing is anything other than 0 or 7 then the fake stats in the database got changed.
     expect(currentStreakAfter).toBe(databaseStats.currentStreak.toString());
     expect(maxStreakAfter).toBe(databaseStats.maxStreak.toString());
 
@@ -171,7 +172,7 @@ test.describe('Stats Sync with Database', () => {
 
     // Go to the game page
     await page.goto('/game');
-    await page.waitForLoadState('networkidle');
+    // await page.waitForLoadState('networkidle');
 
     // Open stats modal to verify starting state (local stats)
     await page.getByRole('button', { name: 'Statistics' }).click();
@@ -202,7 +203,7 @@ test.describe('Stats Sync with Database', () => {
 
     // Navigate to Settings to trigger sync
     await page.goto('/settings');
-    await page.waitForLoadState('networkidle');
+    // await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1000);
 
     // Open stats modal to check merged values

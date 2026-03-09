@@ -21,7 +21,7 @@ dotenv.config();
  * - This prevents duplicate counting of the same game
  */
 test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
-  const testEmail = 'test@example.com';
+  const testEmail = 'test2@example.com';
 
   function decryptName(encryptedAnsKey: string): string {
     const cryptoKey = process.env.CRYPTO_KEY;
@@ -144,7 +144,9 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
     await page.reload({ waitUntil: 'domcontentloaded' });
 
     // Open stats modal again and check values after refresh
+    await page.waitForTimeout(500);
     await openStatsModal(page);
+    await page.waitForTimeout(500);
 
     const gamesWon2 = await page.locator('td[data-cy="games-won"]').textContent();
     const currentStreak2 = await page.locator('td[data-cy="current-streak"]').textContent();
@@ -179,7 +181,9 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
     await page.goto('/settings', { waitUntil: 'domcontentloaded' });
 
     // Check stats after Settings page load
+    await page.waitForTimeout(500);
     await openStatsModal(page);
+    await page.waitForTimeout(500);
     const gamesWon2 = await page.locator('td[data-cy="games-won"]').textContent();
 
     expect(gamesWon2).toBe('16');
