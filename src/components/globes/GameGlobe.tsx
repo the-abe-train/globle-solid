@@ -11,7 +11,7 @@ import {
 import { UAParser } from 'ua-parser-js';
 import { globeImg } from '../../util/globe';
 import { getContext } from '../../Context';
-import { findCentre } from '../../util/geometry';
+import { findCentre, polygonDistance } from '../../util/geometry';
 import { getColour } from '../../util/colour';
 import { formatKm, formatName } from '../../util/text';
 import { unwrap } from 'solid-js/store';
@@ -51,9 +51,12 @@ export default function (props: Props) {
     p.appendChild(nameText);
     p.appendChild(document.createElement('br'));
 
-    if (c.proximity) {
+    const labelDistance =
+      typeof c.proximity === 'number' ? c.proximity : polygonDistance(c, props.ans);
+
+    if (typeof labelDistance === 'number') {
       const distanceText = document.createTextNode(
-        `${formatKm(c.proximity)} ${context.distanceUnit().unit}`,
+        `${formatKm(labelDistance)} ${context.distanceUnit().unit}`,
       );
       p.appendChild(distanceText);
     }

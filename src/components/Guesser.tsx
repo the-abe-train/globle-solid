@@ -48,7 +48,7 @@ export default function (props: Props) {
     } else if (props.guesses.length === 1) {
       return translate(
         'Game4',
-        'Drag, tap, and zoom in on the globe to help you find your next guess.'
+        'Drag, tap, and zoom in on the globe to help you find your next guess.',
       );
     }
     return '';
@@ -144,7 +144,7 @@ export default function (props: Props) {
       setMsg(
         translate('Game19', `"${guess}" not found in database.`, {
           guess,
-        })
+        }),
       );
       return;
     }
@@ -169,7 +169,7 @@ export default function (props: Props) {
       setMsg(
         translate('Game19', `"${newGuess}" not found in database.`, {
           guess: newGuess,
-        })
+        }),
       );
       return;
     }
@@ -199,7 +199,7 @@ export default function (props: Props) {
       setMsg(
         translate('Game19', `"${newGuess}" not found in database.`, {
           guess: newGuess,
-        })
+        }),
       );
       return;
     }
@@ -227,7 +227,7 @@ export default function (props: Props) {
       setMsg(
         translate('Game20', `Did you mean ${name}?`, {
           guess: name,
-        })
+        }),
       );
       setSuggestion(name);
       return;
@@ -247,9 +247,10 @@ export default function (props: Props) {
   function submitGuess(guess: string) {
     console.log(`Submitting guess: ${guess}`);
     if (!guess) return setMsg('Enter your next guess.');
-    const newCountry = findCountry(guess);
-    if (!newCountry) return;
+    const foundCountry = findCountry(guess);
+    if (!foundCountry) return;
 
+    const newCountry = JSON.parse(JSON.stringify(foundCountry)) as Country;
     const name = newCountry.properties[locale === 'en-CA' ? 'NAME' : langKey()];
     const distance = polygonDistance(newCountry, props.ans);
     newCountry['proximity'] = distance;
@@ -264,15 +265,15 @@ export default function (props: Props) {
         setMsg(
           translate('Game15', '{{guess}} is almost adjacent to the answer!', {
             guess: name,
-          })
+          }),
         );
       } else {
         console.log(
           setMsg(
             translate('Game14', '{{guess}} is adjacent to the answer!', {
               guess: name,
-            })
-          )
+            }),
+          ),
         );
       }
       return;

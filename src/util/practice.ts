@@ -1,17 +1,16 @@
-import rawAnswerData from "../../src/data/country_data.json";
-import { getCountry } from "./data";
+import rawAnswerData from '../../src/data/country_data.json';
 
 export function createPracticeAns() {
-  const countries = rawAnswerData["features"] as Country[];
-  const practiceAnswer =
-    countries[Math.floor(Math.random() * countries.length)];
+  const countries = rawAnswerData['features'] as Country[];
+  const selected = countries[Math.floor(Math.random() * countries.length)];
+  const practiceAnswer = JSON.parse(JSON.stringify(selected)) as Country;
   // const practiceAnswer = getCountry("Italy");
-  localStorage.setItem("practice", JSON.stringify(practiceAnswer));
+  localStorage.setItem('practice', JSON.stringify(practiceAnswer));
   return practiceAnswer;
 }
 
 export function getPracticeAns() {
-  const ansString = localStorage.getItem("practice");
+  const ansString = localStorage.getItem('practice');
   let ans: Country;
   if (ansString) {
     ans = JSON.parse(ansString);

@@ -1,23 +1,15 @@
-import {
-  createEffect,
-  createSignal,
-  lazy,
-  onMount,
-  Setter,
-  Show,
-  Suspense,
-} from "solid-js";
-import Guesser from "../components/Guesser";
-import List from "../components/List";
-import { createPracticeAns, getPracticeAns } from "../util/practice";
-import Prompt from "../components/Prompt";
-import { useNavigate } from "@solidjs/router";
-import { createGuessStore } from "../util/stores";
-import { getTerritories } from "../util/data";
-import { translate, translatePage } from "../i18n";
-import NitroPayAd from "../components/NitroPayAd";
+import { createEffect, createSignal, lazy, onMount, Setter, Show, Suspense } from 'solid-js';
+import Guesser from '../components/Guesser';
+import List from '../components/List';
+import { createPracticeAns, getPracticeAns } from '../util/practice';
+import Prompt from '../components/Prompt';
+import { useNavigate } from '@solidjs/router';
+import { createGuessStore } from '../util/stores';
+import { getTerritories } from '../util/data';
+import { translate, translatePage } from '../i18n';
+import NitroPayAd from '../components/NitroPayAd';
 
-const GameGlobe = lazy(() => import("../components/globes/GameGlobe"));
+const GameGlobe = lazy(() => import('../components/globes/GameGlobe'));
 
 export default function Outer() {
   const [ans, setAns] = createSignal(getPracticeAns());
@@ -57,24 +49,25 @@ function Inner(props: InnerProps) {
   // New game
   function newGame() {
     setWin(false);
+    setGuesses('places', []);
     props.setAns(createPracticeAns());
   }
 
   function addGuess(newGuess: Country) {
     const territories = getTerritories(newGuess);
     // console.log("proximity", newGuess.proximity);
-    setGuesses("places", (prev) => [...prev, newGuess, ...territories]);
+    setGuesses('places', (prev) => [...prev, newGuess, ...territories]);
     return;
   }
 
   function revealAnswer() {
-    addGuess(props.ans);
+    addGuess({ ...props.ans, proximity: 0 });
   }
 
   // Effects
   createEffect(() => {
     const winningGuess = guesses.countries.find(
-      (c) => c.properties.NAME === props.ans.properties.NAME
+      (c) => c.properties.NAME === props.ans.properties.NAME,
     );
     if (winningGuess) {
       setWin(true);
@@ -87,12 +80,7 @@ function Inner(props: InnerProps) {
       <p class="italic" data-i18n="Practice1">
         You are playing a practice game.
       </p>
-      <Guesser
-        addGuess={addGuess}
-        guesses={guesses}
-        win={win}
-        ans={props.ans}
-      />
+      <Guesser addGuess={addGuess} guesses={guesses} win={win} ans={props.ans} />
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
         <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
       </Suspense>
@@ -101,10 +89,7 @@ function Inner(props: InnerProps) {
         when={!win()}
         fallback={
           <button
-            class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900
-              dark:hover:bg-purple-900 disabled:bg-blue-900  text-white 
-             focus:ring-4 focus:ring-blue-300 rounded-lg text-sm
-             px-4 py-2.5 text-center w-max"
+            class="w-max rounded-lg bg-blue-700 px-4 py-2.5 text-center text-sm text-white hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 disabled:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900"
             onClick={newGame}
             data-i18n="Practice3"
           >
@@ -113,10 +98,7 @@ function Inner(props: InnerProps) {
         }
       >
         <button
-          class="bg-blue-700 dark:bg-purple-800 hover:bg-blue-900
-              dark:hover:bg-purple-900 disabled:bg-blue-900  text-white 
-             focus:ring-4 focus:ring-blue-300 rounded-lg text-sm
-             px-4 py-2.5 text-center w-max"
+          class="w-max rounded-lg bg-blue-700 px-4 py-2.5 text-center text-sm text-white hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 disabled:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900"
           onClick={revealAnswer}
           data-i18n="Game18"
         >
@@ -125,7 +107,7 @@ function Inner(props: InnerProps) {
       </Show>
       <Prompt
         promptType="Choice"
-        text={translate("Practice3", "Play again")}
+        text={translate('Practice3', 'Play again')}
         showPrompt={showPrompt}
         setShowPrompt={setShowPrompt}
         yes={newGame}
