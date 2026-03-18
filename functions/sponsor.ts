@@ -132,15 +132,33 @@ export const onRequestGet: PagesFunction<ExtendedE> = async (context) => {
       } catch {}
     }
 
+    // Check TWL account subscription status via gateway by email
+    const twlAccountUrl = `${MONGO_GATEWAY_BASE}/twlAccount?email=${encodeURIComponent(email)}`;
+    const twlAccountResp = await fetch(twlAccountUrl, {
+      headers: { 'X-Game-Name': GATEWAY_GAME_NAME },
+    });
+    let hasActiveGatewaySubscription = false;
+    if (twlAccountResp.ok) {
+      try {
+        const accountDoc = (await twlAccountResp.json()) as {
+          subscription?: {
+            active?: boolean;
+          };
+        };
+        hasActiveGatewaySubscription = accountDoc?.subscription?.active === true;
+      } catch {}
+    }
+
     const token = await signer.sign({
       userId: twlId,
       siteId: '58',
     });
     console.log(`Generated token for user ${email}: ${token}`);
 
-    const clubMember = await signer.isSponsor(twlId);
+    const isNitroSponsor = await signer.isSponsor(twlId);
+    const clubMember = isNitroSponsor || hasActiveGatewaySubscription;
     console.log(
-      `User ${email} (TWL ID: ${twlId}) club member: ${clubMember}, teacher: ${isTeacher}`,
+      `User ${email} (TWL ID: ${twlId}) club member: ${clubMember}, nitro sponsor: ${isNitroSponsor}, gateway subscription active: ${hasActiveGatewaySubscription}, teacher: ${isTeacher}`,
     );
     // "isTeacher" will return true if the player is in the "teachers" collection but also if they have the new trainwreck subscription.
     // The existing clubMember field will become completely depracated when the NitroPay subscription is fully depracated.
