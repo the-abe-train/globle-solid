@@ -16,6 +16,7 @@ import { MONGO_GATEWAY_BASE, withGatewayHeaders } from '../util/api';
 export default function () {
   const context = getContext();
   const navigate = useNavigate();
+  const GAME = 'globle';
 
   const isAlreadyDark = context.theme().isDark;
   const [isDark, setDark] = createSignal(isAlreadyDark);
@@ -231,6 +232,20 @@ export default function () {
             Reset
           </button>
         </div>
+      </div>
+      <div class="mt-4 flex justify-center px-4">
+        <p class="text-sm text-current/80">
+          Check out your stats and compare yourself to other players on the{' '}
+          <a
+            class="text-blue-700 underline decoration-blue-700/50 underline-offset-2 transition-colors hover:text-blue-800 dark:text-purple-300 dark:decoration-purple-300/50 dark:hover:text-purple-200"
+            href={`https://trainwrecklabs.com/dashboard?game=${GAME}&utm_source=${GAME}&utm_medium=website&utm_campaign=dashboard`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Trainwreck Labs dashboard
+          </a>
+          .
+        </p>
       </div>
       <TwlAccount />
       <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>

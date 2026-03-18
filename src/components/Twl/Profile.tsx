@@ -30,12 +30,6 @@ export default function () {
           Disconnect
         </button>
       </div>
-      <p class="text-center">
-        <span data-i18n="TWL9">Go to your </span>{' '}
-        <a href="https://trainwrecklabs.com/dashboard" class="underline" target="_blank">
-          Trainwreck Labs dashboard
-        </a>
-      </p>
     </div>
   );
 }
