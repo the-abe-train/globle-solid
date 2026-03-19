@@ -15,3 +15,4 @@ src/.DS_Store
 .wrangler/
 test-results/
 src/images/.DS_Store
+public/version.json

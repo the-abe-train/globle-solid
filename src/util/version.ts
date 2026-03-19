@@ -30,29 +30,26 @@ export function getVersionDisplay(): string {
   return `v${__APP_VERSION__} (${new Date(__BUILD_TIME__).toLocaleDateString()})`;
 }
 
-// Check if service worker has updated and version has changed
-export function checkForVersionUpdate(): Promise<boolean> {
-  return new Promise((resolve) => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        // Service worker has been updated
-        console.log('🔄 Service worker updated - new version available');
-        resolve(true);
-      });
-
-      // Check if there's a waiting service worker
-      navigator.serviceWorker.getRegistration().then((registration) => {
-        if (registration?.waiting) {
-          console.log('⏳ New version waiting to be activated');
-          resolve(true);
-        } else {
-          resolve(false);
-        }
-      });
-    } else {
-      resolve(false);
-    }
-  });
+// Fetch the latest version from the server and compare with the running version
+export async function checkForUpdate(): Promise<{
+  available: boolean;
+  latestVersion?: string;
+  latestBuildTime?: string;
+}> {
+  try {
+    const response = await fetch('/version.json', { cache: 'no-store' });
+    if (!response.ok) return { available: false };
+    const data = (await response.json()) as { version: string; buildTime: string };
+    const current = getVersionInfo();
+    const available = data.buildTime !== current.buildTime;
+    return {
+      available,
+      latestVersion: data.version,
+      latestBuildTime: data.buildTime,
+    };
+  } catch {
+    return { available: false };
+  }
 }
 
 // Store version info in localStorage for comparison

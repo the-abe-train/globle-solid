@@ -1,8 +1,7 @@
 import { Component, createSignal, onMount } from 'solid-js';
 import {
-  getVersionInfo,
   getVersionDisplay,
-  checkForVersionUpdate,
+  checkForUpdate,
   storeVersionInfo,
   hasVersionChanged,
 } from '../util/version';
@@ -13,51 +12,52 @@ interface VersionDisplayProps {
 }
 
 export const VersionDisplay: Component<VersionDisplayProps> = (props) => {
-  const [versionInfo, setVersionInfo] = createSignal(getVersionInfo());
   const [updateAvailable, setUpdateAvailable] = createSignal(false);
-  const [versionChanged, setVersionChanged] = createSignal(false);
+  const [checking, setChecking] = createSignal(false);
+  const [updateTriggered, setUpdateTriggered] = createSignal(false);
 
   onMount(() => {
     // Check if version has changed since last visit
-    setVersionChanged(hasVersionChanged());
-
-    // Store current version info
-    storeVersionInfo();
-
-    // Check for service worker updates
-    checkForVersionUpdate().then(setUpdateAvailable);
+    if (hasVersionChanged()) {
+      storeVersionInfo();
+    } else {
+      storeVersionInfo();
+    }
   });
 
-  const refreshPage = () => {
-    window.location.reload();
+  const checkAndUpdate = async () => {
+    setChecking(true);
+    try {
+      const result = await checkForUpdate();
+      if (result.available) {
+        setUpdateAvailable(true);
+        setUpdateTriggered(true);
+        // Clear any cached resources and hard reload
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map((key) => caches.delete(key)));
+        }
+        window.location.reload();
+      } else {
+        setUpdateAvailable(false);
+      }
+    } finally {
+      setChecking(false);
+    }
   };
 
   return (
     <div class={`version-display ${props.className || ''}`}>
-      {props.showDetails ? (
-        <div class="space-y-1 text-xs text-gray-500">
-          <div>Version: {versionInfo().version}</div>
-          <div>Built: {new Date(versionInfo().buildTime).toLocaleString()}</div>
-          {versionChanged() && (
-            <div class="font-semibold text-green-600">✨ Updated to new version!</div>
-          )}
-          {updateAvailable() && (
-            <div class="text-blue-600">
-              <button onClick={refreshPage} class="underline hover:no-underline">
-                🔄 New version available - Click to refresh
-              </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        <span class="text-xs text-gray-400">
-          {getVersionDisplay()}
-          {updateAvailable() && (
-            <span class="ml-2 cursor-pointer text-blue-600" onClick={refreshPage}>
-              🔄
-            </span>
-          )}
-        </span>
+      <span class="text-xs text-gray-400">{getVersionDisplay()}</span>
+      {!updateTriggered() && (
+        <button
+          onClick={checkAndUpdate}
+          disabled={checking()}
+          class="ml-2 cursor-pointer text-xs text-gray-400 underline transition-opacity hover:opacity-70 disabled:cursor-default disabled:no-underline disabled:opacity-50"
+          title="Check for updates"
+        >
+          {checking() ? 'Checking...' : updateAvailable() ? 'Updating...' : 'Update'}
+        </button>
       )}
     </div>
   );
