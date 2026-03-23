@@ -211,6 +211,7 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
     await closeStatsModal(page);
 
     await page.goto('/settings', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(500);
 
     await openStatsModal(page);
 

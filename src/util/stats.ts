@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { z } from 'zod';
 import { emojiString } from './colour';
 import { getContext } from '../Context';
-import { MONGO_GATEWAY_BASE, withGatewayHeaders } from './api';
+import { getAccountEndpoint, withGatewayHeaders } from './api';
 
 // Zod schema for Stats validation
 const StatsSchema = z.object({
@@ -115,7 +115,7 @@ export async function getAcctStats(context: ReturnType<typeof getContext>) {
     return 'No email provided';
   }
 
-  const endpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
+  const endpoint = getAccountEndpoint(email);
 
   try {
     console.log('Fetching account stats for:', email);

@@ -3,10 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   // Look for tests in both legacy e2eTests and new tests/e2e_tests folders
   testDir: '.',
-  testMatch: [
-    'e2eTests/**/*.test.ts',
-    'tests/e2e_tests/**/*.test.ts',
-  ],
+  testMatch: ['e2eTests/**/*.test.ts', 'tests/e2e_tests/**/*.test.ts'],
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -25,7 +22,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run build && vite preview --port 8788',
+    command: 'npm run build && wrangler pages dev dist --port 8788',
     url: 'http://localhost:8788',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,

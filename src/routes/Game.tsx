@@ -1,13 +1,5 @@
 import dayjs from 'dayjs';
-import {
-  createEffect,
-  createResource,
-  createSignal,
-  on,
-  onMount,
-  Setter,
-  Show,
-} from 'solid-js';
+import { createEffect, createResource, createSignal, on, onMount, Setter, Show } from 'solid-js';
 import Guesser from '../components/Guesser';
 import List from '../components/List';
 import { getAnswer } from '../util/encryption';
@@ -18,7 +10,7 @@ import { translatePage } from '../i18n';
 import { createGuessStore } from '../util/stores';
 import NitroPayAd from '../components/NitroPayAd';
 import { addGameToStats, combineStats, getAcctStats } from '../util/stats';
-import { DAILY_STATS_ENDPOINT, MONGO_GATEWAY_BASE, withGatewayHeaders } from '../util/api';
+import { DAILY_STATS_ENDPOINT, getAccountEndpoint, withGatewayHeaders } from '../util/api';
 
 import GameGlobe from '../components/globes/GameGlobe';
 
@@ -137,7 +129,7 @@ function Inner(props: Props) {
     on(win, async () => {
       // Sync local storage with account
       const email = context.user().email;
-      const accountEndpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
+      const accountEndpoint = getAccountEndpoint(email);
       // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const answer = props.ans;

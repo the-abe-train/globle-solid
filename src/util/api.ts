@@ -1,11 +1,20 @@
 // External Mongo gateway base URL for API endpoints
 export const MONGO_GATEWAY_BASE = 'https://mongo-gateway-globle.twl-early-access.deno.net';
 const browserHost = typeof window !== 'undefined' ? window.location.hostname : '';
-const isLocalDevHost =
-  browserHost === 'localhost' || browserHost === '127.0.0.1' || browserHost === '0.0.0.0';
-export const DAILY_STATS_ENDPOINT =
-  browserHost && !isLocalDevHost ? '/dailyStats' : `${MONGO_GATEWAY_BASE}/dailyStats`;
-export const SUBSCRIBE_ENDPOINT = `${MONGO_GATEWAY_BASE}/subscribe`;
+const browserOriginAvailable = Boolean(browserHost);
+export const ACCOUNT_ENDPOINT_BASE = browserOriginAvailable
+  ? '/account'
+  : `${MONGO_GATEWAY_BASE}/account`;
+export const DAILY_STATS_ENDPOINT = browserOriginAvailable
+  ? '/dailyStats'
+  : `${MONGO_GATEWAY_BASE}/dailyStats`;
+export const SUBSCRIBE_ENDPOINT = browserOriginAvailable
+  ? '/subscribe'
+  : `${MONGO_GATEWAY_BASE}/subscribe`;
+
+export function getAccountEndpoint(email: string): string {
+  return `${ACCOUNT_ENDPOINT_BASE}?email=${encodeURIComponent(email)}`;
+}
 
 // Required header value for gateway identification
 export const GATEWAY_GAME_NAME = 'Globle';

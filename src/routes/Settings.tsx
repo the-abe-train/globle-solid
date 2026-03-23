@@ -11,7 +11,7 @@ import { getColourScheme, translateColourScheme, untranslateColourScheme } from 
 import TwlAccount from '../components/Twl/TwlAccount';
 import { combineStats, getAcctStats } from '../util/stats';
 import Prompt from '../components/Prompt';
-import { MONGO_GATEWAY_BASE, withGatewayHeaders } from '../util/api';
+import { getAccountEndpoint, withGatewayHeaders } from '../util/api';
 
 export default function () {
   const context = getContext();
@@ -116,7 +116,7 @@ export default function () {
 
           // Store combined stats in account
           const email = context.user().email;
-          const endpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
+          const endpoint = getAccountEndpoint(email);
           console.log('Sending combined stats to database');
           const response = await fetch(
             endpoint,
@@ -155,7 +155,7 @@ export default function () {
     // Store new stats in account
     const email = context.user().email;
     if (email) {
-      const endpoint = `${MONGO_GATEWAY_BASE}/account?email=${encodeURIComponent(email)}`;
+      const endpoint = getAccountEndpoint(email);
       fetch(
         endpoint,
         withGatewayHeaders({
