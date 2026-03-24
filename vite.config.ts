@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import solidPlugin from 'vite-plugin-solid';
 import { readFileSync, writeFileSync } from 'fs';
 
@@ -12,12 +12,34 @@ writeFileSync(
   JSON.stringify({ version: packageJson.version, buildTime }),
 );
 
+/**
+ * Vite plugin that injects onerror handlers on built module script tags
+ * so stale-asset failures trigger the boot recovery in index.html.
+ */
+function moduleRecoveryPlugin(): Plugin {
+  return {
+    name: 'module-recovery',
+    transformIndexHtml(html) {
+      return html.replace(
+        /<script\s+type="module"[^>]*src="[^"]*"[^>]*>/g,
+        (tag) => {
+          if (tag.includes('onerror')) return tag;
+          return tag.replace(
+            '>',
+            ` onerror="window.__globleRecoverFromBootFailure && window.__globleRecoverFromBootFailure('entry-module-load-error')">`,
+          );
+        },
+      );
+    },
+  };
+}
+
 export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(packageJson.version),
     __BUILD_TIME__: JSON.stringify(buildTime),
   },
-  plugins: [solidPlugin()],
+  plugins: [solidPlugin(), moduleRecoveryPlugin()],
   server: {
     port: 3000,
   },

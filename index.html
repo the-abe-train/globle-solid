@@ -159,6 +159,14 @@
 
         window.__globleRecoverFromBootFailure = cleanupAndReload;
 
+        // Boot timeout: if the app hasn't signalled successful boot
+        // within 15s, assume a stale-asset failure and recover.
+        if (sessionStorage.getItem(RECOVERY_KEY) !== '1') {
+          window.__globleBootTimer = setTimeout(function () {
+            cleanupAndReload('boot-timeout');
+          }, 15000);
+        }
+
         window.addEventListener('error', function (event) {
           var message = event && event.message ? String(event.message) : '';
           if (

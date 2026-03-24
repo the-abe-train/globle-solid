@@ -84,3 +84,8 @@ render(
   ),
   document.getElementById('root') as HTMLElement,
 );
+
+// Signal successful boot to cancel the recovery timeout in index.html
+if ((window as any).__globleBootTimer) {
+  clearTimeout((window as any).__globleBootTimer);
+}
