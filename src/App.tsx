@@ -1,4 +1,4 @@
-import { Component, createSignal, lazy, onMount } from 'solid-js';
+import { Component, createSignal, ErrorBoundary, onMount } from 'solid-js';
 import { Route, Router } from '@solidjs/router';
 import { getContext } from './Context';
 import './background.css';
@@ -11,12 +11,13 @@ import Practice from './routes/Practice';
 import Route404 from './routes/Route404';
 import Discord from './routes/Discord';
 import { logVersionInfo } from './util/version';
+import { lazyRetry } from './util/lazyRetry';
 
-const Home = lazy(() => import('./routes/Home'));
-const Settings = lazy(() => import('./routes/Settings'));
-const Game = lazy(() => import('./routes/Game'));
-const FAQ = lazy(() => import('./routes/Faq'));
-const PrivacyPolicy = lazy(() => import('./routes/PrivacyPolicy'));
+const Home = lazyRetry(() => import('./routes/Home'));
+const Settings = lazyRetry(() => import('./routes/Settings'));
+const Game = lazyRetry(() => import('./routes/Game'));
+const FAQ = lazyRetry(() => import('./routes/Faq'));
+const PrivacyPolicy = lazyRetry(() => import('./routes/PrivacyPolicy'));
 
 const App: Component = () => {
   const { theme } = getContext();
@@ -37,16 +38,30 @@ const App: Component = () => {
       </Modal>
       <main class="relative z-20 mx-auto flex min-h-screen max-w-2xl flex-col justify-between p-4 md:px-0 dark:text-gray-200">
         <Header showStats={showStats} setShowStats={setShowStats} />
-        <Router>
-          <Route path="/" component={Home} />
-          <Route path="/game" component={() => <Game setShowStats={setShowStats} />} />
-          <Route path="/practice" component={Practice} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/faq" component={FAQ} />
-          <Route path="/privacy-policy" component={PrivacyPolicy} />
-          <Route path="/discord" component={Discord} />
-          <Route path="*" component={Route404} />
-        </Router>
+        <ErrorBoundary
+          fallback={() => (
+            <div class="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+              <p>Something went wrong loading this page.</p>
+              <button
+                class="rounded bg-blue-500 px-4 py-2 text-white"
+                onClick={() => window.location.reload()}
+              >
+                Reload
+              </button>
+            </div>
+          )}
+        >
+          <Router>
+            <Route path="/" component={Home} />
+            <Route path="/game" component={() => <Game setShowStats={setShowStats} />} />
+            <Route path="/practice" component={Practice} />
+            <Route path="/settings" component={Settings} />
+            <Route path="/faq" component={FAQ} />
+            <Route path="/privacy-policy" component={PrivacyPolicy} />
+            <Route path="/discord" component={Discord} />
+            <Route path="*" component={Route404} />
+          </Router>
+        </ErrorBoundary>
 
         <Footer />
       </main>
