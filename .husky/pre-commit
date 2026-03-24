@@ -1,1 +1,8 @@
-pnpm check:version-bump
+export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
+
+if ! command -v node >/dev/null 2>&1; then
+	echo "node is required for the version bump check but was not found in PATH=$PATH" >&2
+	exit 127
+fi
+
+node scripts/check-version-bump.cjs
