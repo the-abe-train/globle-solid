@@ -1,6 +1,6 @@
 {
   "name": "globle",
-  "version": "1.8.4",
+  "version": "1.8.4-test",
   "description": "Use your geography knowledge to figure out the mystery country in as few guesses as possible!",
   "packageManager": "pnpm@10.22.0",
   "scripts": {
