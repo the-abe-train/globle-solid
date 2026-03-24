@@ -9,7 +9,13 @@ import { polygonDistance } from '../util/geometry';
 import { translatePage } from '../i18n';
 import { createGuessStore } from '../util/stores';
 import NitroPayAd from '../components/NitroPayAd';
-import { addGameToStats, combineStats, getAcctStats } from '../util/stats';
+import {
+  addGameToStats,
+  combineStats,
+  getAcctStats,
+  isAccountMissingResult,
+  putAcctStats,
+} from '../util/stats';
 import { DAILY_STATS_ENDPOINT, getAccountEndpoint, withGatewayHeaders } from '../util/api';
 
 import GameGlobe from '../components/globes/GameGlobe';
@@ -108,6 +114,21 @@ function Inner(props: Props) {
           const combinedStats = combineStats(localStats, accountStats);
           console.log('Synced stats on game page load:', combinedStats);
           context.storeStats(combinedStats);
+        } else if (isAccountMissingResult(accountStats)) {
+          const localStats = context.storedStats();
+          if (localStats.gamesWon > 0) {
+            console.log('New account created on game page load - seeding with local stats');
+            const response = await putAcctStats(email, localStats);
+            if (response.ok) {
+              console.log('Successfully seeded new account stats on game page load');
+            } else {
+              console.error(
+                'Failed to seed new account stats on game page load:',
+                response.status,
+                response.statusText,
+              );
+            }
+          }
         } else {
           console.warn('Failed to sync stats on game page load:', accountStats);
         }
@@ -129,7 +150,6 @@ function Inner(props: Props) {
     on(win, async () => {
       // Sync local storage with account
       const email = context.user().email;
-      const accountEndpoint = getAccountEndpoint(email);
       // Add new game to stats
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const answer = props.ans;
@@ -158,24 +178,7 @@ function Inner(props: Props) {
         if (email) {
           console.log('Sending PUT request to account endpoint for:', email);
           try {
-            // Safely convert lastWin to ISO format
-            let lastWinDate = new Date(newStats.lastWin);
-            if (isNaN(lastWinDate.getTime())) {
-              console.warn('Invalid lastWin date:', newStats.lastWin);
-              console.warn("Using today's date as fallback");
-              lastWinDate = new Date();
-            }
-
-            fetch(
-              accountEndpoint,
-              withGatewayHeaders({
-                method: 'PUT',
-                body: JSON.stringify({
-                  ...newStats,
-                  lastWin: lastWinDate.toISOString(),
-                }),
-              }),
-            )
+            putAcctStats(email, newStats)
               .then((response) => {
                 if (response.ok) {
                   console.log('Successfully updated account stats');

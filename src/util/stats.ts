@@ -18,6 +18,9 @@ const AccountDataSchema = z.object({
   stats: StatsSchema,
 });
 
+const ACCOUNT_CREATED_RESULT = 'Account created!';
+const ACCOUNT_NOT_FOUND_RESULT = 'Account not found!';
+
 export function addGameToStats(storedStats: Stats, guesses: Country[], ans: Country) {
   const today = dayjs();
   const lastWin = dayjs(storedStats.lastWin);
@@ -105,6 +108,31 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
   return combinedStats;
 }
 
+export function isAccountMissingResult(result: string) {
+  return result === ACCOUNT_CREATED_RESULT || result === ACCOUNT_NOT_FOUND_RESULT;
+}
+
+export async function putAcctStats(email: string, stats: Stats) {
+  let lastWinDate = new Date(stats.lastWin);
+  if (isNaN(lastWinDate.getTime())) {
+    console.warn('Invalid lastWin date:', stats.lastWin);
+    console.warn("Using today's date as fallback");
+    lastWinDate = new Date();
+  }
+
+  const endpoint = getAccountEndpoint(email);
+  return fetch(
+    endpoint,
+    withGatewayHeaders({
+      method: 'PUT',
+      body: JSON.stringify({
+        ...stats,
+        lastWin: lastWinDate.toISOString(),
+      }),
+    }),
+  );
+}
+
 export async function getAcctStats(context: ReturnType<typeof getContext>) {
   // Dev: Use localhost when testing locally
   // const stats = context.storedStats();
@@ -133,6 +161,11 @@ export async function getAcctStats(context: ReturnType<typeof getContext>) {
 
     console.log('Account stats response status:', response.status, response.statusText);
 
+    if (response.status === 404) {
+      console.log('Account does not exist yet');
+      return ACCOUNT_NOT_FOUND_RESULT;
+    }
+
     // If failed to fetch account, show error
     if (response.status !== 200) {
       console.error('Failed to fetch account stats. Status:', response.status);
@@ -142,7 +175,7 @@ export async function getAcctStats(context: ReturnType<typeof getContext>) {
     // If status is "Account created", then all is well.
     if (response.statusText === 'Account created') {
       console.log('New account created');
-      return 'Account created!';
+      return ACCOUNT_CREATED_RESULT;
     }
 
     // Parse and validate response with Zod

@@ -17,6 +17,10 @@ test.describe('Stats Sync with Database', () => {
     ], // 42 games
     emojiGuesses: '🟩🟩🟥',
   };
+  const databaseAccountStats = {
+    ...databaseStats,
+    lastWin: dayjs(databaseStats.lastWin).toISOString(),
+  };
 
   test('stats should sync from database after signing in', async ({ page }) => {
     // Block PUT requests to prevent updating the database
@@ -31,8 +35,11 @@ test.describe('Stats Sync with Database', () => {
           body: JSON.stringify({ success: true }),
         });
       } else {
-        // Allow GET requests to pass through to real database
-        await route.continue();
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ stats: databaseAccountStats }),
+        });
       }
     });
 
@@ -152,8 +159,11 @@ test.describe('Stats Sync with Database', () => {
           body: JSON.stringify({ success: true }),
         });
       } else {
-        // Allow GET requests to pass through to real database
-        await route.continue();
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ stats: databaseAccountStats }),
+        });
       }
     });
 

@@ -5,7 +5,11 @@ test.describe('Navigation tests', () => {
     await page.goto('/');
 
     await expect(page.getByRole('heading', { level: 1, name: 'GLOBLE' })).toBeVisible();
-    await expect(page.locator('a[href="https://trainwrecklabs.com"]')).toHaveText('by Trainwreck Labs');
+    await expect(
+      page.locator(
+        'a[href="https://trainwrecklabs.com?utm_source=globle&utm_medium=website&utm_campaign=footer"]',
+      ),
+    ).toHaveText('by Trainwreck Labs');
   });
 
   test('Visits every nav link', async ({ page }) => {

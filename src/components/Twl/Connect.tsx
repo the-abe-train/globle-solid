@@ -3,7 +3,7 @@ import { createEffect, createSignal, onMount } from 'solid-js';
 import { getContext } from '../../Context';
 import jwtDecode from 'jwt-decode';
 import { subscribeToNewsletter } from '../../util/newsletter';
-import { getAcctStats, combineStats } from '../../util/stats';
+import { combineStats, getAcctStats, isAccountMissingResult, putAcctStats } from '../../util/stats';
 
 export default function () {
   const url = new URL(window.location.href);
@@ -42,6 +42,21 @@ export default function () {
           context.storeStats(combinedStats);
         }
         console.log('Stats synced successfully after Google sign-in');
+      } else if (isAccountMissingResult(accountStats)) {
+        const localStats = context.storedStats();
+        if (localStats.gamesWon > 0) {
+          console.log('New account created after Google sign-in - seeding with local stats');
+          const response = await putAcctStats(email, localStats);
+          if (response.ok) {
+            console.log('Successfully seeded new account stats after Google sign-in');
+          } else {
+            console.error(
+              'Failed to seed new account stats after Google sign-in:',
+              response.status,
+              response.statusText,
+            );
+          }
+        }
       } else {
         console.error('Failed to sync stats after Google sign-in:', accountStats);
       }

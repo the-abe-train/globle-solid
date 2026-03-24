@@ -1,8 +1,18 @@
 // sum.test.js
-import { expect, test } from 'vitest';
-import { addGameToStats, combineStats } from '../../src/util/stats';
+import { afterEach, expect, test, vi } from 'vitest';
+import {
+  addGameToStats,
+  combineStats,
+  getAcctStats,
+  isAccountMissingResult,
+  putAcctStats,
+} from '../../src/util/stats';
 import { getCountry } from '../../src/util/data';
 import dayjs from 'dayjs';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 test('sync devices', () => {
   const yesterdaysStats: Stats = {
@@ -305,4 +315,47 @@ test('streak should not reset with different timestamp formats for same day', ()
   expect(combinedStats.currentStreak).toBe(7);
   expect(combinedStats.maxStreak).toBe(8);
   expect(combinedStats.gamesWon).toBe(15);
+});
+
+test('getAcctStats should treat 404 as missing account', async () => {
+  const fetchMock = vi.fn().mockResolvedValue({
+    status: 404,
+    statusText: 'Not Found',
+  });
+  vi.stubGlobal('fetch', fetchMock);
+
+  const result = await getAcctStats({
+    user: () => ({ email: 'missing@example.com' }),
+  } as any);
+
+  expect(result).toBe('Account not found!');
+  expect(isAccountMissingResult(result)).toBe(true);
+});
+
+test('putAcctStats should send normalized stats payload', async () => {
+  const fetchMock = vi.fn().mockResolvedValue({ ok: true, status: 200, statusText: 'OK' });
+  vi.stubGlobal('fetch', fetchMock);
+
+  const stats: Stats = {
+    gamesWon: 5,
+    lastWin: '2026-03-20',
+    currentStreak: 2,
+    maxStreak: 3,
+    usedGuesses: [1, 2, 3, 4, 5],
+    emojiGuesses: '🟩🟩',
+  };
+
+  await putAcctStats('missing@example.com', stats);
+
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  const [endpoint, init] = fetchMock.mock.calls[0];
+  expect(endpoint).toContain('/account?email=missing%40example.com');
+  expect(init.method).toBe('PUT');
+
+  const body = JSON.parse(init.body);
+  expect(body.gamesWon).toBe(stats.gamesWon);
+  expect(body.currentStreak).toBe(stats.currentStreak);
+  expect(body.maxStreak).toBe(stats.maxStreak);
+  expect(body.usedGuesses).toEqual(stats.usedGuesses);
+  expect(body.lastWin).toContain('T');
 });

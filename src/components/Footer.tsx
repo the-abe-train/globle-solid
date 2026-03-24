@@ -24,7 +24,7 @@ export default function Footer() {
     <footer class="mb-24 flex w-full flex-grow items-end justify-between gap-8 pt-8 pb-4 text-xs sm:px-0">
       <div class="flex flex-col gap-3">
         <a
-          href="https://trainwrecklabs.com"
+          href="https://trainwrecklabs.com?utm_source=globle&utm_medium=website&utm_campaign=footer"
           data-i18n="Footer1"
           class="flex items-center transition-opacity hover:opacity-80"
         >

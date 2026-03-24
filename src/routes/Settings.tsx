@@ -9,7 +9,7 @@ import { createPracticeAns } from '../util/practice';
 import { subscribeToNewsletter } from '../util/newsletter';
 import { getColourScheme, translateColourScheme, untranslateColourScheme } from '../util/colour';
 import TwlAccount from '../components/Twl/TwlAccount';
-import { combineStats, getAcctStats } from '../util/stats';
+import { combineStats, getAcctStats, isAccountMissingResult, putAcctStats } from '../util/stats';
 import Prompt from '../components/Prompt';
 import { getAccountEndpoint, withGatewayHeaders } from '../util/api';
 
@@ -77,6 +77,21 @@ export default function () {
               context.storeStats(combinedStats);
             }
             console.log('Stats synced successfully after Discord sign-in');
+          } else if (isAccountMissingResult(accountStats)) {
+            const localStats = context.storedStats();
+            if (localStats.gamesWon > 0) {
+              console.log('New account created after Discord sign-in - seeding with local stats');
+              const response = await putAcctStats(email, localStats);
+              if (response.ok) {
+                console.log('Successfully seeded new account stats after Discord sign-in');
+              } else {
+                console.error(
+                  'Failed to seed new account stats after Discord sign-in:',
+                  response.status,
+                  response.statusText,
+                );
+              }
+            }
           } else {
             console.error('Failed to sync stats after Discord sign-in:', accountStats);
           }
@@ -99,6 +114,19 @@ export default function () {
         console.log('Settings mounted - syncing stats for:', email);
         const accountStats = await getAcctStats(context);
         if (typeof accountStats === 'string') {
+          if (isAccountMissingResult(accountStats)) {
+            const localStats = context.storedStats();
+            if (localStats.gamesWon > 0) {
+              console.log('New account created in Settings - seeding with local stats');
+              const response = await putAcctStats(email, localStats);
+              if (!response.ok) {
+                console.error('Failed to seed new account stats in Settings:', response.status);
+              } else {
+                console.log('Successfully seeded new account stats in Settings');
+              }
+            }
+            return;
+          }
           console.error('Failed to fetch account stats in Settings:', accountStats);
           // Don't sync if we can't fetch - keep local stats
           return;
