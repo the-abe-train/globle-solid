@@ -116,12 +116,13 @@
         var RECOVERY_KEY = 'app-boot-recovery-v1';
 
         async function cleanupAndReload(reason) {
-          if (sessionStorage.getItem(RECOVERY_KEY) === '1') {
-            console.error('App boot recovery already attempted:', reason);
+          var attempts = parseInt(sessionStorage.getItem(RECOVERY_KEY) || '0', 10);
+          if (attempts >= 2) {
+            console.error('App boot recovery exhausted after 2 attempts:', reason);
             return;
           }
 
-          sessionStorage.setItem(RECOVERY_KEY, '1');
+          sessionStorage.setItem(RECOVERY_KEY, String(attempts + 1));
 
           try {
             if ('serviceWorker' in navigator) {
@@ -160,11 +161,12 @@
         window.__globleRecoverFromBootFailure = cleanupAndReload;
 
         // Boot timeout: if the app hasn't signalled successful boot
-        // within 15s, assume a stale-asset failure and recover.
-        if (sessionStorage.getItem(RECOVERY_KEY) !== '1') {
+        // within 10s, assume a stale-asset failure and recover.
+        var attempts = parseInt(sessionStorage.getItem(RECOVERY_KEY) || '0', 10);
+        if (attempts < 2) {
           window.__globleBootTimer = setTimeout(function () {
             cleanupAndReload('boot-timeout');
-          }, 15000);
+          }, 10000);
         }
 
         window.addEventListener('error', function (event) {
@@ -178,8 +180,7 @@
         });
 
         window.addEventListener('unhandledrejection', function (event) {
-          var reason =
-            event && event.reason ? String(event.reason.message || event.reason) : '';
+          var reason = event && event.reason ? String(event.reason.message || event.reason) : '';
           if (
             reason.includes('Failed to load module script') ||
             reason.includes('Failed to fetch dynamically imported module') ||

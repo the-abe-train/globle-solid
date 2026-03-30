@@ -1,43 +1,14 @@
+# Default: don't cache HTML pages (SPA catch-all).
+# This ensures ANY route — including ones added in the future — gets fresh HTML.
+# More-specific rules below override this where needed.
+/*
+  Cache-Control: no-cache, no-store, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
 # Cache control for versioned assets (with hash) - cache for 1 year
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
-
-# Cache control for index.html (never cache so users always get latest)
-/
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
-
-# Cache control for SPA routes (ensures deep links get fresh HTML)
-/game
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
-
-/practice
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
-
-/settings
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
-
-/faq
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
-
-/privacy-policy
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
-
-/discord
-  Cache-Control: no-cache, no-store, must-revalidate
-  Pragma: no-cache
-  Expires: 0
 
 # Cache control for service worker (never cache)
 /sw.js
