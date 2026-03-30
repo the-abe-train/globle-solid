@@ -40,7 +40,7 @@ test.describe('Navigation tests', () => {
     await expect(page.getByRole('heading', { level: 2, name: /faq/i })).toBeVisible();
 
     // Privacy Policy
-    await page.locator('[data-i18n="q9"]').click();
+    await page.getByText('Does Globle have a privacy policy?', { exact: false }).click();
     await page.locator('a[href="/privacy-policy"]').click();
     await expect(page).toHaveURL(/\/privacy-policy/);
     await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy' })).toBeVisible();
