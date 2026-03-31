@@ -153,9 +153,11 @@
             console.warn('Failed to clear stale client state during app boot recovery', error);
           }
 
-          var url = new URL(window.location.href);
-          url.searchParams.set('_app_recover', Date.now().toString());
-          window.location.replace(url.toString());
+          // Hard-navigate to the root with a cache-busting param.
+          // Using the origin (not current href) ensures we don't carry forward
+          // stale route state.  The browser will fetch fresh HTML + new chunks.
+          var dest = window.location.origin + '/?_app_recover=' + Date.now();
+          window.location.replace(dest);
         }
 
         window.__globleRecoverFromBootFailure = cleanupAndReload;

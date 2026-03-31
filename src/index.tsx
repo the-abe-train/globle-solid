@@ -21,7 +21,7 @@ const cleanupLegacyServiceWorker = async () => {
   }
 
   try {
-    let registrations: ServiceWorkerRegistration[] = [];
+    let registrations: readonly ServiceWorkerRegistration[] = [];
     if (typeof navigator.serviceWorker.getRegistrations === 'function') {
       registrations = await navigator.serviceWorker.getRegistrations();
     } else {
@@ -88,4 +88,10 @@ render(
 // Signal successful boot to cancel the recovery timeout in index.html
 if ((window as any).__globleBootTimer) {
   clearTimeout((window as any).__globleBootTimer);
+}
+// Reset recovery counter so future deploys can attempt recovery again
+try {
+  sessionStorage.removeItem('app-boot-recovery-v1');
+} catch {
+  // ignore
 }
