@@ -14,16 +14,17 @@ import { getContext } from '../Context';
 import { getColour } from './colour';
 import { formatName } from './text';
 
-function isSafari() {
+export function isSafari() {
   const parser = new UAParser();
   const browser = parser.getBrowser();
   return browser.name === 'Safari';
 }
 
-function isMobile() {
+export function isMobile() {
   const parser = new UAParser();
   const device = parser.getDevice();
-  return device.type === 'mobile' || device.type === 'tablet';
+  const os = parser.getOS();
+  return device.type === 'mobile' || device.type === 'tablet' || os.name === 'Android';
 }
 
 export const globeImg = () => {

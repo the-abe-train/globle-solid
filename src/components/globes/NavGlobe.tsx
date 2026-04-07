@@ -2,9 +2,7 @@ import Globe, { GlobeInstance } from 'globe.gl';
 import { createSignal, onCleanup, onMount, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 
-import UAParser from 'ua-parser-js';
-// import { getContext } from "../../Context";
-import { globeMinImg } from '../../util/globe';
+import { globeMinImg, isMobile as isMobileFn } from '../../util/globe';
 import { translatePage } from '../../i18n';
 
 export default function () {
@@ -12,8 +10,7 @@ export default function () {
 
   let globeRef: HTMLDivElement | undefined;
   let globeInstance: GlobeInstance | null = null;
-  const parser = new UAParser();
-  const isMobile = parser.getDevice().type === 'mobile';
+  const isMobile = isMobileFn();
   const navigate = useNavigate();
   const [webglError, setWebglError] = createSignal(false);
 

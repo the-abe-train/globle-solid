@@ -8,8 +8,7 @@ import {
   onMount,
   Show,
 } from 'solid-js';
-import { UAParser } from 'ua-parser-js';
-import { globeImg } from '../../util/globe';
+import { globeImg, isMobile as isMobileFn } from '../../util/globe';
 import { getContext } from '../../Context';
 import { findCentre, polygonDistance } from '../../util/geometry';
 import { getColour } from '../../util/colour';
@@ -76,10 +75,8 @@ export default function (props: Props) {
     });
   });
 
-  const parser = new UAParser();
-  const device = parser.getDevice();
-  const size = device.type === 'mobile' ? 320 : 600; // px on one side
-  const isMobile = device.type === 'mobile';
+  const isMobile = isMobileFn();
+  const size = isMobile ? 320 : 600; // px on one side
 
   // Turn globe on click
   // TODO if turning from click, don't use alt from arguments!

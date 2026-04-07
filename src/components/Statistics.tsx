@@ -1,8 +1,9 @@
 import dayjs from 'dayjs';
 import { Accessor, createMemo, createSignal, onMount, Setter } from 'solid-js';
 import Icon from './Icon';
-import UAParser from 'ua-parser-js';
 import { getContext } from '../Context';
+import { isMobile } from '../util/globe';
+import UAParser from 'ua-parser-js';
 import { translatePage } from '../i18n';
 import i18next from 'i18next';
 import TwlAd from './TwlAd';
@@ -65,11 +66,9 @@ https://globle-game.com
 #globle`;
 
     try {
-      const parser = new UAParser();
-      const isMobile = parser.getDevice().type === 'mobile';
-      const isFirefox = parser.getBrowser().name === 'Firefox';
+      const isFirefox = new UAParser().getBrowser().name === 'Firefox';
       setPromptType('Message');
-      if ('canShare' in navigator && isMobile && !isFirefox) {
+      if ('canShare' in navigator && isMobile() && !isFirefox) {
         await navigator.share({ title: 'Globle Stats', text: shareString });
         setPromptText('Shared!');
         setShowPrompt(true);

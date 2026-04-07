@@ -1,5 +1,5 @@
 import { createMemo } from 'solid-js';
-import UAParser from 'ua-parser-js';
+import { isMobile } from '../util/globe';
 import forgeousLogo from '../images/other-games/forgeous-logo.png';
 import chronogramLogo from '../images/other-games/chronogram-logo.png';
 import globleCapitalsLogo from '../images/other-games/globle-capitals-logo.png';
@@ -13,9 +13,6 @@ import { translate } from '../i18n';
 import { useGoogleFont } from '../util/fonts';
 
 export default function () {
-  const parser = new UAParser();
-  const isMobile = parser.getDevice().type === 'mobile';
-
   const games = [
     {
       name: 'Forgeous',
@@ -24,7 +21,7 @@ export default function () {
       font: 'Mogra',
       logo: forgeousLogo,
       bg: 'bg-stone-50',
-      weight: isMobile ? 1 : 0,
+      weight: isMobile() ? 1 : 0,
     },
     {
       name: 'Chronogram',

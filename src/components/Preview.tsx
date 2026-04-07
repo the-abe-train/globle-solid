@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 import { createSignal, For, onCleanup } from 'solid-js';
-import UAParser from 'ua-parser-js';
 import { getContext } from '../Context';
+import { isMobile } from '../util/globe';
 import outlines from '../data/country_outlines.json';
 import { getColour } from '../util/colour';
 import { getCountry } from '../util/data';
@@ -10,9 +10,7 @@ export default function () {
   const { isDark } = getContext().theme();
   const { colours } = getContext().colours();
   const [count, setCount] = createSignal(1);
-  const parser = new UAParser();
-  const isMobile = parser.getDevice().type === 'mobile';
-  const countrySize = isMobile ? 125 : 150;
+  const countrySize = isMobile() ? 125 : 150;
 
   const timer = setInterval(() => {
     if (count() < 5) setCount(count() + 1);
@@ -32,7 +30,7 @@ export default function () {
       <div
         class="flex flex-col items-center justify-start space-x-3 md:flex-row"
         style={{
-          'min-height': `${isMobile ? countrySize * 3 : countrySize}px`,
+          'min-height': `${isMobile() ? countrySize * 3 : countrySize}px`,
         }}
       >
         <For each={colouredOutlines()}>
