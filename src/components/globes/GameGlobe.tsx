@@ -109,6 +109,7 @@ export default function (props: Props) {
           .height(size)
           .backgroundColor('#00000000')
           .globeImageUrl(globeImg())
+          .showAtmosphere(!isMobile)
           .atmosphereColor(context.theme().isDark ? 'rgba(63, 201, 255)' : 'lightskyblue')
           .onGlobeReady(() => setIsLoaded(true))
           .onGlobeClick(turnGlobe)
