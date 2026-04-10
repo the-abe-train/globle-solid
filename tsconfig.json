@@ -3,15 +3,16 @@
     "strict": true,
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "types": ["vite/client", "@cloudflare/workers-types"],
+    "types": ["vite/client"],
     "noEmit": true,
     "isolatedModules": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true
   },
   "exclude": ["node_modules", "dist", ".output", ".turbo", ".vite", "coverage"]
 }

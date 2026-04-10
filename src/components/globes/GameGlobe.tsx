@@ -102,7 +102,9 @@ export default function (props: Props) {
     translatePage();
     if (globeRef) {
       try {
-        globe = new Globe(globeRef);
+        globe = new Globe(globeRef, {
+          rendererConfig: { antialias: !isMobile },
+        });
 
         globe
           .width(size)

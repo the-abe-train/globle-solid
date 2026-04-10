@@ -18,7 +18,10 @@ export default function () {
     translatePage();
     if (globeRef) {
       try {
-        globeInstance = new Globe(globeRef, { animateIn: true });
+        globeInstance = new Globe(globeRef, {
+          animateIn: true,
+          rendererConfig: { antialias: !isMobile },
+        });
 
         globeInstance
           .width(100)
