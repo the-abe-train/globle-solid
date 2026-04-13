@@ -30,12 +30,23 @@ export default function (props: Props) {
   const { isDark } = getContext().theme();
   const { colours } = getContext().colours();
 
+  const getGlobeSize = () => {
+    const containerWidth = globeRef?.parentElement?.clientWidth;
+    if (typeof containerWidth === 'number' && containerWidth > 0) {
+      return Math.min(containerWidth, 600);
+    }
+
+    return Math.min(window.innerWidth, 600);
+  };
+  const isCompactViewport = () => size() < 600;
+
   // Refs
   let globeRef: HTMLDivElement | undefined;
   let globe: GlobeInstance | null = null;
 
   // Signals
   const [isLoaded, setIsLoaded] = createSignal(false);
+  const [size, setSize] = createSignal(getGlobeSize());
   const labelBg = isDark ? '#F3E2F1' : '#FEFCE8';
 
   // Create a real DOM element for each label (not JSX)
@@ -76,7 +87,6 @@ export default function (props: Props) {
   });
 
   const isMobile = isMobileFn();
-  const size = isMobile ? 320 : 600; // px on one side
 
   // Turn globe on click
   // TODO if turning from click, don't use alt from arguments!
@@ -100,6 +110,18 @@ export default function (props: Props) {
   // Effects
   onMount(() => {
     translatePage();
+    const handleResize = () => setSize(getGlobeSize());
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (globeRef?.parentElement) {
+      resizeObserver.observe(globeRef.parentElement);
+    }
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    onCleanup(() => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', handleResize);
+    });
+
     if (globeRef) {
       try {
         globe = new Globe(globeRef, {
@@ -107,8 +129,8 @@ export default function (props: Props) {
         });
 
         globe
-          .width(size)
-          .height(size)
+          .width(size())
+          .height(size())
           .backgroundColor('#00000000')
           .globeImageUrl(globeImg())
           .showAtmosphere(!isMobile)
@@ -144,7 +166,7 @@ export default function (props: Props) {
         controls.autoRotate = true;
         controls.autoRotateSpeed = 1;
         // Zoom in more on mobile to make the globe appear larger and better lit
-        const initialAltitude = isMobile ? 1.8 : 1.5;
+        const initialAltitude = isCompactViewport() ? 1.8 : 1.5;
         globe.pointOfView({ lat: 0, lng: 0, altitude: initialAltitude });
       } catch (error) {
         console.error('[GameGlobe] ERROR creating or configuring globe:', error);
@@ -165,6 +187,13 @@ export default function (props: Props) {
       const newPoint = findCentre(newestGuess);
       turnGlobe(newPoint);
       globe.polygonsData(unwrap(props.guesses.places)).htmlElementsData(labels());
+    }
+  });
+
+  createEffect(() => {
+    const globeSize = size();
+    if (globe) {
+      globe.width(globeSize).height(globeSize);
     }
   });
 
@@ -193,7 +222,7 @@ export default function (props: Props) {
         ref={globeRef!}
         class="mx-auto w-min cursor-grab decoration-transparent select-none"
         style={{
-          'clip-path': `circle(${size / 2}px at ${size / 2}px ${size / 2}px)`,
+          'clip-path': `circle(${size() / 2}px at ${size() / 2}px ${size() / 2}px)`,
         }}
       ></div>
       <div class="text-md flex w-full justify-between sm:hidden">
