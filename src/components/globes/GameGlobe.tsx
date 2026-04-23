@@ -35,7 +35,6 @@ export default function (props: Props) {
     if (typeof containerWidth === 'number' && containerWidth > 0) {
       return Math.min(containerWidth, 600);
     }
-
     return Math.min(window.innerWidth, 600);
   };
   const isCompactViewport = () => size() < 600;

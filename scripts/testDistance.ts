@@ -1,6 +1,13 @@
 import { getCountry } from '../src/util/data';
 import { polygonDistance } from '../src/util/geometry';
-import { formatKm } from '../src/util/text';
+
+function formatDistance(value: number) {
+  return Math.round(value / 5) * 5;
+}
+
+function formatNumber(value: number) {
+  return value.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
 
 function testDistance(country1: string, country2: string) {
   // find country objects by their names
@@ -10,8 +17,8 @@ function testDistance(country1: string, country2: string) {
     throw new Error('Country not found');
   }
   const distance = polygonDistance(c1, c2);
-  const km = formatKm(distance);
-  const miles = formatKm(distance * 0.621371);
+  const km = formatNumber(formatDistance(distance / 1000));
+  const miles = formatNumber(formatDistance((distance * 0.621371) / 1000));
   console.log(`Distance between ${country1} and ${country2} is ${km} km (${miles} miles)`);
 
   if (distance === 0) {
@@ -22,5 +29,5 @@ function testDistance(country1: string, country2: string) {
 }
 
 // Get countries from command line arguments or use defaults
-const [country1 = 'Romania', country2 = 'Azerbaijan'] = process.argv.slice(2);
+const [country1 = 'Kiribati', country2 = 'Marshall Islands'] = process.argv.slice(2);
 testDistance(country1, country2);
