@@ -246,6 +246,14 @@ export default function (props: Props) {
 
   function submitGuess(guess: string) {
     console.log(`Submitting guess: ${guess}`);
+    // Once the answer has been found, ignore any further guesses. win() is set
+    // by an effect that runs after the guess store updates, so the input's
+    // reactive `disabled` binding can lag a rapid second submit; reading the
+    // store directly closes that same-tick race deterministically.
+    const alreadyWon = props.guesses.countries.some(
+      (c) => c.properties.NAME === props.ans.properties.NAME,
+    );
+    if (props.win() || alreadyWon) return;
     if (!guess) return setMsg('Enter your next guess.');
     const foundCountry = findCountry(guess);
     if (!foundCountry) return;

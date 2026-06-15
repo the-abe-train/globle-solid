@@ -154,6 +154,15 @@ function Inner(props: Props) {
       const today = dayjs(); // TODO should be using the time from when the game started, not the time when the game ends
       const answer = props.ans;
       if (win() && answer) {
+        // A won game's guess count is the guesses up to and including the
+        // answer. Truncate here so that any guess the player happens to
+        // submit during the async account sync below (the input isn't locked
+        // until the stats modal appears) can't inflate the recorded count.
+        const winningIndex = guesses.countries.findIndex(
+          (c) => c.properties.NAME === answer.properties.NAME,
+        );
+        const winningGuesses =
+          winningIndex >= 0 ? guesses.countries.slice(0, winningIndex + 1) : guesses.countries;
         let currentStats = context.storedStats();
         // First, sync with account stats if user is logged in
         if (email) {
@@ -170,7 +179,7 @@ function Inner(props: Props) {
         }
         // Then add the current game win to the stats
         console.log('Storing new game stats locally');
-        const newStats = addGameToStats(currentStats, guesses.countries, props.ans);
+        const newStats = addGameToStats(currentStats, winningGuesses, props.ans);
         console.log("Storing final stats with today's win", newStats);
         console.log('newStats.lastWin value:', newStats.lastWin, 'type:', typeof newStats.lastWin);
         context.storeStats(newStats);
@@ -204,7 +213,7 @@ function Inner(props: Props) {
 
         // Update the daily stats
         if (email) {
-          let guessesNames = guesses.countries.map((c) => c.properties.NAME);
+          let guessesNames = winningGuesses.map((c) => c.properties.NAME);
           if (guessesNames.length === 0) {
             guessesNames = context.storedGuesses().countries;
           }
