@@ -209,8 +209,9 @@ test('addGameToStats should not add duplicate if game already won today', () => 
     currentStreak: 6,
     emojiGuesses: '🟩🟩',
     gamesWon: 17,
+    // Today's game (last entry) already reflects the real count of 2 guesses.
+    usedGuesses: [...new Array(16).fill(1), 2],
     maxStreak: 6,
-    usedGuesses: [...new Array(17).fill(1)],
   };
 
   // Try to add another game on the same day
@@ -218,10 +219,36 @@ test('addGameToStats should not add duplicate if game already won today', () => 
   const ans = getCountry('Benin');
   const newStats = addGameToStats(statsWithTodayWin, guesses, ans);
 
-  // Stats should remain unchanged
+  // Stats should remain unchanged - no duplicate, and the count is already right
   expect(newStats).toEqual(statsWithTodayWin);
   expect(newStats.gamesWon).toBe(17); // Should NOT increment
   expect(newStats.usedGuesses.length).toBe(17); // Should NOT add new guess count
+});
+
+test('addGameToStats corrects an inflated guess count for today without adding a duplicate', () => {
+  const todayStr = dayjs().toString();
+  // Today's game was recorded with an inflated count of 6 (the pre-truncation
+  // race bug), but the player actually won in 2 guesses.
+  const statsWithInflatedWin: Stats = {
+    lastWin: todayStr,
+    currentStreak: 6,
+    emojiGuesses: '🟩🟩🟩🟩🟩🟩',
+    gamesWon: 17,
+    usedGuesses: [...new Array(16).fill(1), 6],
+    maxStreak: 6,
+  };
+
+  // Re-entering the win effect on the same day with the truncated winning guesses
+  const guesses = [getCountry('Ghana'), getCountry('Togo')];
+  const ans = getCountry('Benin');
+  const newStats = addGameToStats(statsWithInflatedWin, guesses, ans);
+
+  // No duplicate game is added...
+  expect(newStats.gamesWon).toBe(17);
+  expect(newStats.usedGuesses.length).toBe(17);
+  // ...but today's count is corrected from 6 down to the real value of 2
+  expect(newStats.usedGuesses[newStats.usedGuesses.length - 1]).toBe(2);
+  expect(newStats.emojiGuesses).toBe('🟥🟥');
 });
 
 test('multiple refreshes should not increase gamesWon', () => {

@@ -25,8 +25,27 @@ export function addGameToStats(storedStats: Stats, guesses: Country[], ans: Coun
   const today = dayjs();
   const lastWin = dayjs(storedStats.lastWin);
 
-  // Check if user has already won today - if so, don't add duplicate game
+  // Check if user has already won today - if so, don't add a duplicate game.
+  // We still reconcile today's guess count: legacy records (written before the
+  // post-win truncation fix) can have an inflated count because guesses
+  // submitted during the account-sync race were included. `guesses` here is
+  // the truncated winning guesses, so its length is authoritative for today's
+  // game, which is always the last entry in usedGuesses when lastWin is today.
   if (today.isSame(lastWin, 'date')) {
+    const correctCount = guesses.length;
+    const lastIndex = storedStats.usedGuesses.length - 1;
+    if (
+      lastIndex >= 0 &&
+      correctCount > 0 &&
+      storedStats.usedGuesses[lastIndex] !== correctCount
+    ) {
+      console.log(
+        `Game already won today - correcting guess count from ${storedStats.usedGuesses[lastIndex]} to ${correctCount}`,
+      );
+      const usedGuesses = [...storedStats.usedGuesses];
+      usedGuesses[lastIndex] = correctCount;
+      return { ...storedStats, usedGuesses, emojiGuesses: emojiString(guesses, ans) };
+    }
     console.log('Game already won today - not adding duplicate');
     return storedStats;
   }
@@ -108,7 +127,10 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
   return combinedStats;
 }
 
-export function isAccountMissingResult(result: string) {
+// Accepts the full return type of getAcctStats (Stats | string) so callers can
+// pass the raw result without first narrowing; a Stats object simply matches
+// neither sentinel.
+export function isAccountMissingResult(result: string | Stats) {
   return result === ACCOUNT_CREATED_RESULT || result === ACCOUNT_NOT_FOUND_RESULT;
 }
 
