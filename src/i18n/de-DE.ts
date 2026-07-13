@@ -1,5 +1,7 @@
 export const German: i18nMessages = {
   name: "Deutsch",
+  km: "km",
+  miles: "Meilen",
   helpTitle: "Spielanleitung",
   help1: `Jeden Tag gibt es ein neues geheimes Land. Dein Ziel ist es, dieses Land
   in so wenig Versuchen wie möglich zu erraten. Jeder falsche Versuch wir die auf

@@ -1,5 +1,7 @@
 export const Italian: i18nMessages = {
   name: "Italiano",
+  km: "km",
+  miles: "miglia",
   helpTitle: "Come giocare",
   help1: `Ogni giorno c'è un nuovo Paese Misterioso. Il tuo obiettivo è indovinare il
    paese misterioso usando il minor numero di ipotesi. Ogni ipotesi errata

@@ -1,5 +1,7 @@
 export const Swedish: i18nMessages = {
   name: "Svenska",
+  km: "km",
+  miles: "miles",
   helpTitle: "Så här spelar du",
   help1: `Varje dag finns det ett nytt mysterieland. Ditt mål är att gissa mysterielandet med minst antal gissningar. Varje felaktig gissning kommer att dyka upp på jordklotet med en färg som visar hur nära den är mysterielandet. Ju <b>varmare</b> färgen är, desto närmare svaret är du.`,
   help2: `Till exempel, om mysterielandet är <b>Japan</b>, då skulle följande länder visas med dessa färger om man gissade:`,

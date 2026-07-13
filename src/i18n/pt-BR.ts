@@ -1,5 +1,7 @@
 export const Portuguese: i18nMessages = {
   name: "Português Brasileiro",
+  km: "km",
+  miles: "milhas",
   helpTitle: "Como jogar",
   help1: `Todo dia, há um novo País Misterioso. Seu objetivo é advinhar
   o País Misterioso usando o menor número de tentativas. Cada tentativa incorreta

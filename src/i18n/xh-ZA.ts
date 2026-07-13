@@ -1,5 +1,7 @@
 export const Xhosa: i18nMessages = {
   name: "IsiXhosa",
+  km: "km",
+  miles: "iimayile",
   helpTitle: " Idlalwa Njani",
   help1: `Yonke imihla, kukho iLizwe elingaqondakaliyo elitsha. Injongo yakho kukuqikelela ukuba leliphi ilizwe elisebenzisa elona nani limbalwa loqikelelo. Uqikelelo ngalunye olungachanekanga luya kuvela kwiglowubhu enombala obonisa ukuba ikufuphi kangakanani neLizwe elingaqondakaliyo. Ngokuba <b data-stylize="max-colour">shushu</b> kombala, kulapho ukufutshane ngakumbi nempendulo.`,
   help2: `Umzekelo, ukuba ilizw elingaqondakaliyo <b>yi-Japhani</b>, ke oku kulandelayo amazwe angavela nale mibala ukuba uyaqikelela:`,

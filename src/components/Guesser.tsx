@@ -163,6 +163,8 @@ export default function (props: Props) {
   }
 
   function findCountry(newGuess: string) {
+    // Clear any prior suggestion so a stale one doesn't linger across guesses.
+    setSuggestion('');
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, '');
 
     if (buggyNames?.includes(cleanedGuess.toLowerCase())) {
@@ -327,7 +329,7 @@ export default function (props: Props) {
       </form>
 
       <Show
-        when={customMsg()?.includes('Did you mean')}
+        when={suggestion()}
         fallback={
           <p class="text-center font-medium" style={{ color: msgColour() }} data-testid="guess-msg">
             {customMsg() || msg()}
@@ -335,7 +337,11 @@ export default function (props: Props) {
         }
       >
         <p class="text-center font-medium" style={{ color: msgColour() }} data-testid="guess-msg">
-          <Suggestion countryName={suggestion()} submitGuess={submitGuess} />
+          <Suggestion
+            message={customMsg()}
+            countryName={suggestion()}
+            submitGuess={submitGuess}
+          />
         </p>
       </Show>
     </div>

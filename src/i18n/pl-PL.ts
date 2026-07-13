@@ -1,5 +1,7 @@
 export const Polish: i18nMessages = {
   name: "Polski",
+  km: "km",
+  miles: "mile",
   helpTitle: "Jak grać",
   help1: `Każdego dnia pojawia się nowy Tajemniczy Kraj. Twoim zadaniem jest go odgadnąć przy jak najmniejszej liczbie prób. Każda nieprawidłowa odpowiedź pojawia się na kuli ziemskiej w kolorze wskazującym jak blisko jest do Tajemniczego Kraju. Im <b>cieplejszy</b> kolor, tym bliżej jesteś prawidłowej odpowiedzi.`,
   help2: `Na przykład, jeśli Tajemniczym Krajem jest <b>Japonia</b>, to poniższe kraje pojawią się w takich kolorach:`,

@@ -1,5 +1,7 @@
 export const Norwegian: i18nMessages = {
   name: "Norsk",
+  km: "km",
+  miles: "miles",
   helpTitle: "Slik spiller du",
   help1: `Hver dag finnes det et nytt mysterieland. Ditt mål er å gjette
   mysterielandet på færrest antall gjetninger. Hver feil gjetning

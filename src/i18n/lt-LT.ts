@@ -1,5 +1,7 @@
 ﻿export const Lithuanian: i18nMessages = {
   name: "Lietuvių",
+  km: "km",
+  miles: "mylios",
   helpTitle: "Kaip žaisti",
   help1: `Kasdien atsitiktiniu būdu parenkama šalis, kurią turi atspėti. Tavo spėjamos šalys gaublyje bus nuspalvintos tam tikromis spalvomis. Vadovaukis „šilta-šalta“ principu: kuo spalva <b data-stylize="max-colour">tamsesnė</b>, tuo arčiau tiesos esi. Ir kuo mažiau spėjimų, tuo geriau!`,
   help2: `Pavyzdžiui, jei šalis, kurią turi atspėti, būtų <b>Japonija</b>, pamatytum štai tokias tolesnių šalių spalvas:`,

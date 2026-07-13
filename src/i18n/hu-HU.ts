@@ -1,5 +1,7 @@
 export const Hungarian: i18nMessages = {
   name: "Magyar",
+  km: "km",
+  miles: "mérföld",
   helpTitle: "Hogy játsszunk",
   help1: `Minden nap van egy új ország. A te dolgod, hogy a legkevesebb találgatással
   megtaláld ezt az országot. Minden hibás találgatás megjelenik a földgömbön.

@@ -52,8 +52,10 @@ export default function () {
 
   // Get email from search params after Discord sign in
   const [searchParams] = useSearchParams();
-  const email = searchParams.email || context.user().email;
-  const isNewDiscordSignIn = searchParams.email && typeof searchParams.email === 'string';
+  const searchParamsEmail = searchParams.email;
+  const singleEmail = typeof searchParamsEmail === 'string' ? searchParamsEmail : null;
+  const email = singleEmail || context.user().email;
+  const isNewDiscordSignIn = singleEmail !== null;
 
   if (email && typeof email === 'string') {
     context.setUser({ email });
