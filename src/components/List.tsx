@@ -3,6 +3,7 @@ import { createEffect, createMemo, createSignal, For, Match, Setter, Show, Switc
 import { unwrap } from 'solid-js/store';
 import { getContext } from '../Context';
 import { getLangKey, translatePage } from '../i18n';
+import { getFlagAssetPath, handleFlagLoadError } from '../util/flags';
 import { findCentre } from '../util/geometry';
 import { GuessStore } from '../util/stores';
 import { formatKm } from '../util/text';
@@ -73,7 +74,6 @@ export default function (props: Props) {
         <For each={sortedGuesses()}>
           {(country) => {
             const { NAME_LEN, ABBREV, NAME, FLAG } = country.properties;
-            const flag = (FLAG || '').toLocaleLowerCase();
             let name = NAME_LEN >= 10 ? ABBREV : NAME;
             if (context.locale().locale !== 'en-CA') {
               name = country.properties[langKey()] as string;
@@ -84,7 +84,11 @@ export default function (props: Props) {
                   onClick={() => props.setPov(findCentre(country))}
                   class="flex cursor-pointer items-center"
                 >
-                  <img src={`https://flagcdn.com/w20/${flag}.png`} alt={name} />
+                  <img
+                    src={getFlagAssetPath(FLAG || '')}
+                    alt={name}
+                    onError={(event) => handleFlagLoadError(event, FLAG || '')}
+                  />
                   <span class="text-md ml-2 text-left">{name}</span>
                 </button>
               </li>
