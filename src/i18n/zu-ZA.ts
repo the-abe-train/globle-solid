@@ -41,7 +41,7 @@ export const Zulu: i18nMessages = {
   Game2: "Faka",
   Game3:
     "Faka igama lanoma yiliphi izwe ukuze wenze isibikezelo sakho sokuqala.",
-  Game4: `Hudula, {{chofoza}}, futhi usondeze emhlabeni ukuze uzisize uthole isibikezelo sakho esilandelayo.`,
+  Game4: `Hudula, {{click}}, futhi usondeze emhlabeni ukuze uzisize uthole isibikezelo sakho esilandelayo.`,
   Game5: "Isibikezelo esingavumelekile",
   Game6: "Izwe eselicatshangiwe",
   Game7: "Izwe Elimfihlakalo ngu-{{answer}}!",

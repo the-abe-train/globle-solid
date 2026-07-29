@@ -79,15 +79,17 @@ test.describe('Settings tests', () => {
     test('checks the game translates into French', async ({ page }) => {
       await page.goto('/');
       await expect(page.locator('[data-i18n="helpTitle"]')).toContainText('How to Play');
+      await expect(page.locator('footer img[alt="trainwreck"]')).toHaveCount(2);
 
       await page.goto('/settings');
       await page.locator('[name="Language"]').selectOption('fr-FR');
 
       await expect(page.locator('[data-i18n="SettingsTitle"]')).toContainText('Paramètres');
+      await expect(page.locator('html')).toHaveAttribute('lang', 'fr-FR');
 
       // Seed practice mode with Madagascar before navigating
       const answer: any = (rawAnswerData as any).features.find(
-        (feature: any) => feature.properties.NAME === 'Madagascar'
+        (feature: any) => feature.properties.NAME === 'Madagascar',
       );
       await page.addInitScript((answerData) => {
         localStorage.setItem('practice', answerData as string);
@@ -101,6 +103,9 @@ test.describe('Settings tests', () => {
       await page.getByTestId('guesser').type('royaume-uni');
       await page.keyboard.press('Enter');
       await expect(page.locator('[data-cy="countries-list"]')).toContainText('Royaume-Uni');
+      await expect(page.locator('[data-i18n="Game16"]')).toContainText(
+        'Trier par ordre des tentatives',
+      );
     });
   });
 });

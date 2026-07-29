@@ -25,10 +25,9 @@ export default function Footer() {
       <div class="flex flex-col gap-3">
         <a
           href="https://trainwrecklabs.com?utm_source=globle&utm_medium=website&utm_campaign=footer"
-          data-i18n="Footer1"
           class="flex items-center transition-opacity hover:opacity-80"
         >
-          <span>by Trainwreck Labs</span>
+          <span data-i18n="Footer1">by Trainwreck Labs</span>
           <img
             src={trainwreckBlack}
             width={14}

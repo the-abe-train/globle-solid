@@ -265,12 +265,13 @@ export default function (props: Props) {
     const distance = polygonDistance(newCountry, props.ans);
     newCountry['proximity'] = distance;
     props.addGuess(newCountry);
-    const ansName = props.ans.properties[locale === 'en-CA' ? 'NAME' : langKey()];
-    if (newCountry.properties.NAME === ansName) return;
+    const guessedName = newCountry.properties.NAME;
+    const answerName = props.ans.properties.NAME;
+    if (guessedName === answerName) return;
     if (distance === 0 && !props.win()) {
       if (
-        (name === 'Namibia' && ansName === 'Zimbabwe') ||
-        (name === 'Zimbabwe' && ansName === 'Namibia')
+        (guessedName === 'Namibia' && answerName === 'Zimbabwe') ||
+        (guessedName === 'Zimbabwe' && answerName === 'Namibia')
       ) {
         setMsg(
           translate('Game15', '{{guess}} is almost adjacent to the answer!', {

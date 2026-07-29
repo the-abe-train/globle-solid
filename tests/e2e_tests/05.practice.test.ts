@@ -31,7 +31,7 @@ test.describe('Play a practice game', () => {
     await checkMsgText(page, 'Madagascar');
 
   // Play again
-  const yesBtn = page.locator('button[data-i18n="Yes"]');
+  const yesBtn = page.locator('button[data-i18n="Practice4"]');
   await expect(yesBtn).toBeVisible();
   await yesBtn.click();
     await checkMsgText(page, 'any country');

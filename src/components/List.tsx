@@ -121,12 +121,12 @@ export default function (props: Props) {
             >
               <Switch>
                 <Match when={isSortedByDistance()}>
-                  <span class="text-md underline" data-i18n="SortByGuesses">
-                    Sort by guesses
+                  <span class="text-md underline" data-i18n="Game16">
+                    Sort by order of guesses
                   </span>
                 </Match>
                 <Match when={!isSortedByDistance()}>
-                  <span class="text-md underline" data-i18n="SortByDistance">
+                  <span class="text-md underline" data-i18n="Game17">
                     Sort by distance
                   </span>
                 </Match>

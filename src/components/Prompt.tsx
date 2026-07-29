@@ -49,7 +49,7 @@ export function Prompt(props: Props) {
             class="block rounded-md bg-red-700 px-6 py-2 text-base font-medium text-white hover:bg-red-900 focus:ring-2 focus:ring-red-300 focus:outline-none disabled:bg-red-900"
             onClick={runYes}
             data-cy="yes-btn"
-            data-i18n="Yes"
+            data-i18n="Practice4"
           >
             {translate('Practice4', 'Yes')}
           </button>
@@ -57,7 +57,7 @@ export function Prompt(props: Props) {
             class="block rounded-md bg-blue-700 px-6 py-2 text-base font-medium text-white hover:bg-blue-900 focus:ring-2 focus:ring-blue-300 focus:outline-none disabled:bg-blue-900"
             onClick={runNo}
             data-cy="no-btn"
-            data-i18n="No"
+            data-i18n="Practice5"
           >
             {translate('Practice5', 'No')}
           </button>

@@ -8,7 +8,7 @@ export const Spanish: i18nMessages = {
   Mongolia: "Mongolia",
   "South Korea": "Corea del Sur",
   help3: `¡Un nuevo País Secreto estará disponible todos los días!`,
-  Aux1: "¡Haz click en el globo para jugar!",
+  Aux1: "¡{{Click}} en el globo para jugar!",
   Aux2: "¿Tienes alguna duda?",
   Aux3: "Visita Preguntas Frecuentes.",
   Footer1: "Creado por Trainwreck Labs",
@@ -33,7 +33,7 @@ export const Spanish: i18nMessages = {
   Game2: "Ingresar",
   Game3: "Ingresa el nombre de cualquier pais para iniciar el juego.",
   Game4:
-    "Arrastra, haz click, y zoom-in en el globo para ubicar tu siguiente país.",
+    "Arrastra, {{click}}, y zoom-in en el globo para ubicar tu siguiente país.",
   Game5: "Intento inválido",
   Game6: "Pais ya adivinado",
   Game7: "¡El País Secreto es {{answer}}!",

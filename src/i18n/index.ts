@@ -1,4 +1,4 @@
-import i18next, { Resource, TOptions } from 'i18next';
+import i18next, { Resource } from 'i18next';
 import { getContext } from '../Context';
 import { isMobile } from '../util/globe';
 import { getMaxColour } from '../util/colour';
@@ -53,7 +53,7 @@ const resources = langMap.reduce((obj, lang) => {
   return obj;
 }, {} as Resource);
 
-type KeyWords = 'guess' | 'answer' | 'Click' | 'click' | "Côte d'Ivoire";
+type KeyWords = 'guess' | 'answer' | 'Click' | 'click';
 
 export function translate(
   key: keyof i18nMessages,
@@ -65,7 +65,6 @@ export function translate(
     defaultValue,
     Click,
     click: Click && Click.toLowerCase(),
-    "Côte d'Ivoire": 'Côte test',
     interpolation: { escapeValue: false },
     ...interpolation,
   };
@@ -82,7 +81,7 @@ export async function translatePage() {
 
   if (!i18next.isInitialized) {
     await i18next.init({
-      fallbackLng: 'en',
+      fallbackLng: 'en-CA',
       // debug: true,
       lng: locale,
       resources,
@@ -91,6 +90,7 @@ export async function translatePage() {
     await i18next.changeLanguage(locale);
     // console.table(i18next.languages);
   }
+  document.documentElement.lang = locale;
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     const attr = el.getAttribute('data-i18n') as keyof i18nMessages;
     // Check if attr is a key of i18nMessages
