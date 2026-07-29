@@ -91,8 +91,17 @@ test.describe('Settings tests', () => {
         'Par défaut',
       );
 
+      await page.locator('[data-cy="toggle-Labels on-Labels off"]').click();
+      await expect(page.getByText('Étiquettes activées', { exact: true })).toBeVisible();
+
       await page.getByRole('button', { name: 'Statistics' }).click();
       await expect(page.getByText('Dernière victoire', { exact: true })).toBeVisible();
+
+      await page.goto('/');
+      const emphasizedHelpText = page.locator('[data-i18n="help1"] b');
+      await expect(emphasizedHelpText).toHaveText('chaude');
+      await expect(emphasizedHelpText).toHaveAttribute('style', /color:/);
+      await expect(page.locator('footer img[alt="trainwreck"]')).toHaveCount(2);
 
       // Seed practice mode with Madagascar before navigating
       const answer: any = (rawAnswerData as any).features.find(

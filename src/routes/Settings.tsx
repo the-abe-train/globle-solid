@@ -3,7 +3,7 @@ import Toggle from '../components/Toggle';
 import { getContext } from '../Context';
 import { useNavigate, useSearchParams } from '@solidjs/router';
 import SelectMenu from '../components/SelectMenu';
-import { langMap, t, translatePage } from '../i18n';
+import { initializeI18n, langMap, t } from '../i18n';
 import NavGlobe from '../components/globes/NavGlobe';
 import { createPracticeAns } from '../util/practice';
 import { subscribeToNewsletter } from '../util/newsletter';
@@ -36,8 +36,9 @@ export default function () {
   const currentLocale = context.locale().locale;
   const [locale, setLocale] = createSignal(currentLocale);
   createEffect(() => {
-    context?.setLocale({ locale: locale() });
-    translatePage();
+    const nextLocale = locale();
+    context?.setLocale({ locale: nextLocale });
+    void initializeI18n(nextLocale);
   });
 
   const currentColours = context.colours().colours;
@@ -209,7 +210,7 @@ export default function () {
     <div class="space-y-10">
       <div class="space-y-5">
         <h2 class="font-header my-5 text-center text-2xl font-extrabold" data-i18n="SettingsTitle">
-          Settings
+          {t('SettingsTitle', 'Settings')}
         </h2>
         <div class="mx-auto max-w-xs space-y-3">
           <Toggle
@@ -254,14 +255,14 @@ export default function () {
             data-i18n="Settings9"
             class="block items-center justify-center self-center rounded-lg bg-blue-700 px-4 py-2.5 text-center text-sm text-white hover:bg-blue-900 focus:ring-4 focus:ring-blue-300 disabled:bg-blue-900 dark:bg-purple-800 dark:hover:bg-purple-900"
           >
-            Play practice game
+            {t('Settings9', 'Play practice game')}
           </button>
           <button
             class="block rounded-md border border-red-700 px-6 py-2 text-base font-medium text-red-700 hover:bg-red-700 hover:text-gray-300 focus:ring-2 focus:ring-red-300 focus:outline-none dark:border-red-500 dark:text-red-500 dark:hover:bg-red-500 dark:hover:text-black dark:disabled:border-red-400"
             onClick={promptResetStats}
             data-i18n="Stats8"
           >
-            Reset
+            {t('Stats8', 'Reset')}
           </button>
         </div>
       </div>
@@ -280,7 +281,7 @@ export default function () {
         </p>
       </div>
       <TwlAccount />
-      <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
+      <Suspense fallback={<p data-i18n="Loading">{t('Loading', 'Loading...')}</p>}>
         <NavGlobe />
       </Suspense>
       <Prompt

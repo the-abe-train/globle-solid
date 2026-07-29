@@ -37,9 +37,15 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
   async function openStatsModal(page: Page) {
     const title = page.locator('h2[data-i18n="StatsTitle"]');
     if (!(await title.isVisible().catch(() => false))) {
-      await page.locator('button[aria-label="Statistics"]').click();
-      await expect(title).toBeVisible();
+      try {
+        await page.locator('button[aria-label="Statistics"]').click({ timeout: 2000 });
+      } catch (error) {
+        // The game may auto-open the modal while Playwright is clicking, which
+        // legitimately detaches the trigger button.
+        if (!(await title.isVisible().catch(() => false))) throw error;
+      }
     }
+    await expect(title).toBeVisible();
   }
 
   async function closeStatsModal(page: Page) {
@@ -108,7 +114,7 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
 
     await page.getByTestId('guesser').fill(answer);
     await page.keyboard.press('Enter');
-    await expect(page.locator('h2[data-i18n="StatsTitle"]')).toBeVisible();
+    await openStatsModal(page);
   }
 
   test('gamesWon should NOT increment when refreshing with logged-in user', async ({ page }) => {

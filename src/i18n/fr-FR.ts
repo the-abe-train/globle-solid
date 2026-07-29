@@ -6,7 +6,7 @@ export const French: i18nMessages = {
   help1: `Chaque jour, il y a un nouveau pays mystère. Votre but est de deviner 
   le pays mystère avec le moins d'essais possible. Chaque tentative apparaîtra sur 
   le globe avec une couleur indiquant la distance avec le pays mystère. Plus la couleur 
-  est <b data-stylize="max-colour">chaude</b>, plus vous êtes proche de la réponse.`,
+  est <b>chaude</b>, plus vous êtes proche de la réponse.`,
   help2: `Par exemple, si le pays mystère est <b>Japon</b>, les pays suivant apparaitront 
   avec ces couleurs:`,
   help3: `Un nouveau pays mystère sera disponible chaque jour!`,

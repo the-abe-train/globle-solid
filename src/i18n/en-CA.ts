@@ -3,7 +3,7 @@ export const English: i18nMessages = {
   km: 'km',
   miles: 'miles',
   helpTitle: 'How to Play',
-  help1: `Every day, there is a new Mystery Country. Your goal is to guess which country it is using as few guesses as possible. Each incorrect guess will appear on the globe with a colour indicating how close it is to the Mystery Country. The <b data-stylize="max-colour">hotter</b> the colour, the closer you are to the answer.`,
+  help1: `Every day, there is a new Mystery Country. Your goal is to guess which country it is using as few guesses as possible. Each incorrect guess will appear on the globe with a colour indicating how close it is to the Mystery Country. The <b>hotter</b> the colour, the closer you are to the answer.`,
   help2: `For example, if the Mystery Country is <b>Japan</b>, then the following countries would appear with these colours if guessed:`,
   help3: `A new Mystery Country will be available every day!`,
   France: 'France',

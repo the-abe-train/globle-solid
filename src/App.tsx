@@ -4,7 +4,6 @@ import { getContext } from './Context';
 import './background.css';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import { translatePage } from './i18n';
 import Modal from './components/Modal';
 import Statistics from './components/Statistics';
 import Practice from './routes/Practice';
@@ -23,8 +22,6 @@ const App: Component = () => {
   const { theme } = getContext();
   const [showStats, setShowStats] = createSignal(false);
   onMount(() => {
-    translatePage();
-    // Log version information on app load
     logVersionInfo();
   });
 

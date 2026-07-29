@@ -1,4 +1,4 @@
-import { createEffect, createSignal, lazy, onMount, Setter, Show, Suspense } from 'solid-js';
+import { createEffect, createSignal, lazy, Setter, Show, Suspense } from 'solid-js';
 import Guesser from '../components/Guesser';
 import List from '../components/List';
 import { createPracticeAns, getPracticeAns } from '../util/practice';
@@ -6,17 +6,16 @@ import Prompt from '../components/Prompt';
 import { useNavigate } from '@solidjs/router';
 import { createGuessStore } from '../util/stores';
 import { getTerritories } from '../util/data';
-import { t, translatePage } from '../i18n';
+import { t } from '../i18n';
 import NitroPayAd from '../components/NitroPayAd';
 
 const GameGlobe = lazy(() => import('../components/globes/GameGlobe'));
 
 export default function Outer() {
   const [ans, setAns] = createSignal(getPracticeAns());
-  onMount(translatePage);
 
   return (
-    <Show when={ans()} keyed fallback={<p data-i18n="Loading">Loading...</p>}>
+    <Show when={ans()} keyed fallback={<p data-i18n="Loading">{t('Loading', 'Loading...')}</p>}>
       {(ans) => {
         return <Inner ans={ans} setAns={setAns} />;
       }}
@@ -43,9 +42,6 @@ function Inner(props: InnerProps) {
   const { guesses, setGuesses } = createGuessStore([]);
 
   // Lifecycle
-  onMount(translatePage);
-  // onCleanup(() => setGuesses("closest", 12));
-
   // New game
   function newGame() {
     setWin(false);
@@ -78,10 +74,10 @@ function Inner(props: InnerProps) {
   return (
     <div>
       <p class="italic" data-i18n="Practice1">
-        You are playing a practice game.
+        {t('Practice1', 'You are playing a practice game.')}
       </p>
       <Guesser addGuess={addGuess} guesses={guesses} win={win} ans={props.ans} />
-      <Suspense fallback={<p data-i18n="Loading">Loading...</p>}>
+      <Suspense fallback={<p data-i18n="Loading">{t('Loading', 'Loading...')}</p>}>
         <GameGlobe guesses={guesses} pov={pov} ans={props.ans} />
       </Suspense>
       <List guesses={guesses} setPov={setPov} ans={props.ans} />
@@ -93,7 +89,7 @@ function Inner(props: InnerProps) {
             onClick={newGame}
             data-i18n="Practice3"
           >
-            Play again
+            {t('Practice3', 'Play again')}
           </button>
         }
       >
@@ -102,7 +98,7 @@ function Inner(props: InnerProps) {
           onClick={revealAnswer}
           data-i18n="Game18"
         >
-          Reveal answer
+          {t('Game18', 'Reveal answer')}
         </button>
       </Show>
       <Prompt

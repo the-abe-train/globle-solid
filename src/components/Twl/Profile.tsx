@@ -1,6 +1,7 @@
 // import JoinClubBtn from "./JoinClubBtn.tsx";
 
 import { getContext } from '../../Context';
+import { t } from '../../i18n';
 import JoinClubBtn from './JoinClubBtn';
 
 // type Props = {
@@ -18,7 +19,7 @@ export default function () {
   return (
     <div>
       <p class="text-center">
-        <span data-i18n="TWL5">Account:</span> <span>{email}</span>
+        <span data-i18n="TWL5">{t('TWL5', 'Account:')}</span> <span>{email}</span>
       </p>
       <div class="mx-auto my-4 flex w-full justify-center space-x-6">
         <JoinClubBtn />
@@ -27,7 +28,7 @@ export default function () {
           onClick={logout}
           data-i18n="TWL8"
         >
-          Disconnect
+          {t('TWL8', 'Disconnect')}
         </button>
       </div>
     </div>

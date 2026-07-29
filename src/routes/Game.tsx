@@ -6,7 +6,6 @@ import { getAnswer } from '../util/encryption';
 import { getContext } from '../Context';
 import { getCountry, getTerritories } from '../util/data';
 import { polygonDistance } from '../util/geometry';
-import { translatePage } from '../i18n';
 import { createGuessStore } from '../util/stores';
 import NitroPayAd from '../components/NitroPayAd';
 import {
@@ -99,7 +98,6 @@ function Inner(props: Props) {
   });
 
   onMount(async () => {
-    translatePage();
     const expiration = dayjs(context.storedGuesses().day);
     if (dayjs().isAfter(expiration)) context.resetGuesses();
 

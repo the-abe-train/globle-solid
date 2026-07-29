@@ -123,7 +123,13 @@ test.describe('Stats Sync with Database', () => {
 
     // Refresh the page to ensure stats persist
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(500);
+    await page.waitForFunction(
+      (expectedGamesWon) => {
+        const storedStats = JSON.parse(localStorage.getItem('statistics') || '{}');
+        return storedStats.gamesWon === expectedGamesWon;
+      },
+      databaseStats.gamesWon,
+    );
 
     // Check stats again after refresh
     await page.getByRole('button', { name: 'Statistics' }).click();

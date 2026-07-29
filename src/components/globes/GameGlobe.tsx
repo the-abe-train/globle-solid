@@ -15,7 +15,7 @@ import { getColour } from '../../util/colour';
 import { formatKm, formatName } from '../../util/text';
 import { unwrap } from 'solid-js/store';
 import { GuessStore } from '../../util/stores';
-import { translatePage } from '../../i18n';
+import { t } from '../../i18n';
 
 type Props = {
   guesses: GuessStore;
@@ -108,7 +108,6 @@ export default function (props: Props) {
 
   // Effects
   onMount(() => {
-    translatePage();
     const handleResize = () => setSize(getGlobeSize());
     const resizeObserver = new ResizeObserver(handleResize);
     if (globeRef?.parentElement) {
@@ -215,7 +214,7 @@ export default function (props: Props) {
   return (
     <div>
       <Show when={!isLoaded()}>
-        <p data-i18n="Loading">Loading...</p>
+        <p data-i18n="Loading">{t('Loading', 'Loading...')}</p>
       </Show>
       <div
         ref={globeRef!}

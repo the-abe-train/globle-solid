@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
-import { Accessor, createMemo, createSignal, onMount, Setter } from 'solid-js';
+import { Accessor, createMemo, createSignal, Setter } from 'solid-js';
 import Icon from './Icon';
 import { getContext } from '../Context';
 import { isMobile } from '../util/globe';
 import UAParser from 'ua-parser-js';
-import { t, translatePage } from '../i18n';
+import { t } from '../i18n';
 import TwlAd from './TwlAd';
 import { createPracticeAns } from '../util/practice';
 
@@ -15,8 +15,6 @@ type Props = {
 
 export default function (props: Props) {
   const context = getContext();
-
-  onMount(translatePage);
 
   const wonToday = createMemo(() => {
     const lastWin = dayjs(context.storedStats().lastWin);
@@ -101,7 +99,7 @@ https://globle-game.com
         class="font-header text-center text-3xl font-extrabold dark:text-gray-200"
         data-i18n="StatsTitle"
       >
-        Statistics
+        {t('StatsTitle', 'Statistics')}
       </h2>
       <table cell-padding="4rem" class="mx-auto w-full max-w-md dark:text-gray-200">
         <tbody>
@@ -129,7 +127,7 @@ https://globle-game.com
           onClick={enterPractice}
           data-i18n="Settings9"
         >
-          Play practice game
+          {t('Settings9', 'Play practice game')}
         </button>
         <button
           class="block justify-around rounded-md bg-blue-700 px-8 py-2 text-base font-medium text-white hover:bg-blue-900 focus:ring-2 focus:ring-blue-300 focus:outline-none disabled:bg-blue-400 dark:bg-purple-800 dark:text-gray-200 dark:hover:bg-purple-900 dark:disabled:bg-purple-900"
@@ -137,7 +135,7 @@ https://globle-game.com
           disabled={!wonToday()}
           data-i18n="Stats9"
         >
-          Share
+          {t('Stats9', 'Share')}
         </button>
       </div>
       <TwlAd />

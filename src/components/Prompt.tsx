@@ -1,5 +1,5 @@
 import { Accessor, onMount, Setter, Show } from 'solid-js';
-import { t, translatePage } from '../i18n';
+import { t } from '../i18n';
 import Modal from './Modal';
 
 type Choice = {
@@ -37,7 +37,6 @@ export function Prompt(props: Props) {
     if (props.promptType === 'Message') {
       setTimeout(() => props.setShowPrompt(false), 2000);
     }
-    translatePage();
   });
 
   return (

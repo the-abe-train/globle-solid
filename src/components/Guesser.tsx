@@ -325,7 +325,7 @@ export default function (props: Props) {
           disabled={props.win() || !props.ans}
           data-i18n="Game2"
         >
-          Enter
+          {t('Game2', 'Enter')}
         </button>
       </form>
 

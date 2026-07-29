@@ -3,6 +3,7 @@ import trainwreckWhite from '../images/trainwreck-white.svg';
 import trainwreckBlack from '../images/trainwreck-black.svg';
 import { onMount } from 'solid-js';
 import VersionDisplay from './VersionDisplay';
+import { t } from '../i18n';
 
 declare global {
   interface Window {
@@ -27,7 +28,7 @@ export default function Footer() {
           href="https://trainwrecklabs.com?utm_source=globle&utm_medium=website&utm_campaign=footer"
           class="flex items-center transition-opacity hover:opacity-80"
         >
-          <span data-i18n="Footer1">by Trainwreck Labs</span>
+          <span data-i18n="Footer1">{t('Footer1', 'by Trainwreck Labs')}</span>
           <img
             src={trainwreckBlack}
             width={14}
@@ -49,19 +50,19 @@ export default function Footer() {
           class="flex items-center gap-2 transition-opacity hover:opacity-80"
           target="_blank"
         >
-          <span data-i18n="Footer3">Find TWL on Discord</span>
+          <span data-i18n="Footer3">{t('Footer3', 'Find TWL on Discord')}</span>
           <Icon shape="discord" size={18} class="mt-1" />
         </a>
       </div>
       <div class="text-right">
-        <p data-i18n="Aux2">Have a question?</p>
+        <p data-i18n="Aux2">{t('Aux2', 'Have a question?')}</p>
         <a
           href="/faq"
           class="underline transition-opacity hover:opacity-80"
           data-cy="faq-footer-link"
           data-i18n="Aux3"
         >
-          Check out the FAQ.
+          {t('Aux3', 'Check out the FAQ.')}
         </a>
         <p data-ccpa-link="1" class="underline" />
         <div id="ncmp-consent-link" class="underline" />

@@ -1,6 +1,7 @@
 import Icon from '../Icon';
 import { createEffect, createSignal, onMount } from 'solid-js';
 import { getContext } from '../../Context';
+import { t } from '../../i18n';
 import jwtDecode from 'jwt-decode';
 import { subscribeToNewsletter } from '../../util/newsletter';
 import { combineStats, getAcctStats, isAccountMissingResult, putAcctStats } from '../../util/stats';
@@ -119,7 +120,7 @@ export default function () {
         }
       `}</style>
       <p class="my-5 text-center text-sm" data-i18n="TWL1">
-        Connect a TWL Account to backup your stats.
+        {t('TWL1', 'Connect a TWL Account to backup your stats.')}
       </p>
       <div class="mx-auto w-52 space-y-2">
         <div class="flex h-10 w-full justify-center">
@@ -140,7 +141,7 @@ export default function () {
           <input hidden type="text" name="state" value={DISCORD_STATE} />
           <button class="flex h-10 w-full max-w-[208px] min-w-[208px] items-center justify-center space-x-3 rounded border border-gray-100 bg-white p-1 align-middle shadow transition-shadow hover:shadow-md">
             <span class="p-1 text-sm" data-i18n="TWL3">
-              Sign in with Discord
+              {t('TWL3', 'Sign in with Discord')}
             </span>
             <div class="mt-1">
               <Icon shape="discord" size={20} />
@@ -160,7 +161,7 @@ export default function () {
           }}
         />
         <label for="check" class="text-center text-sm" data-i18n="TWL4">
-          Subscribe to Trainwreck Labs newsletter.
+          {t('TWL4', 'Subscribe to Trainwreck Labs newsletter.')}
         </label>
       </form>
     </div>

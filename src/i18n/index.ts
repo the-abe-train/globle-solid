@@ -1,8 +1,6 @@
 import i18next, { Resource } from 'i18next';
 import { createSignal } from 'solid-js';
-import { getContext } from '../Context';
 import { isMobile } from '../util/globe';
-import { getMaxColour } from '../util/colour';
 import { English } from './en-CA';
 import { Spanish } from './es-MX';
 import { French } from './fr-FR';
@@ -117,24 +115,4 @@ export function t(
     ...interpolation,
   };
   return i18next.t(key, options);
-}
-
-export async function translatePage() {
-  const context = getContext();
-  const { isDark } = context.theme();
-  const { colours } = context.colours();
-  const { locale } = context.locale();
-
-  await initializeI18n(locale);
-  document.querySelectorAll('[data-i18n]').forEach((el) => {
-    const attr = el.getAttribute('data-i18n') as keyof i18nMessages;
-    // Check if attr is a key of i18nMessages
-    if (!attr || !(attr in English)) return;
-
-    const defaultValue = el.innerHTML;
-    el.innerHTML = t(attr, defaultValue);
-  });
-  document.querySelectorAll<HTMLElement>('[data-stylize]').forEach((el) => {
-    el.style.color = getMaxColour(colours, isDark);
-  });
 }

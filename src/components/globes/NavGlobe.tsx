@@ -3,7 +3,7 @@ import { createSignal, onCleanup, onMount, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 
 import { globeMinImg, isMobile as isMobileFn } from '../../util/globe';
-import { translatePage } from '../../i18n';
+import { t } from '../../i18n';
 
 export default function () {
   // const context = getContext();
@@ -15,7 +15,6 @@ export default function () {
   const [webglError, setWebglError] = createSignal(false);
 
   onMount(() => {
-    translatePage();
     if (globeRef) {
       try {
         globeInstance = new Globe(globeRef, {
@@ -59,7 +58,7 @@ export default function () {
         fallback={
           <>
             <div ref={globeRef!} class="mx-auto my-2 w-fit" />
-            <b data-i18n="Aux1">{isMobile ? 'Tap' : 'Click'} the globe to play!</b>
+            <b data-i18n="Aux1">{t('Aux1', `${isMobile ? 'Tap' : 'Click'} the globe to play!`)}</b>
           </>
         }
       >

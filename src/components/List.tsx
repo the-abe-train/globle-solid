@@ -1,7 +1,7 @@
 import { createEffect, createMemo, createSignal, For, Match, Setter, Show, Switch } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 import { getContext } from '../Context';
-import { getLangKey, t, translatePage } from '../i18n';
+import { getLangKey, t } from '../i18n';
 import { getFlagAssetPath, handleFlagLoadError } from '../util/flags';
 import { findCentre } from '../util/geometry';
 import { GuessStore } from '../util/stores';
@@ -49,16 +49,13 @@ export default function (props: Props) {
   const [isShowingKm, setShowingKm] = createSignal(isAlreadyShowingKm);
 
   createEffect(() => {
-    if (props.guesses.length > 0) {
-      translatePage();
-    }
     isSortedByDistance();
     context.setDistanceUnit({ unit: isShowingKm() ? 'km' : 'miles' });
   });
 
   return (
     <div class="z-30 mb-16 py-8 dark:text-white">
-      <Switch fallback={<p data-i18n="Game9">Guesses will appear here.</p>}>
+      <Switch fallback={<p data-i18n="Game9">{t('Game9', 'Guesses will appear here.')}</p>}>
         <Match when={props.guesses.length < 1}>
           <p>{t('Game9', 'Guesses will appear here.')}</p>
         </Match>
@@ -99,7 +96,7 @@ export default function (props: Props) {
         <div class="mt-8">
           <div class="flex items-center space-x-1">
             <p>
-              <span data-i18n="Game8">Closest border</span>:{' '}
+              <span data-i18n="Game8">{t('Game8', 'Closest border')}</span>:{' '}
               <span data-testid="closest-border">{formatKm(props.guesses.closest)}</span>
             </p>
             <Toggle
@@ -121,12 +118,12 @@ export default function (props: Props) {
               <Switch>
                 <Match when={isSortedByDistance()}>
                   <span class="text-md underline" data-i18n="Game16">
-                    Sort by order of guesses
+                    {t('Game16', 'Sort by order of guesses')}
                   </span>
                 </Match>
                 <Match when={!isSortedByDistance()}>
                   <span class="text-md underline" data-i18n="Game17">
-                    Sort by distance
+                    {t('Game17', 'Sort by distance')}
                   </span>
                 </Match>
               </Switch>
