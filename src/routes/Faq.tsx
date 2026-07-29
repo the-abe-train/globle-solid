@@ -1,7 +1,5 @@
-import i18next from 'i18next';
-import { createEffect, createMemo, createSignal, For } from 'solid-js';
-import { getContext } from '../Context';
-import { translatePage } from '../i18n';
+import { createMemo, createSignal, For } from 'solid-js';
+import { t } from '../i18n';
 
 type Link = { text: string; link: string };
 type ItemProps = { q: string; a: string; links?: Link[]; idx: number };
@@ -56,18 +54,17 @@ function formatAnswer(answer: string, links?: Link[]) {
 }
 
 function Item({ q, a, links, idx }: ItemProps) {
-  const { locale } = getContext();
   const [open, setOpen] = createSignal(false);
   const num = idx + 1;
 
   const question = createMemo(() => {
-    locale();
-    return stripQuestionNumberPrefix(i18next.t('q' + num, { defaultValue: q }));
+    const key = `q${num}` as keyof i18nMessages;
+    return stripQuestionNumberPrefix(t(key, q));
   });
 
   const answer = createMemo(() => {
-    locale();
-    return formatAnswer(i18next.t('a' + num, { defaultValue: a }), links);
+    const key = `a${num}` as keyof i18nMessages;
+    return formatAnswer(t(key, a), links);
   });
 
   const questionNode = (
@@ -84,20 +81,7 @@ function Item({ q, a, links, idx }: ItemProps) {
 }
 
 export default function () {
-  const { locale } = getContext();
-  const [translationVersion, setTranslationVersion] = createSignal(0);
-
-  createEffect(() => {
-    locale();
-    void translatePage().then(() => {
-      setTranslationVersion((version) => version + 1);
-    });
-  });
-
-  const title = createMemo(() => {
-    translationVersion();
-    return i18next.t('FAQTitle', { defaultValue: 'FAQ' });
-  });
+  const title = createMemo(() => t('FAQTitle', 'FAQ'));
 
   const faqs = [
     {

@@ -1,5 +1,5 @@
 import { Accessor, onMount, Setter, Show } from 'solid-js';
-import { translate, translatePage } from '../i18n';
+import { t, translatePage } from '../i18n';
 import Modal from './Modal';
 
 type Choice = {
@@ -51,7 +51,7 @@ export function Prompt(props: Props) {
             data-cy="yes-btn"
             data-i18n="Practice4"
           >
-            {translate('Practice4', 'Yes')}
+            {t('Practice4', 'Yes')}
           </button>
           <button
             class="block rounded-md bg-blue-700 px-6 py-2 text-base font-medium text-white hover:bg-blue-900 focus:ring-2 focus:ring-blue-300 focus:outline-none disabled:bg-blue-900"
@@ -59,7 +59,7 @@ export function Prompt(props: Props) {
             data-cy="no-btn"
             data-i18n="Practice5"
           >
-            {translate('Practice5', 'No')}
+            {t('Practice5', 'No')}
           </button>
         </div>
       </Show>

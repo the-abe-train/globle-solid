@@ -1,6 +1,5 @@
-import i18next from 'i18next';
 import { Accessor, For, Setter } from 'solid-js';
-import { translate } from '../i18n';
+import { t } from '../i18n';
 
 type Option = { name: string; value: any };
 
@@ -13,13 +12,10 @@ type Props<T extends string> = {
 };
 
 export default function SelectMenu<T extends string>(props: Props<T>) {
-  // console.log("Choice", props.choice(), translateColourScheme(props.choice()));
-  // const [label, setLabel] = createSignal(i18next.t(props.i18n))
-
   const label = () => {
     return props.i18n === 'Settings7' ? (
       <p class="flex">
-        {i18next.t('Settings7')}{' '}
+        {t('Settings7', 'Language')}{' '}
         <svg
           width="22"
           height="22"
@@ -35,7 +31,7 @@ export default function SelectMenu<T extends string>(props: Props<T>) {
         </svg>
       </p>
     ) : (
-      <p data-i18n="Settings12">{translate('Settings12', 'Colours')}</p>
+      <p data-i18n="Settings12">{t('Settings12', 'Colours')}</p>
     );
   };
   return (

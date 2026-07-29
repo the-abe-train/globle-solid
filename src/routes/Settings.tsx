@@ -1,13 +1,13 @@
-import { createEffect, createSignal, onMount, Suspense, Setter } from 'solid-js';
+import { createEffect, createMemo, createSignal, onMount, Suspense, Setter } from 'solid-js';
 import Toggle from '../components/Toggle';
 import { getContext } from '../Context';
 import { useNavigate, useSearchParams } from '@solidjs/router';
 import SelectMenu from '../components/SelectMenu';
-import { langMap, translate, translatePage } from '../i18n';
+import { langMap, t, translatePage } from '../i18n';
 import NavGlobe from '../components/globes/NavGlobe';
 import { createPracticeAns } from '../util/practice';
 import { subscribeToNewsletter } from '../util/newsletter';
-import { getColourScheme, translateColourScheme, untranslateColourScheme } from '../util/colour';
+import { getColourScheme, untranslateColourScheme } from '../util/colour';
 import TwlAccount from '../components/Twl/TwlAccount';
 import { combineStats, getAcctStats, isAccountMissingResult, putAcctStats } from '../util/stats';
 import Prompt from '../components/Prompt';
@@ -41,14 +41,16 @@ export default function () {
   });
 
   const currentColours = context.colours().colours;
-  const currentColoursTranslated = translateColourScheme(currentColours);
   const [colours, setColours] = createSignal(currentColours);
   createEffect(() => {
     context?.setColours({ colours: colours() });
   });
-  const schemesList = Object.entries(getColourScheme(isDark(), true)).map(([key, _value]) => {
-    return { name: key, value: untranslateColourScheme(key) };
-  });
+  const schemesList = createMemo(() =>
+    Object.entries(getColourScheme(isDark(), true)).map(([key]) => ({
+      name: key,
+      value: untranslateColourScheme(key),
+    })),
+  );
 
   // Get email from search params after Discord sign in
   const [searchParams] = useSearchParams();
@@ -174,7 +176,7 @@ export default function () {
 
   function promptResetStats() {
     // setPromptText("Are you sure you want to reset your score?");
-    setPromptText(translate('Stats10', 'Are you sure you want to reset your score?'));
+    setPromptText(t('Stats10', 'Are you sure you want to reset your score?'));
     setPromptType('Choice');
     setShowPrompt(true);
   }
@@ -242,7 +244,7 @@ export default function () {
             i18n="Settings12"
             choice={colours}
             choose={setColours}
-            list={schemesList}
+            list={schemesList()}
           />
         </div>
         <div class="flex justify-center space-x-20 py-4">

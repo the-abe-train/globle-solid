@@ -9,7 +9,7 @@ import linxiconLogo from '../images/other-games/linxicon-logo.png';
 import globleLogo from '../images/no-bg-logos/globle.png';
 import elemingleLogo from '../images/other-games/elemingle-logo.png';
 import stocktangleLogo from '../images/other-games/stocktangle-logo.png';
-import { translate } from '../i18n';
+import { t } from '../i18n';
 import { useGoogleFont } from '../util/fonts';
 
 export default function () {
@@ -109,7 +109,7 @@ export default function () {
   return (
     <div>
       <p class="mt-1 text-center dark:text-gray-200">
-        <span data-i18n="TWL10">{translate('TWL10', 'Play another game from')}</span>{' '}
+        <span data-i18n="TWL10">{t('TWL10', 'Play another game from')}</span>{' '}
         <a href="https://trainwrecklabs.com" class="underline">
           Trainwreck Labs
         </a>

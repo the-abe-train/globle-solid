@@ -3,8 +3,8 @@
 import { render } from 'solid-js/web';
 import './index.css';
 import App from './App';
-import { Router } from '@solidjs/router';
 import { GlobalContext, makeContext } from './Context';
+import { getInitialLocale, initializeI18n } from './i18n';
 
 const SW_CLEANUP_SESSION_KEY = 'sw-cleanup-v3';
 let cleanupInProgress = false;
@@ -76,22 +76,28 @@ window.addEventListener('pageshow', () => {
   void cleanupLegacyServiceWorker();
 });
 
-render(
-  () => (
-    <GlobalContext.Provider value={makeContext('Stored')}>
-      <App />
-    </GlobalContext.Provider>
-  ),
-  document.getElementById('root') as HTMLElement,
-);
+async function bootstrap() {
+  await initializeI18n(getInitialLocale());
 
-// Signal successful boot to cancel the recovery timeout in index.html
-if ((window as any).__globleBootTimer) {
-  clearTimeout((window as any).__globleBootTimer);
+  render(
+    () => (
+      <GlobalContext.Provider value={makeContext('Stored')}>
+        <App />
+      </GlobalContext.Provider>
+    ),
+    document.getElementById('root') as HTMLElement,
+  );
+
+  // Signal successful boot to cancel the recovery timeout in index.html
+  if ((window as any).__globleBootTimer) {
+    clearTimeout((window as any).__globleBootTimer);
+  }
+  // Reset recovery counter so future deploys can attempt recovery again
+  try {
+    sessionStorage.removeItem('app-boot-recovery-v1');
+  } catch {
+    // ignore
+  }
 }
-// Reset recovery counter so future deploys can attempt recovery again
-try {
-  sessionStorage.removeItem('app-boot-recovery-v1');
-} catch {
-  // ignore
-}
+
+void bootstrap();

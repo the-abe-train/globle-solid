@@ -1,4 +1,5 @@
 import i18next, { Resource } from 'i18next';
+import { createSignal } from 'solid-js';
 import { getContext } from '../Context';
 import { isMobile } from '../util/globe';
 import { getMaxColour } from '../util/colour';
@@ -42,6 +43,7 @@ export const langMap = [
   { locale: 'xh-ZA', langKey: 'NAME_XH', resource: Xhosa, name: 'isiXhosa' },
 ] as const;
 export type Locale = (typeof langMap)[number]['locale'] & string;
+export const DEFAULT_LOCALE: Locale = 'en-CA';
 
 export function getLangKey(locale: Locale) {
   const lang = langMap.find((lang) => lang.locale === locale);
@@ -55,11 +57,57 @@ const resources = langMap.reduce((obj, lang) => {
 
 type KeyWords = 'guess' | 'answer' | 'Click' | 'click';
 
-export function translate(
+const [translationVersion, setTranslationVersion] = createSignal(0);
+let initializationPromise: Promise<unknown> | undefined;
+
+export function isLocale(value: unknown): value is Locale {
+  return langMap.some(({ locale }) => locale === value);
+}
+
+export function getInitialLocale(): Locale {
+  try {
+    const storedLocale = JSON.parse(localStorage.getItem('locale') ?? 'null') as {
+      locale?: unknown;
+    } | null;
+    if (isLocale(storedLocale?.locale)) return storedLocale.locale;
+  } catch {
+    // Replace malformed locale state with the default below.
+  }
+
+  localStorage.setItem('locale', JSON.stringify({ locale: DEFAULT_LOCALE }));
+  return DEFAULT_LOCALE;
+}
+
+export async function initializeI18n(locale: Locale) {
+  let languageChanged = false;
+
+  if (!i18next.isInitialized) {
+    initializationPromise ??= i18next.init({
+      fallbackLng: DEFAULT_LOCALE,
+      lng: locale,
+      resources,
+    });
+    await initializationPromise;
+    languageChanged = true;
+  }
+
+  if (i18next.language !== locale) {
+    await i18next.changeLanguage(locale);
+    languageChanged = true;
+  }
+
+  document.documentElement.lang = locale;
+  if (languageChanged) {
+    setTranslationVersion((version) => version + 1);
+  }
+}
+
+export function t(
   key: keyof i18nMessages,
-  defaultValue: string,
+  defaultValue: string = key,
   interpolation?: Partial<Record<KeyWords, string>>,
 ): string {
+  translationVersion();
   const Click = isMobile() ? i18next.t('Tap') : i18next.t('Click');
   const options = {
     defaultValue,
@@ -77,27 +125,14 @@ export async function translatePage() {
   const { colours } = context.colours();
   const { locale } = context.locale();
 
-  // i18next.getResource("fr")
-
-  if (!i18next.isInitialized) {
-    await i18next.init({
-      fallbackLng: 'en-CA',
-      // debug: true,
-      lng: locale,
-      resources,
-    });
-  } else {
-    await i18next.changeLanguage(locale);
-    // console.table(i18next.languages);
-  }
-  document.documentElement.lang = locale;
+  await initializeI18n(locale);
   document.querySelectorAll('[data-i18n]').forEach((el) => {
     const attr = el.getAttribute('data-i18n') as keyof i18nMessages;
     // Check if attr is a key of i18nMessages
     if (!attr || !(attr in English)) return;
 
     const defaultValue = el.innerHTML;
-    el.innerHTML = translate(attr, defaultValue);
+    el.innerHTML = t(attr, defaultValue);
   });
   document.querySelectorAll<HTMLElement>('[data-stylize]').forEach((el) => {
     el.style.color = getMaxColour(colours, isDark);

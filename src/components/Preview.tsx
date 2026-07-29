@@ -1,10 +1,10 @@
-import i18next from 'i18next';
 import { createSignal, For, onCleanup } from 'solid-js';
 import { getContext } from '../Context';
 import { isMobile } from '../util/globe';
 import outlines from '../data/country_outlines.json';
 import { getColour } from '../util/colour';
 import { getCountry } from '../util/data';
+import { t } from '../i18n';
 
 export default function () {
   const { isDark } = getContext().theme();
@@ -54,7 +54,7 @@ export default function () {
                   </g>
                 </svg>
                 <figcaption class="my-auto text-left font-bold sm:text-center">
-                  {i18next.t(outline.name)}
+                  {t(outline.name as keyof i18nMessages)}
                 </figcaption>
               </figure>
             );

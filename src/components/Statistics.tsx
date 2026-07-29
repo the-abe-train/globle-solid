@@ -4,8 +4,7 @@ import Icon from './Icon';
 import { getContext } from '../Context';
 import { isMobile } from '../util/globe';
 import UAParser from 'ua-parser-js';
-import { translatePage } from '../i18n';
-import i18next from 'i18next';
+import { t, translatePage } from '../i18n';
 import TwlAd from './TwlAd';
 import { createPracticeAns } from '../util/practice';
 
@@ -111,7 +110,7 @@ https://globle-game.com
             return (
               <tr>
                 <td class="border-b-2 border-dotted border-slate-700 pt-4 text-lg font-medium">
-                  {i18next.t(row.i18n, row.label)}
+                  {t(row.i18n as keyof i18nMessages, row.label)}
                 </td>
                 <td
                   class="border-b-2 border-dotted border-slate-700 pt-4 text-center text-lg font-medium"

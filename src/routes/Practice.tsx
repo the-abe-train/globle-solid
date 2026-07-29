@@ -6,7 +6,7 @@ import Prompt from '../components/Prompt';
 import { useNavigate } from '@solidjs/router';
 import { createGuessStore } from '../util/stores';
 import { getTerritories } from '../util/data';
-import { translate, translatePage } from '../i18n';
+import { t, translatePage } from '../i18n';
 import NitroPayAd from '../components/NitroPayAd';
 
 const GameGlobe = lazy(() => import('../components/globes/GameGlobe'));
@@ -107,7 +107,7 @@ function Inner(props: InnerProps) {
       </Show>
       <Prompt
         promptType="Choice"
-        text={translate('Practice3', 'Play again')}
+        text={t('Practice3', 'Play again')}
         showPrompt={showPrompt}
         setShowPrompt={setShowPrompt}
         yes={newGame}

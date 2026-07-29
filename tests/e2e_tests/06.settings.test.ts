@@ -86,6 +86,13 @@ test.describe('Settings tests', () => {
 
       await expect(page.locator('[data-i18n="SettingsTitle"]')).toContainText('Paramètres');
       await expect(page.locator('html')).toHaveAttribute('lang', 'fr-FR');
+      await expect(page.locator('label[for="Language"]')).toContainText('Langue');
+      await expect(page.locator('[name="Colours"] option[value="Default"]')).toHaveText(
+        'Par défaut',
+      );
+
+      await page.getByRole('button', { name: 'Statistics' }).click();
+      await expect(page.getByText('Dernière victoire', { exact: true })).toBeVisible();
 
       // Seed practice mode with Madagascar before navigating
       const answer: any = (rawAnswerData as any).features.find(

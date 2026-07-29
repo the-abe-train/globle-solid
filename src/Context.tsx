@@ -1,7 +1,7 @@
 import jwtDecode from 'jwt-decode';
 import dayjs from 'dayjs';
 import { Accessor, createContext, createEffect, createSignal, Setter, useContext } from 'solid-js';
-import { Locale } from './i18n';
+import type { Locale } from './i18n';
 import { ColourScheme } from './util/colour';
 import { subscribeToNewsletter } from './util/newsletter';
 

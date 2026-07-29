@@ -7,7 +7,7 @@ import {
 } from "d3";
 import { isTerritory } from "../util/data";
 import { polygonDistance } from "./geometry";
-import { translate } from "../i18n";
+import { t } from "../i18n";
 
 const GREEN_SQUARE = "🟩";
 const ORANGE_SQUARE = "🟧";
@@ -36,25 +36,25 @@ export const getBaseColourScheme = (isDark: boolean) => {
 
 export const getColourScheme = (isDark: boolean, doTranslate: boolean) => {
   return {
-    [doTranslate ? translate("Settings15", "Default") : "Default"]: isDark
+    [doTranslate ? t("Settings15", "Default") : "Default"]: isDark
       ? interpolateBuPu
       : interpolateOrRd,
-    [doTranslate ? translate("Settings16", "Reds") : "Reds"]: interpolateOrRd,
-    [doTranslate ? translate("Settings17", "Blues") : "Blues"]: interpolateBuPu,
-    [doTranslate ? translate("Settings18", "Rainbow") : "Rainbow"]:
+    [doTranslate ? t("Settings16", "Reds") : "Reds"]: interpolateOrRd,
+    [doTranslate ? t("Settings17", "Blues") : "Blues"]: interpolateBuPu,
+    [doTranslate ? t("Settings18", "Rainbow") : "Rainbow"]:
       interpolateTurbo,
-    [doTranslate ? translate("Settings19", "Grayscale") : "Grayscale"]:
+    [doTranslate ? t("Settings19", "Grayscale") : "Grayscale"]:
       interpolateGreys,
   };
 };
 
 export const translateColourScheme = (scheme: ColourScheme) => {
   return {
-    Default: translate("Settings15", "Default"),
-    Reds: translate("Settings16", "Reds"),
-    Blues: translate("Settings17", "Blues"),
-    Rainbow: translate("Settings18", "Rainbow"),
-    Grayscale: translate("Settings19", "Grayscale"),
+    Default: t("Settings15", "Default"),
+    Reds: t("Settings16", "Reds"),
+    Blues: t("Settings17", "Blues"),
+    Rainbow: t("Settings18", "Rainbow"),
+    Grayscale: t("Settings19", "Grayscale"),
   }[scheme];
 };
 
@@ -62,11 +62,11 @@ export const untranslateColourScheme = (
   translatedScheme: string
 ): ColourScheme => {
   const translationMap = {
-    [translate("Settings15", "Default")]: "Default",
-    [translate("Settings16", "Reds")]: "Reds",
-    [translate("Settings17", "Blues")]: "Blues",
-    [translate("Settings18", "Rainbow")]: "Rainbow",
-    [translate("Settings19", "Grayscale")]: "Grayscale",
+    [t("Settings15", "Default")]: "Default",
+    [t("Settings16", "Reds")]: "Reds",
+    [t("Settings17", "Blues")]: "Blues",
+    [t("Settings18", "Rainbow")]: "Rainbow",
+    [t("Settings19", "Grayscale")]: "Grayscale",
   };
   const englishScheme = translationMap[translatedScheme] || translatedScheme;
   return englishScheme as ColourScheme;

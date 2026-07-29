@@ -5,7 +5,7 @@ import Fuse from 'fuse.js';
 import { getContext } from '../Context';
 import { polygonDistance } from '../util/geometry';
 import { GuessStore } from '../util/stores';
-import { getLangKey, translate } from '../i18n';
+import { getLangKey, t } from '../i18n';
 import { isTerritory } from '../util/data';
 import alternateNames from '../data/alternate_names.json';
 import buggyNames from '../data/buggy_names.json';
@@ -35,7 +35,7 @@ export default function (props: Props) {
       const { properties } = props.ans;
       const name = langKey ? (properties[langKey()] as string) : properties.NAME;
       if (name) {
-        return translate('Game7', `The Mystery Country is ${name}!`, {
+        return t('Game7', `The Mystery Country is ${name}!`, {
           answer: name,
         });
       }
@@ -44,9 +44,9 @@ export default function (props: Props) {
 
     // If not win, check guesses length for appropriate message
     if (props.guesses.length === 0) {
-      return translate('Game3', 'Enter the name of any country to make your first guess!');
+      return t('Game3', 'Enter the name of any country to make your first guess!');
     } else if (props.guesses.length === 1) {
-      return translate(
+      return t(
         'Game4',
         'Drag, tap, and zoom in on the globe to help you find your next guess.',
       );
@@ -142,7 +142,7 @@ export default function (props: Props) {
     });
     if (!foundCountry) {
       setMsg(
-        translate('Game19', `"${guess}" not found in database.`, {
+        t('Game19', `"${guess}" not found in database.`, {
           guess,
         }),
       );
@@ -155,7 +155,7 @@ export default function (props: Props) {
       if (locale === 'en-CA') {
         setMsg(`Already guessed ${foundCountry.properties.NAME}.`);
       } else {
-        setMsg(translate('Game6', 'Already guessed'));
+        setMsg(t('Game6', 'Already guessed'));
       }
       return;
     }
@@ -169,7 +169,7 @@ export default function (props: Props) {
 
     if (buggyNames?.includes(cleanedGuess.toLowerCase())) {
       setMsg(
-        translate('Game19', `"${newGuess}" not found in database.`, {
+        t('Game19', `"${newGuess}" not found in database.`, {
           guess: newGuess,
         }),
       );
@@ -199,7 +199,7 @@ export default function (props: Props) {
     const results = answerIndex().search(searchPhrase);
     if (results.length === 0) {
       setMsg(
-        translate('Game19', `"${newGuess}" not found in database.`, {
+        t('Game19', `"${newGuess}" not found in database.`, {
           guess: newGuess,
         }),
       );
@@ -220,14 +220,14 @@ export default function (props: Props) {
         if (locale === 'en-CA') {
           setMsg(`Already guessed ${name}.`);
         } else {
-          setMsg(translate('Game6', 'Already guessed'));
+          setMsg(t('Game6', 'Already guessed'));
         }
         return;
       }
       return topAnswer.item;
     } else if (topScore < APPROX_THRESHHOLD) {
       setMsg(
-        translate('Game20', `Did you mean ${name}?`, {
+        t('Game20', `Did you mean ${name}?`, {
           guess: name,
         }),
       );
@@ -274,14 +274,14 @@ export default function (props: Props) {
         (guessedName === 'Zimbabwe' && answerName === 'Namibia')
       ) {
         setMsg(
-          translate('Game15', '{{guess}} is almost adjacent to the answer!', {
+          t('Game15', '{{guess}} is almost adjacent to the answer!', {
             guess: name,
           }),
         );
       } else {
         console.log(
           setMsg(
-            translate('Game14', '{{guess}} is adjacent to the answer!', {
+            t('Game14', '{{guess}} is adjacent to the answer!', {
               guess: name,
             }),
           ),
@@ -311,7 +311,7 @@ export default function (props: Props) {
           type="text"
           name="guess"
           class="focus:shadow-outline w-full rounded border bg-white px-2 py-1 text-gray-700 shadow focus:outline-none disabled:border-slate-400 disabled:bg-slate-400 md:py-0 dark:bg-slate-200 dark:text-gray-900"
-          placeholder={translate('Game1', 'Enter country name here.') ?? ''}
+          placeholder={t('Game1', 'Enter country name here.') ?? ''}
           autocomplete="off"
           disabled={props.win() || !props.ans}
           data-cy="guesser"

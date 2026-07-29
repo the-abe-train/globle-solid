@@ -1,8 +1,7 @@
-import i18next from 'i18next';
 import { createEffect, createMemo, createSignal, For, Match, Setter, Show, Switch } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 import { getContext } from '../Context';
-import { getLangKey, translatePage } from '../i18n';
+import { getLangKey, t, translatePage } from '../i18n';
 import { getFlagAssetPath, handleFlagLoadError } from '../util/flags';
 import { findCentre } from '../util/geometry';
 import { GuessStore } from '../util/stores';
@@ -61,13 +60,13 @@ export default function (props: Props) {
     <div class="z-30 mb-16 py-8 dark:text-white">
       <Switch fallback={<p data-i18n="Game9">Guesses will appear here.</p>}>
         <Match when={props.guesses.length < 1}>
-          <p>{i18next.t('Game9', 'Guesses will appear here.')}</p>
+          <p>{t('Game9', 'Guesses will appear here.')}</p>
         </Match>
         <Match when={isSortedByDistance()}>
-          <p>{i18next.t('Game12', 'Closest')}</p>
+          <p>{t('Game12', 'Closest')}</p>
         </Match>
         <Match when={!isSortedByDistance()}>
-          <p>{i18next.t('Game13', 'Guessed first')}</p>
+          <p>{t('Game13', 'Guessed first')}</p>
         </Match>
       </Switch>
       <ul class="grid grid-cols-3 gap-3 md:grid-cols-4" data-cy="countries-list">
