@@ -40,7 +40,7 @@
   Game1: "Įvesk šalies pavadinimą",
   Game2: "Įvesti",
   Game3: "Kad pradėtum, įvesk bet kokią šalį.",
-  Game4: `Gaublį gali sukinėti ir priartinti.`,
+  Game4: `Gaublį gali sukinėti, {{click}} ir priartinti.`,
   Game5: "Spėjimas neįskaitytas",
   Game6: "Tokia šalis jau įvesta",
   Game7: "Šios dienos šalis yra {{answer}}!",
