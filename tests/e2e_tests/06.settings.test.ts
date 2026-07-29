@@ -76,6 +76,24 @@ test.describe('Settings tests', () => {
   });
 
   test.describe('Explore changing the language', () => {
+    test('checks Arabic translations and right-to-left layout', async ({ page }) => {
+      await page.goto('/settings');
+      await page.locator('[name="Language"]').selectOption('ar-SA');
+
+      await expect(page.locator('[data-i18n="SettingsTitle"]')).toHaveText('الإعدادات');
+      await expect(page.locator('html')).toHaveAttribute('lang', 'ar-SA');
+      await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+
+      await page.goto('/faq');
+      const firstQuestion = page.locator('dt').first();
+      await expect(firstQuestion).toContainText('1. كيف تُحسب المسافة بين الإجابة وتخمينك؟');
+      await expect(firstQuestion).not.toContainText('١.');
+
+      await page.goto('/settings');
+      await page.locator('[name="Language"]').selectOption('en-CA');
+      await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+    });
+
     test('checks the game translates into French', async ({ page }) => {
       await page.goto('/');
       await expect(page.locator('[data-i18n="helpTitle"]')).toContainText('How to Play');
@@ -123,5 +141,21 @@ test.describe('Settings tests', () => {
         'Trier par ordre des tentatives',
       );
     });
+  });
+
+  test('requires an explicit newsletter opt-in', async ({ page }) => {
+    await page.goto('/settings');
+    const newsletterCheckbox = page.locator('#twl-newsletter');
+
+    await expect(newsletterCheckbox).not.toBeChecked();
+    await expect
+      .poll(() => page.evaluate(() => localStorage.getItem('twlNewsletterOptIn')))
+      .toBe('false');
+
+    await newsletterCheckbox.check();
+    await expect(newsletterCheckbox).toBeChecked();
+    await expect
+      .poll(() => page.evaluate(() => localStorage.getItem('twlNewsletterOptIn')))
+      .toBe('true');
   });
 });

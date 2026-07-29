@@ -1,6 +1,9 @@
 import { SUBSCRIBE_ENDPOINT, withGatewayHeaders } from './api';
 
 const NEWSLETTER_SUBSCRIBED_KEY = 'twlNewsletterSubscribed';
+// Do not reuse the legacy `twlNewsletter` key: it defaulted to true and
+// therefore cannot prove that the user explicitly opted in.
+export const NEWSLETTER_OPT_IN_KEY = 'twlNewsletterOptIn';
 
 export async function subscribeToNewsletter(email: string): Promise<boolean> {
   if (!email) {
@@ -9,7 +12,7 @@ export async function subscribeToNewsletter(email: string): Promise<boolean> {
   }
 
   // Check if user wants to subscribe
-  const wantsNewsletter = localStorage.getItem('twlNewsletter') === 'true';
+  const wantsNewsletter = localStorage.getItem(NEWSLETTER_OPT_IN_KEY) === 'true';
   if (!wantsNewsletter) {
     console.log('User opted out of newsletter subscription');
     return false;

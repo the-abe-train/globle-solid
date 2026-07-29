@@ -3,7 +3,7 @@ import { createEffect, createSignal, onMount } from 'solid-js';
 import { getContext } from '../../Context';
 import { t } from '../../i18n';
 import jwtDecode from 'jwt-decode';
-import { subscribeToNewsletter } from '../../util/newsletter';
+import { NEWSLETTER_OPT_IN_KEY, subscribeToNewsletter } from '../../util/newsletter';
 import { combineStats, getAcctStats, isAccountMissingResult, putAcctStats } from '../../util/stats';
 
 export default function () {
@@ -13,13 +13,12 @@ export default function () {
   const DISCORD_CLIENT_ID = import.meta.env.VITE_DISCORD_CLIENT_ID;
   const DISCORD_STATE = import.meta.env.VITE_DISCORD_STATE;
 
-  const isConnected = () => context.user().email !== '';
   const context = getContext();
+  const isConnected = () => context.user().email !== '';
 
-  let googleBtn: HTMLDivElement | null = null;
-  async function handleCredentialResponse(googleResponse?: google.accounts.id.CredentialResponse) {
-    if (!googleResponse) return;
-    const googleToken = googleResponse?.credential;
+  let googleBtn!: HTMLDivElement;
+  async function handleCredentialResponse(googleResponse: google.accounts.id.CredentialResponse) {
+    const googleToken = googleResponse.credential;
 
     // Add email to context
     const email = jwtDecode<Token>(googleToken).email;
@@ -66,13 +65,13 @@ export default function () {
     }
   }
 
-  const [choice, setChoice] = createSignal(
-    localStorage.getItem('twlNewsletter') === 'false' ? false : true, // Default to true if not set or 'true'
+  const [newsletterOptIn, setNewsletterOptIn] = createSignal(
+    localStorage.getItem(NEWSLETTER_OPT_IN_KEY) === 'true',
   );
 
   // Persist newsletter choice
   createEffect(() => {
-    localStorage.setItem('twlNewsletter', choice().toString());
+    localStorage.setItem(NEWSLETTER_OPT_IN_KEY, newsletterOptIn().toString());
   });
 
   // Initialize Google button once mounted (ensure ref is set)
@@ -84,14 +83,12 @@ export default function () {
           callback: handleCredentialResponse,
           auto_select: true,
         });
-        if (googleBtn) {
-          google.accounts.id.renderButton(googleBtn, {
-            type: 'standard',
-            theme: 'outline',
-            size: 'large',
-            width: '208', // Fixed width to match our container (w-52 = 208px)
-          });
-        }
+        google.accounts.id.renderButton(googleBtn, {
+          type: 'standard',
+          theme: 'outline',
+          size: 'large',
+          width: '208', // Fixed width to match our container (w-52 = 208px)
+        });
       }
     } catch (err) {
       console.log('Failed to render google button');
@@ -125,7 +122,7 @@ export default function () {
       <div class="mx-auto w-52 space-y-2">
         <div class="flex h-10 w-full justify-center">
           <div
-            ref={(el) => (googleBtn = el)}
+            ref={googleBtn}
             class="flex h-full w-full flex-col justify-center"
             style={{
               'min-width': '208px',
@@ -151,16 +148,14 @@ export default function () {
       </div>
       <form action="" class="mt-4 flex items-center justify-center space-x-1">
         <input
+          id="twl-newsletter"
           type="checkbox"
-          name="check"
+          name="twlNewsletter"
           style={{ 'accent-color': '#4a5568' }}
-          checked={choice()}
-          onChange={() => {
-            // choice.value = !choice.value;
-            setChoice((x) => !x);
-          }}
+          checked={newsletterOptIn()}
+          onChange={(event) => setNewsletterOptIn(event.currentTarget.checked)}
         />
-        <label for="check" class="text-center text-sm" data-i18n="TWL4">
+        <label for="twl-newsletter" class="text-center text-sm" data-i18n="TWL4">
           {t('TWL4', 'Subscribe to Trainwreck Labs newsletter.')}
         </label>
       </form>

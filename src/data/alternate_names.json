@@ -43,6 +43,7 @@
     { "real": "timor-leste", "alternative": "timor leste" },
     { "real": "yemen", "alternative": "jemen" }
   ],
+  "ar-SA": [],
   "fr-FR": [
     { "real": "eswatini", "alternative": "swaziland" },
     { "real": "myanmar", "alternative": "byrmanie" },

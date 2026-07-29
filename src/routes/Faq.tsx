@@ -1,12 +1,9 @@
 import { createMemo, createSignal, For } from 'solid-js';
 import { t } from '../i18n';
+import { stripQuestionNumberPrefix } from '../util/faq';
 
 type Link = { text: string; link: string };
 type ItemProps = { q: string; a: string; links?: Link[]; idx: number };
-
-function stripQuestionNumberPrefix(question: string) {
-  return question.replace(/^\s*\d+\.\s*/, '');
-}
 
 function isExternalLink(link: string) {
   return /^https?:\/\//i.test(link);

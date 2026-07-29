@@ -3,7 +3,8 @@ import { join, relative } from 'node:path';
 import ts from 'typescript';
 import { describe, expect, test } from 'vitest';
 import countryData from '../../src/data/country_data.json';
-import { langMap } from '../../src/i18n';
+import { initializeI18n, langMap } from '../../src/i18n';
+import { stripQuestionNumberPrefix } from '../../src/util/faq';
 
 type TranslationResource = Record<string, string>;
 
@@ -107,6 +108,18 @@ function validateRichText(locale: string, key: string, message: string) {
 }
 
 describe('translation integrity', () => {
+  test('supports Arabic document direction and localized FAQ numbering', async () => {
+    await initializeI18n('ar-SA');
+    expect(document.documentElement).toMatchObject({ lang: 'ar-SA', dir: 'rtl' });
+    expect(stripQuestionNumberPrefix('١. كيف تُحسب المسافة؟')).toBe('كيف تُحسب المسافة؟');
+
+    await initializeI18n('en-CA');
+    expect(document.documentElement).toMatchObject({ lang: 'en-CA', dir: 'ltr' });
+    expect(stripQuestionNumberPrefix('1. How is distance calculated?')).toBe(
+      'How is distance calculated?',
+    );
+  });
+
   test('registered locales only use canonical English keys', () => {
     const expectedKeys = Object.keys(english).sort();
     const failures: string[] = [];

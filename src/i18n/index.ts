@@ -1,6 +1,7 @@
 import i18next, { Resource } from 'i18next';
 import { createSignal } from 'solid-js';
 import { isMobile } from '../util/globe';
+import { Arabic } from './ar-SA';
 import { English } from './en-CA';
 import { Spanish } from './es-MX';
 import { French } from './fr-FR';
@@ -17,6 +18,7 @@ import { Xhosa } from './xh-ZA';
 
 export const langMap = [
   { locale: 'en-CA', langKey: 'NAME', resource: English, name: 'English' },
+  { locale: 'ar-SA', langKey: 'NAME_AR', resource: Arabic, name: 'العربية' },
   { locale: 'fr-FR', langKey: 'NAME_FR', resource: French, name: 'Français' },
   { locale: 'es-MX', langKey: 'NAME_ES', resource: Spanish, name: 'Español' },
   {
@@ -95,6 +97,7 @@ export async function initializeI18n(locale: Locale) {
   }
 
   document.documentElement.lang = locale;
+  document.documentElement.dir = locale === 'ar-SA' ? 'rtl' : 'ltr';
   if (languageChanged) {
     setTranslationVersion((version) => version + 1);
   }

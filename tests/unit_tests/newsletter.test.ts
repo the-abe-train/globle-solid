@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
-  subscribeToNewsletter,
-  isEmailSubscribed,
   clearSubscriptionHistory,
+  isEmailSubscribed,
+  NEWSLETTER_OPT_IN_KEY,
+  subscribeToNewsletter,
 } from '../../src/util/newsletter';
 
 // Mock fetch globally
@@ -32,7 +33,24 @@ describe('Newsletter Utils', () => {
 
     it('should not subscribe if user opted out', async () => {
       localStorageMock.getItem.mockImplementation((key) => {
-        if (key === 'twlNewsletter') return 'false';
+        if (key === NEWSLETTER_OPT_IN_KEY) return 'false';
+        return null;
+      });
+
+      const result = await subscribeToNewsletter('test@example.com');
+      expect(result).toBe(false);
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
+    it('should not subscribe without explicit opt-in', async () => {
+      const result = await subscribeToNewsletter('test@example.com');
+      expect(result).toBe(false);
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
+    it('should ignore the legacy default-on preference', async () => {
+      localStorageMock.getItem.mockImplementation((key) => {
+        if (key === 'twlNewsletter') return 'true';
         return null;
       });
 
@@ -43,7 +61,7 @@ describe('Newsletter Utils', () => {
 
     it('should not subscribe if email already subscribed', async () => {
       localStorageMock.getItem.mockImplementation((key) => {
-        if (key === 'twlNewsletter') return 'true';
+        if (key === NEWSLETTER_OPT_IN_KEY) return 'true';
         if (key === 'twlNewsletterSubscribed') return JSON.stringify(['test@example.com']);
         return null;
       });
@@ -55,7 +73,7 @@ describe('Newsletter Utils', () => {
 
     it('should subscribe successfully', async () => {
       localStorageMock.getItem.mockImplementation((key) => {
-        if (key === 'twlNewsletter') return 'true';
+        if (key === NEWSLETTER_OPT_IN_KEY) return 'true';
         if (key === 'twlNewsletterSubscribed') return null;
         return null;
       });
@@ -82,7 +100,7 @@ describe('Newsletter Utils', () => {
 
     it('should handle subscription error', async () => {
       localStorageMock.getItem.mockImplementation((key) => {
-        if (key === 'twlNewsletter') return 'true';
+        if (key === NEWSLETTER_OPT_IN_KEY) return 'true';
         if (key === 'twlNewsletterSubscribed') return null;
         return null;
       });
