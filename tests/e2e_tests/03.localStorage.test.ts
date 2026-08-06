@@ -60,6 +60,82 @@ test.describe('Guesses', () => {
     const message = await page.locator('p[data-testid="guess-msg"]').textContent();
     expect(message || '').toContain('any country');
   });
+
+  test('rejects guesses from another puzzle date even when the stored date is in the future', async ({
+    page,
+  }) => {
+    const cryptoKey = process.env.CRYPTO_KEY;
+    if (!cryptoKey) throw new Error('CRYPTO_KEY is not defined in environment variables');
+
+    // Madagascar is both the mocked answer and a stale guess. Restoring it
+    // would immediately mark the new game as won and disable the input.
+    await page.route('**/answer*', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ answer: AES.encrypt('159', cryptoKey).toString() }),
+      });
+    });
+
+    const guesses = {
+      day: dayjs().add(1, 'day').format('YYYY-MM-DD'),
+      countries: ['Madagascar'],
+    };
+    await page.addInitScript((guessesData) => {
+      localStorage.setItem('guesses', guessesData as string);
+    }, JSON.stringify(guesses));
+
+    await page.goto('/game');
+
+    await expect(page.locator('ul[data-cy="countries-list"] li')).toHaveCount(0);
+    await expect(page.getByTestId('guesser')).toBeEnabled();
+    await expect(page.locator('h2[data-i18n="StatsTitle"]')).not.toBeVisible();
+
+    await page.getByTestId('guesser').fill('Canada');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('ul[data-cy="countries-list"] li')).toHaveCount(1);
+    await expect
+      .poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('guesses')!)))
+      .toEqual({
+        day: dayjs().format('YYYY-MM-DD'),
+        countries: ['Canada'],
+      });
+  });
+
+  test('reloads and clears guesses when an open game crosses midnight', async ({ page }) => {
+    const cryptoKey = process.env.CRYPTO_KEY;
+    if (!cryptoKey) throw new Error('CRYPTO_KEY is not defined in environment variables');
+
+    let answerRequests = 0;
+    await page.route('**/answer*', async (route) => {
+      answerRequests += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ answer: AES.encrypt('159', cryptoKey).toString() }),
+      });
+    });
+
+    const beforeMidnight = new Date(2026, 7, 5, 23, 59, 59, 0);
+    await page.clock.install({ time: beforeMidnight });
+    await page.addInitScript(
+      (guessesData) => {
+        localStorage.setItem('guesses', guessesData as string);
+      },
+      JSON.stringify({
+        day: dayjs(beforeMidnight).format('YYYY-MM-DD'),
+        countries: ['Canada'],
+      }),
+    );
+
+    await page.goto('/game');
+    await expect(page.locator('ul[data-cy="countries-list"] li')).toHaveCount(1);
+
+    await page.clock.fastForward(2_000);
+    await expect.poll(() => answerRequests).toBeGreaterThanOrEqual(2);
+    await expect(page.locator('ul[data-cy="countries-list"] li')).toHaveCount(0);
+    await expect(page.getByTestId('guesser')).toBeEnabled();
+  });
 });
 
 test.describe('Maintain a streak', () => {

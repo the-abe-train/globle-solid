@@ -1,5 +1,14 @@
 import dayjs from 'dayjs';
-import { createEffect, createResource, createSignal, on, onMount, Setter, Show } from 'solid-js';
+import {
+  createEffect,
+  createResource,
+  createSignal,
+  on,
+  onCleanup,
+  onMount,
+  Setter,
+  Show,
+} from 'solid-js';
 import Guesser from '../components/Guesser';
 import List from '../components/List';
 import { getAnswer } from '../util/encryption';
@@ -16,6 +25,11 @@ import {
   putAcctStats,
 } from '../util/stats';
 import { DAILY_STATS_ENDPOINT, getAccountEndpoint, withGatewayHeaders } from '../util/api';
+import {
+  getPuzzleDate,
+  isGuessDayForPuzzle,
+  millisecondsUntilNextPuzzleDay,
+} from '../util/puzzleDate';
 
 import GameGlobe from '../components/globes/GameGlobe';
 
@@ -24,7 +38,8 @@ type OuterProps = {
 };
 
 export default function Outer(props: OuterProps) {
-  const [ans] = createResource(getAnswer);
+  const puzzleDate = getPuzzleDate();
+  const [ans] = createResource(() => getAnswer(puzzleDate));
   return (
     <Show
       when={ans()}
@@ -53,7 +68,7 @@ export default function Outer(props: OuterProps) {
       }
     >
       {(ans) => {
-        return <Inner setShowStats={props.setShowStats} ans={ans} />;
+        return <Inner setShowStats={props.setShowStats} ans={ans} puzzleDate={puzzleDate} />;
       }}
     </Show>
   );
@@ -62,6 +77,7 @@ export default function Outer(props: OuterProps) {
 type Props = {
   setShowStats: Setter<boolean>;
   ans: Country;
+  puzzleDate: string;
 };
 
 function Inner(props: Props) {
@@ -72,7 +88,7 @@ function Inner(props: Props) {
   const restoredGuesses = () => {
     const oldGuesses = context.storedGuesses();
 
-    if (dayjs(oldGuesses.day).isAfter(dayjs())) {
+    if (isGuessDayForPuzzle(oldGuesses.day, props.puzzleDate)) {
       const countries = oldGuesses.countries.map((countryName) => {
         const country = getCountry(countryName);
         const proximity = polygonDistance(country, props.ans);
@@ -91,6 +107,7 @@ function Inner(props: Props) {
 
   // Effects
   createEffect(() => {
+    if (getPuzzleDate() !== props.puzzleDate) return;
     const winningGuess = guesses.countries.find(
       (c) => c.properties.NAME === props.ans.properties.NAME,
     );
@@ -98,8 +115,30 @@ function Inner(props: Props) {
   });
 
   onMount(async () => {
-    const expiration = dayjs(context.storedGuesses().day);
-    if (dayjs().isAfter(expiration)) context.resetGuesses();
+    if (!isGuessDayForPuzzle(context.storedGuesses().day, props.puzzleDate)) {
+      context.resetGuesses();
+    }
+
+    const reloadForNewPuzzle = () => {
+      if (getPuzzleDate() === props.puzzleDate) return false;
+      window.location.reload();
+      return true;
+    };
+    if (reloadForNewPuzzle()) return;
+    const handleVisibilityChange = () => {
+      if (!document.hidden) reloadForNewPuzzle();
+    };
+    const rolloverTimer = window.setTimeout(
+      reloadForNewPuzzle,
+      millisecondsUntilNextPuzzleDay() + 50,
+    );
+    window.addEventListener('pageshow', reloadForNewPuzzle);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    onCleanup(() => {
+      window.clearTimeout(rolloverTimer);
+      window.removeEventListener('pageshow', reloadForNewPuzzle);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    });
 
     // Sync stats on page load for logged-in users
     const email = context.user().email;
@@ -239,11 +278,17 @@ function Inner(props: Props) {
   );
 
   function addNewGuess(newGuess: Country) {
+    if (getPuzzleDate() !== props.puzzleDate) {
+      window.location.reload();
+      return;
+    }
+
     const territories = getTerritories(newGuess);
     setGuesses('places', (prev) => [...prev, newGuess, ...territories]);
     const countryName = newGuess.properties.NAME;
     context.storeGuesses((prev) => {
-      return { ...prev, countries: [...prev.countries, countryName] };
+      const countries = isGuessDayForPuzzle(prev.day, props.puzzleDate) ? prev.countries : [];
+      return { day: props.puzzleDate, countries: [...countries, countryName] };
     });
     const email = context.user().email;
     if (email) {

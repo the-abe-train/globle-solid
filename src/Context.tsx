@@ -1,9 +1,9 @@
 import jwtDecode from 'jwt-decode';
-import dayjs from 'dayjs';
 import { Accessor, createContext, createEffect, createSignal, Setter, useContext } from 'solid-js';
 import type { Locale } from './i18n';
 import { ColourScheme } from './util/colour';
 import { subscribeToNewsletter } from './util/newsletter';
+import { getPuzzleDate } from './util/puzzleDate';
 
 function getStorageValue<T extends object>(key: string, defaultValue?: T) {
   const saved = localStorage.getItem(key);
@@ -43,7 +43,7 @@ export const makeContext = (mode: 'Stored' | 'Static') => {
     statistics,
     guesses: {
       countries: [] as string[],
-      day: dayjs().endOf('day').toDate(),
+      day: getPuzzleDate(),
     },
     distanceUnit: { unit: 'km' as Unit },
     token: { google: '' },
@@ -94,7 +94,7 @@ export const makeContext = (mode: 'Stored' | 'Static') => {
     storedGuesses,
     storeGuesses,
     resetStats: () => storeStats(initial.statistics),
-    resetGuesses: () => storeGuesses(initial.guesses),
+    resetGuesses: () => storeGuesses({ countries: [], day: getPuzzleDate() }),
     distanceUnit,
     setDistanceUnit,
     token,

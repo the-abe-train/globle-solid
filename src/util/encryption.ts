@@ -3,6 +3,7 @@ import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
 import dayjs from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import { getPuzzleDate } from './puzzleDate';
 dayjs.extend(advancedFormat);
 
 const key: string | undefined = import.meta.env.VITE_CRYPTO_KEY;
@@ -40,11 +41,10 @@ async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<R
   throw new Error('Fetch failed after retries');
 }
 
-export async function getAnswer() {
-  const today = dayjs().format('YYYY-MM-DD');
+export async function getAnswer(puzzleDate = getPuzzleDate()) {
   const listLength = rawAnswerData['features'].length;
   // const endpoint = `/.netlify/functions/answer?day=${today}`;
-  const endpoint = `/answer?day=${today}&list=${listLength}`;
+  const endpoint = `/answer?day=${puzzleDate}&list=${listLength}`;
   try {
     const response = await fetchWithRetry(endpoint);
     if (!response.ok) throw new Error(`Server error (${response.status})`);
