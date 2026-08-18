@@ -137,3 +137,35 @@ test.describe('Tests with a fake answer', () => {
   expect(todaysGuesses || '').toContain('3');
   });
 });
+
+test.describe('The Gambia display name', () => {
+  test.beforeEach(async ({ page }) => {
+    const cryptoKey = process.env.CRYPTO_KEY;
+    if (!cryptoKey) throw new Error('CRYPTO_KEY is not defined in environment variables');
+
+    await page.addInitScript(() => {
+      localStorage.setItem('labels', JSON.stringify({ labelsOn: true }));
+    });
+    await page.route('**/answer*', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ answer: AES.encrypt('155', cryptoKey).toString() }),
+      });
+    });
+  });
+
+  test('uses the official English name in the list, globe label, and win message', async ({
+    page,
+  }) => {
+    await page.goto('/game');
+    await page.getByTestId('guesser').fill('Gambia');
+    await page.keyboard.press('Enter');
+
+    await expect(page.locator('[data-cy="countries-list"]')).toContainText('The Gambia');
+    await expect(page.locator('p.bg-yellow-50.text-sm')).toContainText('The Gambia');
+    await expect(page.locator('p[data-testid="guess-msg"]')).toContainText(
+      'The Mystery Country is The Gambia!',
+    );
+  });
+});

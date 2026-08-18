@@ -1,11 +1,11 @@
 import { createEffect, createMemo, createSignal, For, Match, Setter, Show, Switch } from 'solid-js';
 import { unwrap } from 'solid-js/store';
 import { getContext } from '../Context';
-import { getLangKey, t } from '../i18n';
+import { t } from '../i18n';
 import { getFlagAssetPath, handleFlagLoadError } from '../util/flags';
 import { findCentre } from '../util/geometry';
 import { GuessStore } from '../util/stores';
-import { formatKm } from '../util/text';
+import { formatKm, formatName } from '../util/text';
 import Toggle from './Toggle';
 
 type Props = {
@@ -16,8 +16,6 @@ type Props = {
 
 export default function (props: Props) {
   const context = getContext();
-  const locale = context.locale().locale;
-  const langKey = createMemo(() => getLangKey(locale));
 
   const [isSortedByDistance, toggleSortByDistance] = createSignal(true);
 
@@ -69,11 +67,8 @@ export default function (props: Props) {
       <ul class="grid grid-cols-3 gap-3 md:grid-cols-4" data-cy="countries-list">
         <For each={sortedGuesses()}>
           {(country) => {
-            const { NAME_LEN, ABBREV, NAME, FLAG } = country.properties;
-            let name = NAME_LEN >= 10 ? ABBREV : NAME;
-            if (context.locale().locale !== 'en-CA') {
-              name = country.properties[langKey()] as string;
-            }
+            const { FLAG } = country.properties;
+            const name = formatName(country, context.locale().locale);
             return (
               <li>
                 <button

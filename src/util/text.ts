@@ -23,11 +23,14 @@ export function formatName(country: Country, locale: Locale): string {
   const { NAME_LEN, ABBREV, NAME } = country.properties;
   const territory = isTerritory(country);
   let name = NAME;
-  if (locale !== "en-CA" && !territory) {
+  if (locale === "en-CA" && NAME === "Gambia") {
+    name = "The Gambia";
+  } else if (locale !== "en-CA" && !territory) {
     const langKey = createMemo(() => getLangKey(locale));
     name = country.properties[langKey()];
+  } else if (NAME_LEN >= 10) {
+    name = ABBREV;
   }
-  if (locale === "en-CA" && NAME_LEN >= 10) name = ABBREV;
   if (territory) {
     const { SOVEREIGNT } = country.properties;
     const sovereigntName = formatName(getCountry(SOVEREIGNT), locale);
