@@ -19,7 +19,7 @@ export function formatKm(m: number) {
   return `${format(rounded)}`;
 }
 
-export function formatName(country: Country, locale: Locale): string {
+function formatCountryName(country: Country, locale: Locale, abbreviate: boolean): string {
   const { NAME_LEN, ABBREV, NAME } = country.properties;
   const territory = isTerritory(country);
   let name = NAME;
@@ -28,14 +28,22 @@ export function formatName(country: Country, locale: Locale): string {
   } else if (locale !== "en-CA" && !territory) {
     const langKey = createMemo(() => getLangKey(locale));
     name = country.properties[langKey()];
-  } else if (NAME_LEN >= 10) {
+  } else if (abbreviate && NAME_LEN >= 10) {
     name = ABBREV;
   }
   if (territory) {
     const { SOVEREIGNT } = country.properties;
-    const sovereigntName = formatName(getCountry(SOVEREIGNT), locale);
+    const sovereigntName = formatCountryName(getCountry(SOVEREIGNT), locale, abbreviate);
     return `${name} 
     <br/> (${sovereigntName})`;
   }
   return name;
+}
+
+export function formatName(country: Country, locale: Locale): string {
+  return formatCountryName(country, locale, true);
+}
+
+export function formatFullName(country: Country, locale: Locale): string {
+  return formatCountryName(country, locale, false);
 }

@@ -10,7 +10,7 @@ import { isTerritory } from '../util/data';
 import alternateNames from '../data/alternate_names.json';
 import buggyNames from '../data/buggy_names.json';
 import Suggestion from './Suggestion';
-import { formatName } from '../util/text';
+import { formatFullName } from '../util/text';
 
 type Props = {
   guesses: GuessStore;
@@ -33,7 +33,7 @@ export default function (props: Props) {
     // Check win state first
     if (props.win()) {
       setMsg('');
-      const name = formatName(props.ans, locale);
+      const name = formatFullName(props.ans, locale);
       if (name) {
         return t('Game7', `The Mystery Country is ${name}!`, {
           answer: name,
@@ -153,7 +153,7 @@ export default function (props: Props) {
     });
     if (existingGuess) {
       if (locale === 'en-CA') {
-        setMsg(`Already guessed ${formatName(foundCountry, locale)}.`);
+        setMsg(`Already guessed ${formatFullName(foundCountry, locale)}.`);
       } else {
         setMsg(t('Game6', 'Already guessed'));
       }
@@ -211,7 +211,7 @@ export default function (props: Props) {
       return;
     }
     const topScore = topAnswer.score ?? 1;
-    const name = formatName(topAnswer.item, locale);
+    const name = formatFullName(topAnswer.item, locale);
     if (topScore < CORRECT_THRESHHOLD) {
       const existingGuess = props.guesses.countries.find((guess) => {
         return topAnswer.item.properties.NAME === guess.properties.NAME;
@@ -261,7 +261,7 @@ export default function (props: Props) {
     if (!foundCountry) return;
 
     const newCountry = JSON.parse(JSON.stringify(foundCountry)) as Country;
-    const name = formatName(newCountry, locale);
+    const name = formatFullName(newCountry, locale);
     const distance = polygonDistance(newCountry, props.ans);
     newCountry['proximity'] = distance;
     props.addGuess(newCountry);

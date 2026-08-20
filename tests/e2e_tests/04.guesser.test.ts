@@ -62,6 +62,14 @@ test.describe('Tests with a fake answer', () => {
     await page.getByTestId('guesser').type('burma');
     await page.keyboard.press('Enter');
     await expect(page.locator('p[data-testid="guess-msg"]')).toContainText('Myanmar is cooler');
+
+    await page.getByTestId('guesser').fill('Mauritania');
+    await page.keyboard.press('Enter');
+    await page.getByTestId('guesser').fill('Mauritania');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('p[data-testid="guess-msg"]')).toHaveText(
+      'Already guessed Mauritania.'
+    );
   });
 
   test('distance unit toggle', async ({ page }) => {
