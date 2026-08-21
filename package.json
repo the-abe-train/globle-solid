@@ -1,6 +1,6 @@
 {
   "name": "globle",
-  "version": "1.10.3",
+  "version": "1.10.4",
   "description": "Use your geography knowledge to figure out the mystery country in as few guesses as possible!",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
@@ -17,6 +17,7 @@
     "format:check": "prettier --check .",
     "deploy": "vite build && wrangler pages deploy dist",
     "test-distance": "tsx scripts/testDistance.ts",
+    "check:secrets": "node scripts/check-secrets.cjs",
     "check:version-bump": "node scripts/check-version-bump.cjs",
     "prepare": "husky"
   },
