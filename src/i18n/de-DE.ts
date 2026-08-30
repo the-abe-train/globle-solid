@@ -59,6 +59,7 @@ export const German: i18nMessages = {
   Game18: "Antwort aufdecken",
   Game19: `"{{guess}}" nicht in der Datenbank gefunden.`,
   Game20: `Meintest du {{guess}}?`,
+  Game21: 'Entfernung des letzten Versuchs',
   StatsTitle: "Statistiken",
   Stats1: "Letzter Sieg",
   Stats2: "Heutige Versuche",

@@ -89,6 +89,7 @@ export const Norwegian: i18nMessages = {
   Game18: "Vis svar",
   Game19: `"{{guess}}" ble ikke funnet i databasen.`,
   Game20: "Mente du {{guess}}?",
+  Game21: "Avstand for siste gjetning",
   Settings12: "Farger",
   Settings13: "Etiketter på",
   Settings14: "Etiketter av",

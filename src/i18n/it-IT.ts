@@ -50,6 +50,7 @@ export const Italian: i18nMessages = {
   Game8: "Confine più vicino",
   Game19: `"{{guess}}" non trovato nel database.`,
   Game20: `Intendevi dire {{guess}}?`,
+  Game21: 'Distanza del tentativo più recente',
   StatsTitle: "Statistiche",
   Stats1: "Ultima vittoria",
   Stats2: "Tentativi di oggi",

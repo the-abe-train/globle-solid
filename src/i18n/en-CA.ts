@@ -57,6 +57,7 @@ export const English: i18nMessages = {
   Game18: 'Reveal answer',
   Game19: `"{{guess}}" not found in database.`,
   Game20: 'Did you mean {{guess}}?',
+  Game21: 'Most recent guess distance',
   StatsTitle: 'Statistics',
   Stats1: 'Last win',
   Stats2: "Today's guesses",

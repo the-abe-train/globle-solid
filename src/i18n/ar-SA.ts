@@ -57,6 +57,7 @@ export const Arabic: i18nMessages = {
   Game18: 'كشف الإجابة',
   Game19: `"{{guess}}" غير موجودة في قاعدة البيانات.`,
   Game20: 'هل تقصد {{guess}}؟',
+  Game21: 'مسافة أحدث تخمين',
   StatsTitle: 'الإحصائيات',
   Stats1: 'آخر فوز',
   Stats2: 'تخمينات اليوم',

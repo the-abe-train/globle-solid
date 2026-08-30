@@ -50,6 +50,7 @@ export const Spanish: i18nMessages = {
   Game18: "Revelar respuesta",
   Game19: `"{{guess}}" no encontrado en la base de datos.`,
   Game20: `¿Quisiste decir {{guess}}?`,
+  Game21: 'Distancia del intento más reciente',
   StatsTitle: "Estadísticas",
   Stats1: "Última victoria	",
   Stats2: "Intentos de hoy",

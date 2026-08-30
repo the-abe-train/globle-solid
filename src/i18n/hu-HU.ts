@@ -49,6 +49,7 @@ export const Hungarian: i18nMessages = {
   Game8: "Legközelebbi határ:",
   Game19: `"{{guess}}" nem található az adatbázisban.`,
   Game20: `Arra gondoltál, hogy {{guess}}?`,
+  Game21: 'A legutóbbi találgatás távolsága',
   StatsTitle: "Statisztika",
   Stats1: "Utolsó nyerés",
   Stats2: "Mai próbálkozások",

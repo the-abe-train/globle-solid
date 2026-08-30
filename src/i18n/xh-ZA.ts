@@ -93,6 +93,7 @@ export const Xhosa: i18nMessages = {
   Game18: "Reveal answer",
   Game19: `"{{guess}}" not found in database.`,
   Game20: `Did you mean {{guess}}?`,
+  Game21: 'Umgama woqikelelo lwamva nje',
   Practice4: "Yes",
   Practice5: "No",
   TWL1: "Connect a TWL Account to backup your stats.",

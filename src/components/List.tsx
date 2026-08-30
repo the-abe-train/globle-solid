@@ -43,6 +43,13 @@ export default function (props: Props) {
     return list;
   });
 
+  const displayedDistance = createMemo(() => {
+    if (isSortedByDistance()) return props.guesses.closest;
+
+    const countries = props.guesses.countries;
+    return countries[countries.length - 1]?.proximity ?? 0;
+  });
+
   const isAlreadyShowingKm = context.distanceUnit().unit === 'km';
   const [isShowingKm, setShowingKm] = createSignal(isAlreadyShowingKm);
 
@@ -91,8 +98,22 @@ export default function (props: Props) {
         <div class="mt-8">
           <div class="flex items-center space-x-1">
             <p>
-              <span data-i18n="Game8">{t('Game8', 'Closest border')}</span>:{' '}
-              <span data-testid="closest-border">{formatKm(props.guesses.closest)}</span>
+              <Switch>
+                <Match when={isSortedByDistance()}>
+                  <span data-i18n="Game8">{t('Game8', 'Closest border')}</span>
+                </Match>
+                <Match when={!isSortedByDistance()}>
+                  <span data-i18n="Game21">{t('Game21', 'Most recent guess distance')}</span>
+                </Match>
+              </Switch>
+              :{' '}
+              <span data-testid="guess-distance">
+                <span
+                  data-testid={isSortedByDistance() ? 'closest-border' : 'recent-guess-distance'}
+                >
+                  {formatKm(displayedDistance())}
+                </span>
+              </span>
             </p>
             <Toggle
               setToggle={setShowingKm}

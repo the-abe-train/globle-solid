@@ -56,6 +56,7 @@ export const French: i18nMessages = {
   Game15: '{{guess}} est presque adjacent à la réponse !',
   Game19: `"{{guess}}" n'a pas été trouvé dans la base de données.`,
   Game20: `Vouliez-vous dire {{guess}}?`,
+  Game21: 'Distance de la tentative la plus récente',
   StatsTitle: 'Statistiques',
   Stats1: 'Dernière victoire',
   Stats2: "Tentatives d'aujourd'hui",

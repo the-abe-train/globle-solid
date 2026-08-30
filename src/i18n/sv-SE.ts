@@ -85,6 +85,7 @@ export const Swedish: i18nMessages = {
   Game18: "Visa svar",
   Game19: `"{{guess}}" hittades inte i databasen.`,
   Game20: `Menade du {{guess}}?`,
+  Game21: 'Avstånd för senaste gissningen',
   Settings12: "Färger",
   Settings13: "Etiketter på",
   Settings14: "Etiketter av",

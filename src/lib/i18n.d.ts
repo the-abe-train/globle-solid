@@ -58,6 +58,7 @@ declare global {
     Game18: string;
     Game19: string;
     Game20: string;
+    Game21: string;
     StatsTitle: string;
     Stats1: string;
     Stats2: string;

@@ -57,6 +57,7 @@
   Game18: "Atskleisti atsakymą",
   Game19: `"{{guess}}" nerasta duomenų bazėje.`,
   Game20: "Ar turėjote omenyje {{guess}}?",
+  Game21: "Paskutinio spėjimo atstumas",
   StatsTitle: "Statistika",
   Stats1: "Paskutinį kartą atspėta",
   Stats2: "Šios dienos spėjimai",

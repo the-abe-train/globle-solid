@@ -109,4 +109,5 @@ export const Portuguese: i18nMessages = {
   TWL9: "Vá para o seu",
   TWL10: "Jogue outro jogo de",
   Game20: `Você quis dizer {{guess}}?`,
+  Game21: 'Distância do chute mais recente',
 };

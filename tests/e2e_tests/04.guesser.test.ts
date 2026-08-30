@@ -80,7 +80,7 @@ test.describe('Tests with a fake answer', () => {
   await page.getByTestId('guesser').fill('saudi arabia');
   await page.keyboard.press('Enter');
 
-    const closestBorderText = await page.locator('[data-testid="closest-border"]').textContent();
+    const closestBorderText = await page.locator('[data-testid="guess-distance"]').textContent();
     expect(closestBorderText || '').toContain('3,265');
 
     const closestBorderUnit = await page.locator('[data-testid="toggle-text"]').textContent();
@@ -89,7 +89,7 @@ test.describe('Tests with a fake answer', () => {
     await page.locator('[data-cy="toggle-km-miles"]').click();
 
     const closestBorderTextMiles = await page
-      .locator('[data-testid="closest-border"]')
+      .locator('[data-testid="guess-distance"]')
       .textContent();
     expect(closestBorderTextMiles || '').toContain('2,030');
 
@@ -110,6 +110,22 @@ test.describe('Tests with a fake answer', () => {
     await page.locator('[data-cy="change-sort"]').click();
     const newFirstItemText = await page.locator('li').first().textContent();
     expect(newFirstItemText || '').toContain('Türkiye');
+
+    await expect(page.locator('[data-i18n="Game21"]')).toHaveText('Most recent guess distance');
+    const latestGuessDistance = await page.locator('[data-testid="guess-distance"]').textContent();
+
+    await page.getByTestId('guesser').fill('Canada');
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-testid="guess-distance"]')).not.toHaveText(
+      latestGuessDistance || '',
+    );
+
+    const canadaDistance = await page.locator('[data-testid="guess-distance"]').textContent();
+    await page.locator('[data-cy="change-sort"]').click();
+    await expect(page.locator('[data-i18n="Game8"]')).toHaveText('Closest border');
+    await expect(page.locator('[data-testid="guess-distance"]')).not.toHaveText(
+      canadaDistance || '',
+    );
   });
 
   test('winning the game', async ({ page }) => {

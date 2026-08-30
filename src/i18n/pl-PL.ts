@@ -85,6 +85,7 @@ export const Polish: i18nMessages = {
   Game18: "Pokaż odpowiedź",
   Game19: `"{{guess}}" nie znaleziono w bazie danych.`,
   Game20: `Czy miałeś na myśli {{guess}}?`,
+  Game21: 'Odległość ostatniej próby',
   Settings12: "Kolory",
   Settings13: "Etykiety włączone",
   Settings14: "Etykiety wyłączone",

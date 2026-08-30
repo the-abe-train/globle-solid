@@ -58,6 +58,7 @@ export const Zulu: i18nMessages = {
   Game18: "Veza impendulo",
   Game19: `"{{guess}}" alitholakali kudathabheyisi.`,
   Game20: "Ubuwusho {{guess}}?",
+  Game21: "Ibanga lokuqagela kwakamuva",
   StatsTitle: "Izibalo",
   Stats1: "Ukuphumelela kokugcina",
   Stats2: "Izibikezelo zanamuhla",
