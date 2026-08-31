@@ -1,5 +1,10 @@
 import crypto from 'crypto-js';
 import invariant from 'tiny-invariant';
+import {
+  DEFAULT_PUZZLE_TIME_ZONE,
+  isPuzzleDateAvailable,
+  isValidTimeZone,
+} from './answerAvailability';
 
 function encrypt(text: string, key: string) {
   const encyptedText = crypto.AES.encrypt(text, key).toString();
@@ -2216,34 +2221,62 @@ function pickAnswer(day: string) {
   return ans.key;
 }
 
-const onRequest: PagesFunction<E> = async (context) => {
+type AnswerContext = Parameters<PagesFunction<E>>[0];
+
+const jsonResponse = (body: Record<string, unknown>, status: number) =>
+  new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      'Cache-Control': 'no-store',
+      'Content-Type': 'application/json',
+    },
+  });
+
+export const handleAnswerRequest = async (context: AnswerContext, now = new Date()) => {
   try {
     const { request, env } = context;
+    if (request.method !== 'GET') {
+      return jsonResponse({ message: 'Method not allowed.' }, 405);
+    }
+
     const url = new URL(request.url);
-    const today = url.searchParams.get('day');
-    invariant(today, 'No date argument provided.');
+    const requestedDate = url.searchParams.get('day');
+    if (!requestedDate) {
+      return jsonResponse({ message: 'No date argument provided.' }, 400);
+    }
+
+    const requestTimeZone = (request as Request & { cf?: { timezone?: string } }).cf?.timezone;
+    const timeZone =
+      url.searchParams.get('timeZone') || requestTimeZone || DEFAULT_PUZZLE_TIME_ZONE;
+    if (!isValidTimeZone(timeZone)) {
+      return jsonResponse({ message: 'Invalid time zone.' }, 400);
+    }
+    if (!isPuzzleDateAvailable(requestedDate, timeZone, now)) {
+      return jsonResponse({ message: 'Puzzle is not available.' }, 404);
+    }
+
     invariant(env.CRYPTO_KEY, 'Missing CRYPTO_KEY env var');
-    const answerKey = pickAnswer(today);
+    const answerKey = pickAnswer(requestedDate);
     const answer = encrypt(`${answerKey}`, env.CRYPTO_KEY);
-    console.log({ answerKey, answer });
-    return new Response(
-      JSON.stringify({
+    return jsonResponse(
+      {
         message: 'Mystery country retrieved.',
         answer,
-      }),
-      { headers: { 'Content-Type': 'application/json' } },
+      },
+      200,
     );
   } catch (error) {
     console.error(error);
     const message = error instanceof Error ? error.message : 'Internal server error';
-    return new Response(
-      JSON.stringify({
+    return jsonResponse(
+      {
         message,
-        error,
-      }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } },
+      },
+      500,
     );
   }
 };
+
+const onRequest: PagesFunction<E> = (context) => handleAnswerRequest(context);
 
 export { onRequest };

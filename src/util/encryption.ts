@@ -43,8 +43,14 @@ async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<R
 
 export async function getAnswer(puzzleDate = getPuzzleDate()) {
   const listLength = rawAnswerData['features'].length;
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   // const endpoint = `/.netlify/functions/answer?day=${today}`;
-  const endpoint = `/answer?day=${puzzleDate}&list=${listLength}`;
+  const params = new URLSearchParams({
+    day: puzzleDate,
+    list: String(listLength),
+  });
+  if (timeZone) params.set('timeZone', timeZone);
+  const endpoint = `/answer?${params.toString()}`;
   try {
     const response = await fetchWithRetry(endpoint);
     if (!response.ok) throw new Error(`Server error (${response.status})`);
