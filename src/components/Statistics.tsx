@@ -96,7 +96,7 @@ https://globle-game.com
         <Icon shape="x" size={18} />
       </button>
       <h2
-        class="font-header text-center text-3xl font-extrabold dark:text-gray-200"
+        class="font-header text-center text-3xl dark:text-gray-200"
         data-i18n="StatsTitle"
       >
         {t('StatsTitle', 'Statistics')}

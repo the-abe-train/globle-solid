@@ -20,5 +20,5 @@ body {
 
 .font-header {
   font-family: var(--font-family-header);
-  font-weight: 600;
+  font-weight: 400;
 }

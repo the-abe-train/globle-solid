@@ -209,7 +209,7 @@ export default function () {
   return (
     <div class="space-y-10">
       <div class="space-y-5">
-        <h2 class="font-header my-5 text-center text-2xl font-extrabold" data-i18n="SettingsTitle">
+        <h2 class="font-header my-5 text-center text-2xl" data-i18n="SettingsTitle">
           {t('SettingsTitle', 'Settings')}
         </h2>
         <div class="mx-auto max-w-xs space-y-3">

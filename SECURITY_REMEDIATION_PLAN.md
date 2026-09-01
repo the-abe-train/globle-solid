@@ -16,6 +16,18 @@ Repositories in scope: `globle-solid`, `globle-capitals`, `mongo-gateway-globle`
   the repositories without human-only access. Deployment still has its own
   explicitly marked **MEAT PROXY** checkpoint.
 
+### User-experience flags
+
+- **UX CHANGE** means the item intentionally changes something a player can
+  see, do, or rely on, such as login, account sync, gameplay, rollover, or an
+  on-screen message.
+- **UX RISK** means no user-visible change is intended, but a bad migration,
+  configuration, or rollout could cause sign-in failures, missing statistics,
+  lost benefits, errors, or downtime.
+- An unchecked item with neither flag is expected to have no user-experience
+  impact. This convention applies to every to-do in this document, including
+  tests, documentation, incident review, and internal observability work.
+
 ## Executive summary
 
 The investigation confirmed two classes of issue across both games:
@@ -29,11 +41,10 @@ The investigation confirmed two classes of issue across both games:
    reads, statistics changes, daily-result changes, sponsor-token generation,
    and account deletion.
 
-The `/answer` containment is implemented and locally verified in
-`globle-solid`. It only serves the puzzle date currently available in the
-requested IANA time zone. The same containment still needs to be ported to
-`globle-capitals`, whose current answer endpoint accepts any scheduled date
-through 2027-06-30 and logs answer material.
+The `/answer` containment is implemented and locally verified in both game
+working trees. Each endpoint only serves the puzzle date currently available
+in the requested IANA time zone, and the Capitals answer-material logging has
+been removed. Neither working tree has been deployed yet.
 
 The account issue should be treated as high priority. The recommended design is
 to establish a verified login session at each game origin, derive identity from
@@ -64,15 +75,15 @@ that the browser can choose is authentication.
 - [x] Confirm that `/answer` accepts arbitrary scheduled dates through
       2027-06-30.
 - [x] Confirm that answer indexes, ciphertext, decrypted answers, and key
-      metadata are currently written to logs.
+      metadata were written to logs before the Phase 0 cleanup.
 - [x] Confirm that account and daily-stat calls use the same unauthenticated
       shared gateway. Some Capitals calls go directly from the browser rather than
       through same-origin Cloudflare functions.
 - [x] Confirm that `/sponsor?email=` has the same account-selection and signed
       token issue as Globle.
-- [ ] Port the `globle-solid` `/answer` availability guard, method restriction,
+- [x] Port the `globle-solid` `/answer` availability guard, method restriction,
       no-store response, browser-time-zone request, and tests to `globle-capitals`.
-- [ ] Remove Capitals client/server logging of answer indexes, ciphertext,
+- [x] Remove Capitals client/server logging of answer indexes, ciphertext,
       decrypted answers, and encryption-key metadata.
 
 ### `mongo-gateway-globle`
@@ -125,22 +136,25 @@ Target: same day.
 - [x] Stop logging plaintext answer indexes and ciphertext.
 - [x] Add unit coverage for current, past, future, invalid-time-zone, and method
       behavior.
-- [ ] **MEAT PROXY** — Review and accept the local-midnight/time-zone behavior,
+- [x] **MEAT PROXY** — Review and accept the local-midnight/time-zone behavior,
       including the narrow adjacent-date limitation described below.
-- [ ] **MEAT PROXY** — Approve and deploy the `globle-solid` containment.
+- [ ] **UX RISK** — **MEAT PROXY** — Approve and deploy the `globle-solid`
+      containment.
 - [ ] **MEAT PROXY** — Verify production returns `200` for the currently
       playable date and rejects unavailable scheduled dates.
 
 #### `globle-capitals`
 
-- [ ] Port every checked `globle-solid` answer-containment item above to the
+- [x] Port every checked `globle-solid` answer-containment item above to the
       Capitals implementation.
-- [ ] Add Capitals tests for current, past, future, malformed-date,
+- [x] Add Capitals tests for current, past, future, malformed-date,
       invalid-time-zone, cache, and unsupported-method behavior.
-- [ ] Remove verbose client logs that expose response bodies and decrypted
+- [x] Remove verbose client logs that expose response bodies and decrypted
       capital records.
-- [ ] Remove server logs that expose answer indexes or encryption-key metadata.
-- [ ] **MEAT PROXY** — Review the Capitals behavior and approve deployment.
+- [x] Remove server logs that expose answer indexes or encryption-key metadata.
+- [x] **MEAT PROXY** — Review and accept the Capitals local-midnight/time-zone
+      behavior.
+- [ ] **UX RISK** — **MEAT PROXY** — Approve the Capitals deployment.
 - [ ] **MEAT PROXY** — Verify the deployed Capitals endpoint rejects
       unavailable scheduled dates.
 
@@ -151,9 +165,18 @@ limits enumeration to currently live dates instead of the entire future
 schedule. A single official rollover time would remove even that narrow window
 but would change current player-facing behavior in both games.
 
+Decision recorded 2026-08-31: **MEAT PROXY** approved retaining local-midnight
+rollover in both games and accepted the adjacent-date limitation above.
+
 ### Account containment
 
-- [ ] **MEAT PROXY** — Choose one temporary containment option:
+Implementation and test items in this section are blocked until the first
+**MEAT PROXY** decision selects the production containment behavior. Disabling
+sync, adding Cloudflare Access, and retaining limited writes have materially
+different client and gateway implementations, so choosing one in code would
+make an unauthorized product/operations decision.
+
+- [ ] **UX CHANGE** — **MEAT PROXY** — Choose one temporary containment option:
   1. Preferred: disable `PUT`, `POST`, and `DELETE` on `/account` and disable
      writes to `/dailyStats` while keeping local browser statistics working.
   2. Put protected gateway and proxy routes behind a short-lived Cloudflare
@@ -161,17 +184,22 @@ but would change current player-facing behavior in both games.
   3. Minimum only: disable account deletion, reduce the 50,000/hour rate limit,
      and alert on one source accessing multiple emails. This reduces abuse but
      does not fix unauthorized access.
-- [ ] Implement the selected temporary behavior consistently in
+- [ ] **UX CHANGE** — Implement the selected temporary behavior consistently in
       `globle-solid`, `globle-capitals`, and `mongo-gateway-globle`.
-- [ ] Add a temporary account-sync notice in both game clients if sync is
+- [ ] **UX CHANGE** — Add a temporary account-sync notice in both game clients if sync is
       paused.
 - [ ] Add tests proving disabled methods cannot reach the gateway or database.
-- [ ] **MEAT PROXY** — Configure any required Cloudflare Access policy, route
+- [ ] **UX RISK** — **MEAT PROXY** — Configure any required Cloudflare Access policy, route
       setting, or temporary production environment flag.
-- [ ] **MEAT PROXY** — Approve and deploy temporary containment to all three
+- [ ] **UX CHANGE** — **MEAT PROXY** — Approve and deploy temporary containment to all three
       services.
 
 ### Incident review
+
+The analysis items in this section are blocked until the first two
+**MEAT PROXY** steps preserve and provide production logs. Restoration analysis
+also depends on confirmation of the available backup facilities. No production
+records have been queried or modified during this remediation work.
 
 - [ ] **MEAT PROXY** — Preserve Cloudflare and Deno request logs before their
       retention windows expire.
@@ -186,7 +214,7 @@ but would change current player-facing behavior in both games.
 - [ ] **MEAT PROXY** — Confirm what database backup and point-in-time recovery
       facilities are available.
 - [ ] Determine which corrupted records, if any, can be restored.
-- [ ] **MEAT PROXY** — Approve any production restoration or data correction
+- [ ] **UX RISK** — **MEAT PROXY** — Approve any production restoration or data correction
       before it runs.
 - [ ] **MEAT PROXY** — Record the disclosure timeline, communication with the
       reporter, deployed commits, and log-retention limits.
@@ -200,41 +228,41 @@ writes.
 
 ### Architecture decisions
 
-- [ ] **MEAT PROXY** — Approve server-verified sessions as the authentication
+- [ ] **UX CHANGE** — **MEAT PROXY** — Approve server-verified sessions as the authentication
       direction for both Globle and Globle Capitals.
-- [ ] **MEAT PROXY** — Choose session idle and absolute expiry periods.
-- [ ] **MEAT PROXY** — Confirm whether users may link both Google and Discord to
+- [ ] **UX CHANGE** — **MEAT PROXY** — Choose session idle and absolute expiry periods.
+- [ ] **UX CHANGE** — **MEAT PROXY** — Confirm whether users may link both Google and Discord to
       one TWL account.
-- [ ] **MEAT PROXY** — Decide whether account deletion requires a fresh provider
+- [ ] **UX CHANGE** — **MEAT PROXY** — Decide whether account deletion requires a fresh provider
       login and what confirmation UI is acceptable.
 
 ### Verified session implementation
 
-- [ ] Verify Google credential signature, issuer, audience/client ID, expiry,
+- [ ] **UX RISK** — Verify Google credential signature, issuer, audience/client ID, expiry,
       nonce/state, and `email_verified` in a server-side endpoint.
-- [ ] Exchange Discord OAuth codes server-side and obtain identity from
+- [ ] **UX RISK** — Exchange Discord OAuth codes server-side and obtain identity from
       Discord's API rather than trusting callback query parameters.
-- [ ] Resolve or create the canonical TWL account using the provider's stable
+- [ ] **UX RISK** — Resolve or create the canonical TWL account using the provider's stable
       issuer and subject identifiers.
-- [ ] Use `twlId` as the internal account identity; treat normalized email as a
-      changeable attribute.
-- [ ] Issue an opaque session identifier in a `Secure`, `HttpOnly`,
+- [ ] **UX RISK** — Use `twlId` as the internal account identity; treat normalized
+      email as a changeable attribute.
+- [ ] **UX RISK** — Issue an opaque session identifier in a `Secure`, `HttpOnly`,
       `SameSite=Lax`, `Path=/`, `__Host-` cookie.
 - [ ] Store only a hash of the session identifier server-side with provider,
       creation time, last-used time, idle expiry, absolute expiry, and revocation
       state.
-- [ ] Add session rotation, logout, revocation, and expired-session cleanup.
-- [ ] Add per-session CSRF protection to state-changing cookie-authenticated
+- [ ] **UX CHANGE** — Add session rotation, logout, revocation, and expired-session cleanup.
+- [ ] **UX RISK** — Add per-session CSRF protection to state-changing cookie-authenticated
       requests and verify `Origin` as an additional signal.
-- [ ] Derive account ID and email from the verified session on every protected
+- [ ] **UX RISK** — Derive account ID and email from the verified session on every protected
       request; ignore or reject client-supplied identity fields.
-- [ ] Update both games' Google and Discord flows to establish the new session.
-- [ ] Update both games' account, daily-stat, subscription, teacher-status, and
+- [ ] **UX CHANGE** — Update both games' Google and Discord flows to establish the new session.
+- [ ] **UX RISK** — Update both games' account, daily-stat, subscription, teacher-status, and
       sponsor calls to use the session-bound same-origin API.
-- [ ] Remove direct browser-to-gateway calls from `globle-capitals`.
-- [ ] **MEAT PROXY** — Create or verify production Google and Discord OAuth
+- [ ] **UX RISK** — Remove direct browser-to-gateway calls from `globle-capitals`.
+- [ ] **UX RISK** — **MEAT PROXY** — Create or verify production Google and Discord OAuth
       configuration, callback URLs, client IDs, and secrets for both game origins.
-- [ ] **MEAT PROXY** — Store provider and session secrets in the appropriate
+- [ ] **UX RISK** — **MEAT PROXY** — Store provider and session secrets in the appropriate
       Cloudflare/Deno production secret stores.
 
 ### Cloudflare-to-gateway authentication
@@ -253,45 +281,45 @@ Implementation checklist:
 
 - [ ] Define one versioned canonical request format shared by both game proxies
       and the gateway.
-- [ ] Sign internal requests with an HMAC key stored only in Cloudflare and
+- [ ] **UX RISK** — Sign internal requests with an HMAC key stored only in Cloudflare and
       Deno deployment secrets.
-- [ ] Verify signature, timestamp, body digest, game binding, key ID, and replay
+- [ ] **UX RISK** — Verify signature, timestamp, body digest, game binding, key ID, and replay
       nonce at the gateway before routing.
-- [ ] Reject unsigned, expired, replayed, body-modified, identity-modified, and
+- [ ] **UX RISK** — Reject unsigned, expired, replayed, body-modified, identity-modified, and
       wrong-game requests.
 - [ ] Strip browser-provided internal authentication headers before constructing
       the signed request.
-- [ ] Add short-overlap key rotation support.
+- [ ] **UX RISK** — Add short-overlap key rotation support.
 - [ ] Add audit mode that reports would-be signature failures without initially
       blocking legitimate traffic.
 - [ ] **MEAT PROXY** — Generate the production signing key using an approved
       secret-management method.
-- [ ] **MEAT PROXY** — Install the signing key and key ID in all relevant
+- [ ] **UX RISK** — **MEAT PROXY** — Install the signing key and key ID in all relevant
       Cloudflare Pages projects and the Deno gateway.
 - [ ] **MEAT PROXY** — Decide whether to retain HMAC signing long term or migrate
       to Cloudflare Access service tokens/private service networking.
 
 ### Account-provider data migration
 
-- [ ] Add a provider identity collection keyed by `(issuer, subject)` with a
+- [ ] **UX RISK** — Add a provider identity collection keyed by `(issuer, subject)` with a
       unique index.
-- [ ] Implement one-time linking of existing records after a verified email
+- [ ] **UX RISK** — Implement one-time linking of existing records after a verified email
       match.
-- [ ] Record completed migration and stop repeated email auto-linking once a
+- [ ] **UX RISK** — Record completed migration and stop repeated email auto-linking once a
       verified provider identity exists.
-- [ ] Implement conflict reporting rather than automatically merging ambiguous
+- [ ] **UX CHANGE** — Implement conflict reporting rather than automatically merging ambiguous
       accounts.
-- [ ] Keep Google and Discord identities separately linkable to one TWL account
+- [ ] **UX CHANGE** — Keep Google and Discord identities separately linkable to one TWL account
       if the approved product decision permits it.
-- [ ] Remove the public `fake` login method from production and restrict any
+- [ ] **UX RISK** — Remove the public `fake` login method from production and restrict any
       replacement to isolated tests.
 - [ ] Build a dry-run migration report containing counts and conflicts without
       exposing raw emails in normal logs.
-- [ ] **MEAT PROXY** — Define the account-recovery policy for changed provider
+- [ ] **UX CHANGE** — **MEAT PROXY** — Define the account-recovery policy for changed provider
       emails, lost providers, and identity conflicts.
-- [ ] **MEAT PROXY** — Review the dry-run report and approve the production
+- [ ] **UX RISK** — **MEAT PROXY** — Review the dry-run report and approve the production
       migration.
-- [ ] **MEAT PROXY** — Approve rollback or manual resolution for each ambiguous
+- [ ] **UX RISK** — **MEAT PROXY** — Approve rollback or manual resolution for each ambiguous
       account class.
 
 ## Phase 2: enforce object-level authorization on every route
@@ -313,40 +341,40 @@ Target: deploy with Phase 1 or immediately afterward.
 
 Route-hardening checklist:
 
-- [ ] Protect every account method with verified identity and load records by
+- [ ] **UX CHANGE** — Protect every account method with verified identity and load records by
       authenticated `twlId`.
-- [ ] Replace public account creation with authenticated account initialization.
-- [ ] Replace broad account-stat replacement with narrowly scoped operations.
-- [ ] Require recent reauthentication and explicit confirmation for account
+- [ ] **UX CHANGE** — Replace public account creation with authenticated account initialization.
+- [ ] **UX RISK** — Replace broad account-stat replacement with narrowly scoped operations.
+- [ ] **UX CHANGE** — Require recent reauthentication and explicit confirmation for account
       deletion.
-- [ ] Derive daily-stat identity and allowed puzzle date from authenticated
+- [ ] **UX RISK** — Derive daily-stat identity and allowed puzzle date from authenticated
       server state.
-- [ ] Make `/twlAccount` internal-only and return a purpose-specific DTO.
-- [ ] Make `/teachers` internal-only or self-only and return only capability
+- [ ] **UX RISK** — Make `/twlAccount` internal-only and return a purpose-specific DTO.
+- [ ] **UX RISK** — Make `/teachers` internal-only or self-only and return only capability
       booleans.
-- [ ] Bind `/sponsor` to the authenticated `twlId`; never accept a target email
+- [ ] **UX RISK** — Bind `/sponsor` to the authenticated `twlId`; never accept a target email
       and never log signed sponsor tokens.
-- [ ] Protect account-linked subscriptions with a session or require explicit
+- [ ] **UX CHANGE** — Protect account-linked subscriptions with a session or require explicit
       email verification for standalone newsletter subscriptions.
-- [ ] Return `401` without a valid session and `403` when an authenticated
+- [ ] **UX CHANGE** — Return `401` without a valid session and `403` when an authenticated
       principal lacks permission.
-- [ ] Stop revealing whether another email has an account.
-- [ ] Remove `_id`, `twlId`, provider metadata, login methods, subscription
+- [ ] **UX CHANGE** — Stop revealing whether another email has an account.
+- [ ] **UX RISK** — Remove `_id`, `twlId`, provider metadata, login methods, subscription
       details, and other internal fields from general account responses unless a
       reviewed UI requirement needs them.
-- [ ] Apply method allowlists at both games' Cloudflare layers and the gateway.
-- [ ] Replace permissive Zod `.passthrough()` schemas on protected writes with
+- [ ] **UX RISK** — Apply method allowlists at both games' Cloudflare layers and the gateway.
+- [ ] **UX RISK** — Replace permissive Zod `.passthrough()` schemas on protected writes with
       strict schemas.
-- [ ] Apply equivalent client and proxy changes to both `globle-solid` and
+- [ ] **UX RISK** — Apply equivalent client and proxy changes to both `globle-solid` and
       `globle-capitals`.
-- [ ] **MEAT PROXY** — Approve the minimal account, teacher, subscription, and
+- [ ] **UX RISK** — **MEAT PROXY** — Approve the minimal account, teacher, subscription, and
       sponsor response fields needed by each game's UI.
 
 ## Phase 3: redesign statistics writes
 
 Target: after authenticated account access is stable.
 
-- [ ] **MEAT PROXY** — Choose and document one statistics trust model:
+- [ ] **UX CHANGE** — **MEAT PROXY** — Choose and document one statistics trust model:
   1. Casual, user-owned statistics: authenticate ownership, but allow players to
      sync and therefore forge their own totals.
   2. Trusted statistics: validate attempts and guesses server-side and derive
@@ -356,30 +384,30 @@ Target: after authenticated account access is stable.
 
 Complete these only if Option A is selected:
 
-- [ ] Authenticate ownership while allowing each player to sync only their own
+- [ ] **UX RISK** — Authenticate ownership while allowing each player to sync only their own
       statistics.
-- [ ] Use a strict schema with maximum array and body sizes.
-- [ ] Reject negative values, invalid dates, and unreasonable jumps.
-- [ ] Add a version number and optimistic concurrency to prevent stale clients
+- [ ] **UX RISK** — Use a strict schema with maximum array and body sizes.
+- [ ] **UX RISK** — Reject negative values, invalid dates, and unreasonable jumps.
+- [ ] **UX RISK** — Add a version number and optimistic concurrency to prevent stale clients
       from overwriting newer data.
 - [ ] Keep an append-only audit record or short history for recovery.
-- [ ] Make daily writes idempotent with a unique
+- [ ] **UX RISK** — Make daily writes idempotent with a unique
       `(twlId, gameId, puzzleDate)` key.
-- [ ] Update both games to handle version conflicts and safe retries.
+- [ ] **UX CHANGE** — Update both games to handle version conflicts and safe retries.
 
 ### Option B: trusted statistics
 
 Complete these only if Option B is selected:
 
-- [ ] Stop accepting aggregate totals from the browser.
-- [ ] Create a server-side game attempt for the authenticated player and puzzle.
-- [ ] Submit guesses to the server and have it determine correctness and
+- [ ] **UX CHANGE** — Stop accepting aggregate totals from the browser.
+- [ ] **UX CHANGE** — Create a server-side game attempt for the authenticated player and puzzle.
+- [ ] **UX CHANGE** — Submit guesses to the server and have it determine correctness and
       proximity without returning the answer.
-- [ ] Append validated guess and completion events.
-- [ ] Derive games won, streaks, and guess distributions from those events.
-- [ ] Make completion idempotent and reject attempts for closed puzzle dates.
-- [ ] Retain enough event history to recompute aggregates.
-- [ ] Implement the model for both country and capital answer datasets.
+- [ ] **UX RISK** — Append validated guess and completion events.
+- [ ] **UX RISK** — Derive games won, streaks, and guess distributions from those events.
+- [ ] **UX CHANGE** — Make completion idempotent and reject attempts for closed puzzle dates.
+- [ ] **UX RISK** — Retain enough event history to recompute aggregates.
+- [ ] **UX CHANGE** — Implement the model for both country and capital answer datasets.
 
 Option A prevents one player corrupting another player's data, but a player can
 still forge their own totals. Option B also supplies the long-term fix for
@@ -387,24 +415,22 @@ same-day answer recovery and is a larger architectural change.
 
 ## Phase 4: answer architecture follow-up
 
-- [ ] **MEAT PROXY** — Choose one long-term answer model for both games:
+- [ ] **UX CHANGE** — **MEAT PROXY** — Choose one long-term answer model for both games:
   1. Keep the casual client-side model, remove AES, and explicitly accept that
      the currently playable answer can be inspected. Continue serving only
      currently available dates.
   2. Move guess evaluation to the server so the browser never receives the
      answer before completion.
-- [ ] **MEAT PROXY** — Decide whether both games retain local-midnight rollover
-      or adopt one worldwide rollover time.
-- [ ] If adopting worldwide rollover, define the official IANA time zone or UTC
-      boundary and update answer selection, client countdowns, stored puzzle dates,
-      and streak rules in both games.
-- [ ] If keeping local rollover, document that a caller may claim another time
+- [x] **MEAT PROXY** — Decide that both games retain local-midnight rollover.
+- [x] **UX CHANGE — NOT SELECTED:** worldwide rollover work is not applicable
+      because local-midnight rollover was retained.
+- [x] With local rollover retained, document that a caller may claim another time
       zone and access an adjacent date already live elsewhere.
-- [ ] If keeping client-side gameplay, remove AES and its key-management code so
+- [ ] **UX RISK** — If keeping client-side gameplay, remove AES and its key-management code so
       it is not presented as a security control.
-- [ ] If adopting server-side gameplay, implement country and capital guess
+- [ ] **UX CHANGE** — If adopting server-side gameplay, implement country and capital guess
       evaluation without returning answers before completion.
-- [ ] **MEAT PROXY** — Approve player-facing communication for any rollover or
+- [ ] **UX CHANGE** — **MEAT PROXY** — Approve player-facing communication for any rollover or
       gameplay behavior change.
 
 Rotating `CRYPTO_KEY` without changing the architecture is not a security fix;
@@ -419,25 +445,25 @@ the replacement key would be published in the next client bundle.
       correlation is necessary.
 - [ ] Log authenticated account ID, stable game ID, route, method, outcome,
       request ID, and coarse source metadata.
-- [ ] Alert on repeated authorization failures, signature failures, replay
+- [ ] **UX RISK** — Alert on repeated authorization failures, signature failures, replay
       attempts, multi-account access, unusual deletion volume, and large statistics
       changes.
-- [ ] Reduce rate limits to route-appropriate values and key them by both
+- [ ] **UX RISK** — Reduce rate limits to route-appropriate values and key them by both
       session and source IP.
-- [ ] Add database constraints and indexes for provider subjects, canonical
+- [ ] **UX RISK** — Add database constraints and indexes for provider subjects, canonical
       account IDs, and per-day statistics uniqueness.
-- [ ] Add automated backup verification and a documented restoration procedure.
+- [ ] **UX RISK** — Add automated backup verification and a documented restoration procedure.
 - [ ] Reconcile `mongo-gateway-globle/SECURITY.md` with the implementation; it
       currently claims JWT verification exists while newer code states it was
       removed.
-- [ ] Add a private security contact and coordinated-disclosure policy with
+- [ ] **UX CHANGE** — Add a private security contact and coordinated-disclosure policy with
       response targets to all relevant public properties.
 - [ ] **MEAT PROXY** — Choose production alert destinations and responsible
       responders.
-- [ ] **MEAT PROXY** — Configure production log retention, monitoring, and alert
+- [ ] **UX RISK** — **MEAT PROXY** — Configure production log retention, monitoring, and alert
       integrations.
-- [ ] **MEAT PROXY** — Confirm backup retention and recovery objectives.
-- [ ] **MEAT PROXY** — Publish or approve the security contact and disclosure
+- [ ] **UX RISK** — **MEAT PROXY** — Confirm backup retention and recovery objectives.
+- [ ] **UX CHANGE** — **MEAT PROXY** — Publish or approve the security contact and disclosure
       policy.
 
 ## Test plan
@@ -494,48 +520,48 @@ the replacement key would be published in the next client bundle.
 - [x] `globle-solid`: non-GET methods return `405`.
 - [x] `globle-solid`: answer material is no longer written by the answer
       function.
-- [ ] `globle-capitals`: add and pass the equivalent current/past/future/input/
+- [x] `globle-capitals`: add and pass the equivalent current/past/future/input/
       method tests.
-- [ ] `globle-capitals`: verify answer material and key metadata are absent from
+- [x] `globle-capitals`: verify answer material and key metadata are absent from
       client and server logs.
 - [ ] Add production smoke tests for both games that never request or reveal an
       unavailable answer value.
 
 ## Deployment sequence
 
-- [ ] **MEAT PROXY** — Review the time-zone limitation and approve the
-      `globle-solid` answer deployment.
-- [ ] **MEAT PROXY** — Deploy and smoke-test `globle-solid` answer containment.
-- [ ] Implement and locally verify the same containment in `globle-capitals`.
-- [ ] **MEAT PROXY** — Approve, deploy, and smoke-test the Capitals containment.
-- [ ] **MEAT PROXY** — Preserve production logs and choose temporary account
+- [x] **MEAT PROXY** — Review and accept the time-zone limitation for both games.
+- [ ] **UX RISK** — **MEAT PROXY** — Approve the `globle-solid` answer deployment.
+- [ ] **UX RISK** — **MEAT PROXY** — Deploy and smoke-test `globle-solid` answer containment.
+- [x] Implement and locally verify the same containment in `globle-capitals`.
+- [ ] **UX RISK** — **MEAT PROXY** — Approve, deploy, and smoke-test the Capitals containment.
+- [ ] **UX CHANGE** — **MEAT PROXY** — Preserve production logs and choose temporary account
       containment.
-- [ ] Implement and locally verify temporary containment in both clients and the
+- [ ] **UX CHANGE** — Implement and locally verify temporary containment in both clients and the
       gateway.
-- [ ] **MEAT PROXY** — Deploy temporary containment to both games and the
+- [ ] **UX CHANGE** — **MEAT PROXY** — Deploy temporary containment to both games and the
       gateway.
-- [ ] Implement provider verification and session creation without changing
+- [ ] **UX RISK** — Implement provider verification and session creation without changing
       existing reads; prepare staff-account tests.
-- [ ] **MEAT PROXY** — Configure production OAuth credentials/secrets, deploy
+- [ ] **UX CHANGE** — **MEAT PROXY** — Configure production OAuth credentials/secrets, deploy
       the session path, and run staff-account acceptance tests.
-- [ ] Implement signed Cloudflare-to-gateway requests and gateway verification
+- [ ] **UX RISK** — Implement signed Cloudflare-to-gateway requests and gateway verification
       in audit mode.
-- [ ] **MEAT PROXY** — Install signing secrets, deploy audit mode, and confirm
+- [ ] **UX RISK** — **MEAT PROXY** — Install signing secrets, deploy audit mode, and confirm
       legitimate Globle and Capitals traffic signs correctly.
-- [ ] Implement enforcement for reads and then writes; remove query-email
+- [ ] **UX CHANGE** — Implement enforcement for reads and then writes; remove query-email
       compatibility paths.
-- [ ] **MEAT PROXY** — Approve and deploy signature/session enforcement.
-- [ ] Build and dry-run Google/Discord account-link migration.
-- [ ] **MEAT PROXY** — Review conflicts and approve production migration.
-- [ ] Lock down `/twlAccount`, `/teachers`, `/sponsor`, and `/subscribe` in code
+- [ ] **UX CHANGE** — **MEAT PROXY** — Approve and deploy signature/session enforcement.
+- [ ] **UX RISK** — Build and dry-run Google/Discord account-link migration.
+- [ ] **UX RISK** — **MEAT PROXY** — Review conflicts and approve production migration.
+- [ ] **UX RISK** — Lock down `/twlAccount`, `/teachers`, `/sponsor`, and `/subscribe` in code
       and tests.
-- [ ] **MEAT PROXY** — Deploy adjacent-route lockdown and verify both games.
-- [ ] Implement the selected statistics trust model.
-- [ ] **MEAT PROXY** — Approve re-enabling account writes and deploy the selected
+- [ ] **UX RISK** — **MEAT PROXY** — Deploy adjacent-route lockdown and verify both games.
+- [ ] **UX CHANGE** — Implement the selected statistics trust model.
+- [ ] **UX CHANGE** — **MEAT PROXY** — Approve re-enabling account writes and deploy the selected
       statistics model.
-- [ ] Remove compatibility code, old secrets, token logging, and stale security
+- [ ] **UX RISK** — Remove compatibility code, old secrets, token logging, and stale security
       documentation.
-- [ ] **MEAT PROXY** — Revoke retired production secrets and approve final
+- [ ] **UX RISK** — **MEAT PROXY** — Revoke retired production secrets and approve final
       cleanup deployment.
 - [ ] **MEAT PROXY** — Commission or complete an independent authorization
       review before declaring remediation complete.

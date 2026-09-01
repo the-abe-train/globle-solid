@@ -3,6 +3,7 @@ import invariant from 'tiny-invariant';
 import {
   DEFAULT_PUZZLE_TIME_ZONE,
   isPuzzleDateAvailable,
+  isValidPuzzleDate,
   isValidTimeZone,
 } from './answerAvailability';
 
@@ -2243,6 +2244,9 @@ export const handleAnswerRequest = async (context: AnswerContext, now = new Date
     const requestedDate = url.searchParams.get('day');
     if (!requestedDate) {
       return jsonResponse({ message: 'No date argument provided.' }, 400);
+    }
+    if (!isValidPuzzleDate(requestedDate)) {
+      return jsonResponse({ message: 'Invalid date.' }, 400);
     }
 
     const requestTimeZone = (request as Request & { cf?: { timezone?: string } }).cf?.timezone;

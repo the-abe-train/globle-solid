@@ -34,7 +34,7 @@ export default function () {
     },
     {
       name: 'GLOBLE: CAPITALS',
-      style: 'text-xl mt-1 ml-1 mr-2 font-bold',
+      style: 'text-xl mt-1 ml-1 mr-2',
       url: 'https://globle-capitals.com',
       font: 'Montserrat',
       logo: globleCapitalsLogo,
@@ -43,7 +43,7 @@ export default function () {
     },
     {
       name: 'GLOBLE: LEAGUES',
-      style: 'text-xl mt-1 ml-1 mr-2 font-bold',
+      style: 'text-xl mt-1 ml-1 mr-2',
       url: 'https://globle-leagues.com',
       font: 'Montserrat',
       logo: globleLogo,

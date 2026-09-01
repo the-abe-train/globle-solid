@@ -2,6 +2,19 @@ const PUZZLE_DATE_FORMAT = /^\d{4}-\d{2}-\d{2}$/;
 
 export const DEFAULT_PUZZLE_TIME_ZONE = 'UTC';
 
+export function isValidPuzzleDate(value: string): boolean {
+  const match = value.match(PUZZLE_DATE_FORMAT);
+  if (!match) return false;
+
+  const [year, month, day] = value.split('-').map(Number);
+  const normalized = new Date(Date.UTC(year, month - 1, day));
+  return (
+    normalized.getUTCFullYear() === year &&
+    normalized.getUTCMonth() === month - 1 &&
+    normalized.getUTCDate() === day
+  );
+}
+
 export function isValidTimeZone(timeZone: string): boolean {
   try {
     new Intl.DateTimeFormat('en-US', { timeZone }).format();
@@ -29,7 +42,7 @@ export function isPuzzleDateAvailable(
   now: Date = new Date(),
 ): boolean {
   return (
-    PUZZLE_DATE_FORMAT.test(requestedDate) &&
+    isValidPuzzleDate(requestedDate) &&
     isValidTimeZone(timeZone) &&
     requestedDate === getPuzzleDateInTimeZone(now, timeZone)
   );

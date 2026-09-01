@@ -134,7 +134,7 @@ export default function () {
   ];
   return (
     <div class="my-4 space-y-6">
-      <h2 class="font-header text-center text-3xl font-extrabold dark:text-gray-200">{title()}</h2>
+      <h2 class="font-header text-center text-3xl dark:text-gray-200">{title()}</h2>
       <For each={faqs}>
         {(faq, idx) => {
           return <Item {...faq} idx={idx()} />;

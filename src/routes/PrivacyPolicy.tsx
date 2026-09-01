@@ -2,8 +2,8 @@ export default function () {
   return (
     <div class="col-span-6 md:col-span-12 space-y-3 my-4">
       <section class="max-w-3xl space-y-3 mx-auto">
-        <h1 class="text-3xl font-header font-bold">Globle Privacy Policy</h1>
-        <h2 class="text-2xl font-bold font-header">Disclaimer</h2>
+        <h1 class="text-3xl font-header">Globle Privacy Policy</h1>
+        <h2 class="text-2xl font-header">Disclaimer</h2>
         <p>
           When you see ads on Globle, they are being distributed by{" "}
           <a href="https://www.snack-media.com/" class="underline">
@@ -55,7 +55,7 @@ export default function () {
           interact with the internet, such as your IP address. Check out the
           links attached to learn more about each of these services.
         </p>
-        <h2 class="text-2xl font-bold font-header">Policy</h2>
+        <h2 class="text-2xl font-header">Policy</h2>
         <ol class="space-y-2 list-decimal list-inside">
           <li>
             <a href="#section1">Our Data Promise to you</a>

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import rawAnswerData from '../../src/data/country_data.json';
 
 test.describe('Play a practice game', () => {
@@ -9,7 +9,7 @@ test.describe('Play a practice game', () => {
   test('practice game', async ({ page }) => {
     // Set fake answer in localStorage before navigation
     const answer: any = (rawAnswerData as any).features.find(
-      (feature: any) => feature.properties.NAME === 'Madagascar'
+      (feature: any) => feature.properties.NAME === 'Madagascar',
     );
     await page.addInitScript((answerData) => {
       localStorage.setItem('practice', answerData as string);
@@ -30,10 +30,10 @@ test.describe('Play a practice game', () => {
     await page.locator('button[data-i18n="Game18"]').click();
     await checkMsgText(page, 'Madagascar');
 
-  // Play again
-  const yesBtn = page.locator('button[data-i18n="Practice4"]');
-  await expect(yesBtn).toBeVisible();
-  await yesBtn.click();
+    // Play again
+    const yesBtn = page.locator('button[data-i18n="Practice4"]');
+    await expect(yesBtn).toBeVisible();
+    await yesBtn.click();
     await checkMsgText(page, 'any country');
   });
 });

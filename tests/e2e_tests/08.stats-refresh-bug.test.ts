@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page } from './fixtures';
 import dayjs from 'dayjs';
 import dotenv from 'dotenv';
 import AES from 'crypto-js/aes';
@@ -38,7 +38,7 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
     const title = page.locator('h2[data-i18n="StatsTitle"]');
     if (!(await title.isVisible().catch(() => false))) {
       try {
-        await page.locator('button[aria-label="Statistics"]').click({ timeout: 2000 });
+        await page.locator('button[aria-label="Statistics"]').click();
       } catch (error) {
         // The game may auto-open the modal while Playwright is clicking, which
         // legitimately detaches the trigger button.
@@ -57,7 +57,7 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
         .locator('body')
         .click({ position: { x: 5, y: 5 } })
         .catch(() => {});
-      await page.waitForTimeout(150);
+      await expect(title).toBeHidden();
     }
   }
 
@@ -104,6 +104,13 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
     );
   }
 
+  function waitForAccountResponse(page: Page, method: 'GET' | 'PUT') {
+    return page.waitForResponse(
+      (response) =>
+        response.url().includes('/account?email=') && response.request().method() === method,
+    );
+  }
+
   async function winGameWithTodaysAnswer(page: Page) {
     const answerResponsePromise = page.waitForResponse((res) => res.url().includes('/answer'));
     await page.goto('/game', { waitUntil: 'domcontentloaded' });
@@ -113,8 +120,10 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
     const answer = decryptName(payload.answer);
 
     await page.getByTestId('guesser').fill(answer);
+    const accountUpdatePromise = waitForAccountResponse(page, 'PUT');
     await page.keyboard.press('Enter');
     await openStatsModal(page);
+    await accountUpdatePromise;
   }
 
   test('gamesWon should NOT increment when refreshing with logged-in user', async ({ page }) => {
@@ -147,15 +156,20 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
     // Close modal before refreshing
     await closeStatsModal(page);
 
+    const accountSyncPromise = waitForAccountResponse(page, 'GET');
     await page.reload({ waitUntil: 'domcontentloaded' });
+    await accountSyncPromise;
 
     // Open stats modal again and check values after refresh
-    await page.waitForTimeout(500);
     await openStatsModal(page);
-    await page.waitForTimeout(500);
 
-    const gamesWon2 = await page.locator('td[data-cy="games-won"]').textContent();
-    const currentStreak2 = await page.locator('td[data-cy="current-streak"]').textContent();
+    const gamesWon2Locator = page.locator('td[data-cy="games-won"]');
+    const currentStreak2Locator = page.locator('td[data-cy="current-streak"]');
+    await expect(gamesWon2Locator).toHaveText('11');
+    await expect(currentStreak2Locator).toHaveText('6');
+
+    const gamesWon2 = await gamesWon2Locator.textContent();
+    const currentStreak2 = await currentStreak2Locator.textContent();
 
     console.log('After refresh - Games Won:', gamesWon2, 'Current Streak:', currentStreak2);
 
@@ -184,13 +198,15 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
     expect(gamesWon1).toBe('16'); // Was 15, now 16
     await closeStatsModal(page);
 
+    const accountSyncPromise = waitForAccountResponse(page, 'GET');
     await page.goto('/settings', { waitUntil: 'domcontentloaded' });
+    await accountSyncPromise;
 
     // Check stats after Settings page load
-    await page.waitForTimeout(500);
     await openStatsModal(page);
-    await page.waitForTimeout(500);
-    const gamesWon2 = await page.locator('td[data-cy="games-won"]').textContent();
+    const gamesWon2Locator = page.locator('td[data-cy="games-won"]');
+    await expect(gamesWon2Locator).toHaveText('16');
+    const gamesWon2 = await gamesWon2Locator.textContent();
 
     expect(gamesWon2).toBe('16');
   });
@@ -216,12 +232,15 @@ test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
 
     await closeStatsModal(page);
 
+    const accountSyncPromise = waitForAccountResponse(page, 'GET');
     await page.goto('/settings', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(500);
+    await accountSyncPromise;
 
     await openStatsModal(page);
 
-    const currentStreak2 = await page.locator('td[data-cy="current-streak"]').textContent();
+    const currentStreak2Locator = page.locator('td[data-cy="current-streak"]');
+    await expect(currentStreak2Locator).toHaveText('13');
+    const currentStreak2 = await currentStreak2Locator.textContent();
 
     expect(currentStreak2).toBe('13');
     expect(currentStreak2).not.toBe('1');

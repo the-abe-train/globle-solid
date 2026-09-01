@@ -49,7 +49,7 @@ export default function Header({ showStats, setShowStats }: Props) {
           href="/game"
           data-cy="game-link"
         >
-          <h1 class="font-header w-min text-center text-3xl font-extrabold sm:w-max">GLOBLE</h1>
+          <h1 class="font-header w-min text-center text-3xl sm:w-max">GLOBLE</h1>
         </a>
         <div class="absolute right-0 bottom-1 flex space-x-1">
           <Show when={!showStats()} fallback={<Icon shape="stats" size={24} />}>

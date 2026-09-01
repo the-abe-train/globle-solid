@@ -55,7 +55,7 @@ export default function () {
 
   return (
     <div class="space-y-5">
-      <h2 class="font-header my-5 text-center text-2xl font-extrabold" data-i18n="helpTitle">
+      <h2 class="font-header my-5 text-center text-2xl" data-i18n="helpTitle">
         {t('helpTitle', 'How to Play')}
       </h2>
       <p data-i18n="help1">

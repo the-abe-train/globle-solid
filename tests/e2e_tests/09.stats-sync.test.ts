@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import dayjs from 'dayjs';
 
 test.describe('Stats Sync with Database', () => {
@@ -83,7 +83,6 @@ test.describe('Stats Sync with Database', () => {
 
     // Close stats modal
     await page.click('body');
-    await page.waitForTimeout(300);
 
     // Now simulate signing in by setting the user in localStorage
     // and navigating to Settings (which triggers the sync)
@@ -92,19 +91,28 @@ test.describe('Stats Sync with Database', () => {
     }, testEmail);
 
     // Navigate to Settings page to trigger stats sync
+    const accountSyncPromise = page.waitForResponse(
+      (response) =>
+        response.url().includes('/account?email=') && response.request().method() === 'GET',
+    );
     await page.goto('/settings');
+    await accountSyncPromise;
     // await page.waitForLoadState('networkidle');
-
-    // Wait for the account endpoint to be called (sync happens in onMount)
-    await page.waitForTimeout(1000); // Give time for the fetch to complete
 
     // Open stats modal to check synced values
     await page.getByRole('button', { name: 'Statistics' }).click();
     await expect(page.locator('h2[data-i18n="StatsTitle"]')).toBeVisible();
 
-    const gamesWonAfter = await page.locator('td[data-cy="games-won"]').textContent();
-    const currentStreakAfter = await page.locator('td[data-cy="current-streak"]').textContent();
-    const maxStreakAfter = await page.locator('td[data-cy="max-streak"]').textContent();
+    const gamesWonAfterLocator = page.locator('td[data-cy="games-won"]');
+    const currentStreakAfterLocator = page.locator('td[data-cy="current-streak"]');
+    const maxStreakAfterLocator = page.locator('td[data-cy="max-streak"]');
+    await expect(gamesWonAfterLocator).toHaveText(databaseStats.gamesWon.toString());
+    await expect(currentStreakAfterLocator).toHaveText(databaseStats.currentStreak.toString());
+    await expect(maxStreakAfterLocator).toHaveText(databaseStats.maxStreak.toString());
+
+    const gamesWonAfter = await gamesWonAfterLocator.textContent();
+    const currentStreakAfter = await currentStreakAfterLocator.textContent();
+    const maxStreakAfter = await maxStreakAfterLocator.textContent();
 
     console.log('After signing in:');
     console.log('  Games Won:', gamesWonAfter);
@@ -119,17 +127,13 @@ test.describe('Stats Sync with Database', () => {
 
     // Close modal
     await page.click('body');
-    await page.waitForTimeout(300);
 
     // Refresh the page to ensure stats persist
     await page.reload({ waitUntil: 'domcontentloaded' });
-    await page.waitForFunction(
-      (expectedGamesWon) => {
-        const storedStats = JSON.parse(localStorage.getItem('statistics') || '{}');
-        return storedStats.gamesWon === expectedGamesWon;
-      },
-      databaseStats.gamesWon,
-    );
+    await page.waitForFunction((expectedGamesWon) => {
+      const storedStats = JSON.parse(localStorage.getItem('statistics') || '{}');
+      return storedStats.gamesWon === expectedGamesWon;
+    }, databaseStats.gamesWon);
 
     // Check stats again after refresh
     await page.getByRole('button', { name: 'Statistics' }).click();
@@ -211,7 +215,6 @@ test.describe('Stats Sync with Database', () => {
 
     // Close stats modal
     await page.click('body');
-    await page.waitForTimeout(300);
 
     // Sign in
     await page.evaluate((email) => {
@@ -219,17 +222,28 @@ test.describe('Stats Sync with Database', () => {
     }, testEmail);
 
     // Navigate to Settings to trigger sync
+    const accountSyncPromise = page.waitForResponse(
+      (response) =>
+        response.url().includes('/account?email=') && response.request().method() === 'GET',
+    );
     await page.goto('/settings');
+    await accountSyncPromise;
     // await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
 
     // Open stats modal to check merged values
     await page.getByRole('button', { name: 'Statistics' }).click();
     await expect(page.locator('h2[data-i18n="StatsTitle"]')).toBeVisible();
 
-    const gamesWonAfter = await page.locator('td[data-cy="games-won"]').textContent();
-    const currentStreakAfter = await page.locator('td[data-cy="current-streak"]').textContent();
-    const maxStreakAfter = await page.locator('td[data-cy="max-streak"]').textContent();
+    const gamesWonAfterLocator = page.locator('td[data-cy="games-won"]');
+    const currentStreakAfterLocator = page.locator('td[data-cy="current-streak"]');
+    const maxStreakAfterLocator = page.locator('td[data-cy="max-streak"]');
+    await expect(gamesWonAfterLocator).toHaveText(databaseStats.gamesWon.toString());
+    await expect(currentStreakAfterLocator).toHaveText(localStats.currentStreak.toString());
+    await expect(maxStreakAfterLocator).toHaveText(databaseStats.maxStreak.toString());
+
+    const gamesWonAfter = await gamesWonAfterLocator.textContent();
+    const currentStreakAfter = await currentStreakAfterLocator.textContent();
+    const maxStreakAfter = await maxStreakAfterLocator.textContent();
 
     console.log('After signing in (merged stats):');
     console.log('  Games Won:', gamesWonAfter);

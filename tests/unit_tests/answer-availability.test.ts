@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   getPuzzleDateInTimeZone,
   isPuzzleDateAvailable,
+  isValidPuzzleDate,
   isValidTimeZone,
 } from '../../functions/answerAvailability';
 import { handleAnswerRequest } from '../../functions/answer';
@@ -31,6 +32,9 @@ describe('answer availability', () => {
 
   it('rejects invalid dates and time zones', () => {
     expect(isValidTimeZone('Not/A_Time_Zone')).toBe(false);
+    expect(isValidPuzzleDate('2026-08-31')).toBe(true);
+    expect(isValidPuzzleDate('August 31, 2026')).toBe(false);
+    expect(isValidPuzzleDate('2026-02-30')).toBe(false);
     expect(isPuzzleDateAvailable('August 31, 2026', 'UTC', now)).toBe(false);
     expect(isPuzzleDateAvailable('2026-08-31', 'Not/A_Time_Zone', now)).toBe(false);
   });
@@ -65,5 +69,22 @@ describe('answer availability', () => {
       now,
     );
     expect(response.status).toBe(405);
+  });
+
+  it('rejects missing, malformed, and impossible dates with 400', async () => {
+    const missing = await handleAnswerRequest(createContext('https://example.com/answer'), now);
+    expect(missing.status).toBe(400);
+
+    const malformed = await handleAnswerRequest(
+      createContext('https://example.com/answer?day=August-31&timeZone=UTC'),
+      now,
+    );
+    expect(malformed.status).toBe(400);
+
+    const impossible = await handleAnswerRequest(
+      createContext('https://example.com/answer?day=2026-02-30&timeZone=UTC'),
+      now,
+    );
+    expect(impossible.status).toBe(400);
   });
 });

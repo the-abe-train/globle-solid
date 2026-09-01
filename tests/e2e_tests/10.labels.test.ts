@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import rawAnswerData from '../../src/data/country_data.json';
 import { polygonDistance } from '../../src/util/geometry';
 
