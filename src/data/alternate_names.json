@@ -53,7 +53,8 @@
   ],
   "es-MX": [
     { "real": "netherlands", "alternative": "holanda" },
-    { "real": "united states", "alternative": "ee uu" }
+    { "real": "united states", "alternative": "ee uu" },
+    { "real": "democratic republic of the congo", "alternative": "rdc" }
   ],
   "de-DE": [],
   "hu-HU": [],
