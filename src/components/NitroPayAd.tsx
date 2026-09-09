@@ -11,7 +11,7 @@ export default function () {
   const isConnected = () => context.user().email !== '';
 
   let anchorAd: any;
-  let leftSiderail: any;
+  let leftSiderails: any[] = [];
   let isTeacher = false;
 
   // Don't run in Dev mode
@@ -64,7 +64,7 @@ export default function () {
     try {
       if ('nitroAds' in window && !isTeacher) {
         console.log('Loading NitroPay Ads');
-        [anchorAd, leftSiderail] = await Promise.all([
+        const [createdAnchorAd, ...createdLeftSiderails] = await Promise.all([
           // @ts-ignore
           window['nitroAds'].createAd('anchor', {
             refreshLimit: 0,
@@ -82,33 +82,75 @@ export default function () {
             },
             anchorBgColor: '#ffffff00',
           }),
-          // @ts-ignore
-          window['nitroAds'].createAd('left-siderail', {
-            refreshLimit: 0,
-            refreshTime: 30,
-            format: 'rail',
-            rail: 'left',
-            railOffsetTop: 0,
-            railOffsetBottom: 0,
-            railCollisionWhitelist: ['*'],
-            sizes: [
-              ['160', '600'],
-              ['300', '250'],
-              ['300', '600'],
-              ['320', '50'],
-              ['320', '100'],
-              ['336', '280'],
-              ['320', '480'],
-            ],
-            report: {
-              enabled: true,
-              icon: true,
-              wording: 'Report Ad',
-              position: 'bottom-right',
+          ...[
+            {
+              id: 'left-siderail-160',
+              sizes: [['160', '600']],
+              mediaQuery: '(min-width: 1025px) and (max-width: 1219.98px)',
             },
-            mediaQuery: '(min-width: 1025px)',
-          }),
+            {
+              id: 'left-siderail-300',
+              sizes: [
+                ['160', '600'],
+                ['300', '250'],
+                ['300', '600'],
+              ],
+              mediaQuery: '(min-width: 1220px) and (max-width: 1259.98px)',
+            },
+            {
+              id: 'left-siderail-320',
+              sizes: [
+                ['160', '600'],
+                ['300', '250'],
+                ['300', '600'],
+                ['320', '50'],
+                ['320', '100'],
+                ['320', '480'],
+              ],
+              mediaQuery: '(min-width: 1260px) and (max-width: 1291.98px)',
+            },
+            {
+              id: 'left-siderail-336',
+              sizes: [
+                ['160', '600'],
+                ['300', '250'],
+                ['300', '600'],
+                ['320', '50'],
+                ['320', '100'],
+                ['320', '480'],
+                ['336', '280'],
+              ],
+              mediaQuery: '(min-width: 1292px)',
+            },
+          ].map(({ id, sizes, mediaQuery }) =>
+            // @ts-ignore
+            window['nitroAds'].createAd(id, {
+              refreshLimit: 0,
+              refreshTime: 30,
+              format: 'rail',
+              rail: 'left',
+              railOffsetTop: 0,
+              railOffsetBottom: 0,
+              railSpacing: 10,
+              railCollisionWhitelist: ['*'],
+              sizes,
+              report: {
+                enabled: true,
+                icon: true,
+                wording: 'Report Ad',
+                position: 'bottom-right',
+              },
+              // The globe is at most 600px wide and centered. These breakpoints
+              // reserve the ad width plus the configured 10px edge spacing on
+              // each side: 600 + 2 * (ad width + 10px).
+              mediaQuery,
+            }),
+          ),
         ]);
+        anchorAd = createdAnchorAd;
+        leftSiderails = createdLeftSiderails.flatMap((ad: any) =>
+          Array.isArray(ad) ? ad : ad ? [ad] : [],
+        );
       } else {
         console.log('NitroPay not loaded.');
       }
@@ -124,7 +166,7 @@ export default function () {
       if ('nitroAds' in window) {
         console.log('Cleaning up NitroPay Ads');
         if (anchorAd) anchorAd.onNavigate();
-        if (leftSiderail) leftSiderail.onNavigate();
+        leftSiderails.forEach((ad) => ad.onNavigate());
 
         return console.log('NitroPay ad stopped.');
       }
