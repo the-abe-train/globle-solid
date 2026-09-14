@@ -1,6 +1,6 @@
 {
   "name": "globle",
-  "version": "1.10.5",
+  "version": "1.10.6",
   "description": "Use your geography knowledge to figure out the mystery country in as few guesses as possible!",
   "packageManager": "pnpm@10.33.0",
   "scripts": {
@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20221111.1",
+    "@cloudflare/workers-types": "^5.20260914.1",
     "@playwright/test": "^1.47.2",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/crypto-js": "^4.1.1",
@@ -48,7 +48,7 @@
     "vite-plugin-pwa": "^1.0.2",
     "vite-plugin-solid": "^2.11.8",
     "vitest": "^3.2.4",
-    "wrangler": "^4.115.0",
+    "wrangler": "^4.131.2",
     "zod": "^4.1.11"
   },
   "dependencies": {

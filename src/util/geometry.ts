@@ -12,9 +12,13 @@ function pointToCoordinates(point: Array<number>) {
   return coord;
 }
 
-function samplePoints(points: number[][]) {
-  // If the polygon is too big, reduce the number of points used in calculation
-  if (points.length > 500) {
+const MAX_POINT_COMPARISONS = 250_000;
+
+function samplePoints(points: number[][], comparisonCount: number) {
+  // Only reduce large polygons when the complete comparison would be expensive.
+  // Sampling a large country unconditionally can discard the point closest to a
+  // much smaller country even though comparing every point would be cheap.
+  if (points.length > 500 && comparisonCount > MAX_POINT_COMPARISONS) {
     return points.filter((_, idx) => {
       return idx % 2 === 0;
     });
@@ -26,13 +30,13 @@ function polygonPoints(country: Country) {
   const { geometry } = country;
   switch (geometry.type) {
     case 'Polygon':
-      return samplePoints(geometry.coordinates[0]);
+      return geometry.coordinates[0];
     case 'MultiPolygon':
       let points: number[][] = [];
       for (const polygon of geometry.coordinates) {
         points = [...points, ...polygon[0]];
       }
-      return samplePoints(points);
+      return points;
     default:
       throw new Error('Country data error');
   }
@@ -42,11 +46,15 @@ function calcProximity(points1: number[][], points2: number[][]) {
   // Find min distance between 2 sets of points
   const EARTH_CIRCUMFERENCE = 40_075_000;
   let distance = EARTH_CIRCUMFERENCE / 2;
-  for (let i = 0; i < points1.length; i++) {
-    const point1 = points1[i];
+  const comparisonCount = points1.length * points2.length;
+  const sampledPoints1 = samplePoints(points1, comparisonCount);
+  const sampledPoints2 = samplePoints(points2, comparisonCount);
+
+  for (let i = 0; i < sampledPoints1.length; i++) {
+    const point1 = sampledPoints1[i];
     const coord1 = pointToCoordinates(point1);
-    for (let j = 0; j < points2.length; j++) {
-      const point2 = points2[j];
+    for (let j = 0; j < sampledPoints2.length; j++) {
+      const point2 = sampledPoints2[j];
       const coord2 = pointToCoordinates(point2);
       const pointDistance = geometry.computeDistanceBetween(coord1, coord2);
       distance = Math.min(distance, pointDistance);
