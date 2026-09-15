@@ -1,12 +1,11 @@
 import dayjs from 'dayjs';
-import { Accessor, createMemo, createSignal, Setter } from 'solid-js';
+import { Accessor, createMemo, createSignal, onCleanup, Setter } from 'solid-js';
 import Icon from './Icon';
 import { getContext } from '../Context';
-import { isMobile } from '../util/globe';
-import UAParser from 'ua-parser-js';
 import { t } from '../i18n';
 import TwlAd from './TwlAd';
 import { createPracticeAns } from '../util/practice';
+import { deliverShare } from '../util/share';
 
 type Props = {
   showStats: Accessor<boolean>;
@@ -43,12 +42,16 @@ export default function (props: Props) {
     return statsTable;
   });
 
-  const [showPrompt, setShowPrompt] = createSignal(false);
-  const [promptType, setPromptType] = createSignal<ModalPrompt>('Message');
-  const [promptText, setPromptText] = createSignal('');
+  const [sharing, setSharing] = createSignal(false);
+  const [shareFeedback, setShareFeedback] = createSignal('');
+  const [shareFailed, setShareFailed] = createSignal(false);
+  let feedbackTimer: ReturnType<typeof setTimeout> | undefined;
+  onCleanup(() => clearTimeout(feedbackTimer));
 
   // Share score
-  async function copyToClipboard() {
+  async function shareScore() {
+    if (sharing()) return;
+
     const { lastWin, currentStreak, usedGuesses, emojiGuesses } = context.storedStats();
     const date = dayjs(lastWin);
     const sumGuesses = usedGuesses.reduce((a: number, b: number) => a + b, 0);
@@ -62,25 +65,23 @@ ${wonToday() ? emojiGuesses : '--'} = ${todaysGuesses}
 https://globle-game.com
 #globle`;
 
-    try {
-      const isFirefox = new UAParser().getBrowser().name === 'Firefox';
-      setPromptType('Message');
-      if ('canShare' in navigator && isMobile() && !isFirefox) {
-        await navigator.share({ title: 'Globle Stats', text: shareString });
-        setPromptText('Shared!');
-        setShowPrompt(true);
-      } else if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(shareString);
-        setPromptText('Copied!');
-        setShowPrompt(true);
-      } else {
-        document.execCommand('copy', true, shareString);
-        setPromptText('Copied!');
-        setShowPrompt(true);
-      }
-    } catch (e) {
-      setPromptText('This browser cannot share');
-      setShowPrompt(true);
+    clearTimeout(feedbackTimer);
+    setShareFeedback('');
+    setShareFailed(false);
+    setSharing(true);
+
+    const result = await deliverShare({ title: 'Globle Stats', text: shareString });
+    setSharing(false);
+
+    if (result.status === 'success') {
+      setShareFeedback(
+        result.method === 'web_share' ? 'Shared!' : t('Stats12', 'Copied to clipboard!'),
+      );
+      feedbackTimer = setTimeout(() => setShareFeedback(''), 2000);
+    } else if (result.status === 'error') {
+      console.error(result.error);
+      setShareFailed(true);
+      setShareFeedback('Retry');
     }
   }
 
@@ -95,10 +96,7 @@ https://globle-game.com
       <button class="absolute top-3 right-4" onClick={() => props.setShowStats(false)}>
         <Icon shape="x" size={18} />
       </button>
-      <h2
-        class="font-header text-center text-3xl dark:text-gray-200"
-        data-i18n="StatsTitle"
-      >
+      <h2 class="font-header text-center text-3xl dark:text-gray-200" data-i18n="StatsTitle">
         {t('StatsTitle', 'Statistics')}
       </h2>
       <table cell-padding="4rem" class="mx-auto w-full max-w-md dark:text-gray-200">
@@ -131,11 +129,15 @@ https://globle-game.com
         </button>
         <button
           class="block justify-around rounded-md bg-blue-700 px-8 py-2 text-base font-medium text-white hover:bg-blue-900 focus:ring-2 focus:ring-blue-300 focus:outline-none disabled:bg-blue-400 dark:bg-purple-800 dark:text-gray-200 dark:hover:bg-purple-900 dark:disabled:bg-purple-900"
-          onClick={copyToClipboard}
-          disabled={!wonToday()}
+          onClick={shareScore}
+          disabled={!wonToday() || sharing()}
+          aria-busy={sharing()}
+          aria-label={shareFailed() ? 'Sharing failed. Try again.' : undefined}
           data-i18n="Stats9"
         >
-          {t('Stats9', 'Share')}
+          <span role="status" aria-live="polite" aria-atomic="true">
+            {shareFeedback() || (sharing() ? 'Sharing…' : t('Stats9', 'Share'))}
+          </span>
         </button>
       </div>
       <TwlAd />
