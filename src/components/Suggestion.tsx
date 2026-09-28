@@ -1,7 +1,7 @@
 type Props = {
   message: string;
   countryName: string;
-  submitGuess: (guess: string) => void;
+  onAccept: () => void;
 };
 
 export default function (props: Props) {
@@ -18,17 +18,17 @@ export default function (props: Props) {
   };
 
   return (
-    <p>
+    <>
       {parts()?.before ?? props.message}
       {parts() && (
         <>
           <span
             class="cursor-pointer underline"
             tabIndex={0}
-            onClick={() => props.submitGuess(props.countryName)}
+            onClick={props.onAccept}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                props.submitGuess(props.countryName);
+                props.onAccept();
               }
             }}
           >
@@ -37,6 +37,6 @@ export default function (props: Props) {
           {parts()?.after}
         </>
       )}
-    </p>
+    </>
   );
 }

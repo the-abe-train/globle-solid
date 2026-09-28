@@ -19,6 +19,11 @@ type Props = {
   ans: Country;
 };
 
+type CountrySuggestion = {
+  country: Country;
+  displayName: string;
+};
+
 const CORRECT_THRESHHOLD = 0.000001;
 const APPROX_THRESHHOLD = 0.05;
 
@@ -28,7 +33,7 @@ export default function (props: Props) {
   const langKey = createMemo(() => getLangKey(locale));
 
   // Combined message system
-  const [suggestion, setSuggestion] = createSignal('');
+  const [suggestion, setSuggestion] = createSignal<CountrySuggestion>();
   const msg = createMemo(() => {
     // Check win state first
     if (props.win()) {
@@ -46,10 +51,7 @@ export default function (props: Props) {
     if (props.guesses.length === 0) {
       return t('Game3', 'Enter the name of any country to make your first guess!');
     } else if (props.guesses.length === 1) {
-      return t(
-        'Game4',
-        'Drag, tap, and zoom in on the globe to help you find your next guess.',
-      );
+      return t('Game4', 'Drag, tap, and zoom in on the globe to help you find your next guess.');
     }
     return '';
   });
@@ -122,10 +124,10 @@ export default function (props: Props) {
     }
   }
 
-  function directSearch(guess: string) {
+  function findExactCountry(guess: string) {
     const fixedGuess = guess.toLowerCase().trim();
     const countries = rawAnswerData['features'] as Country[];
-    const foundCountry = countries.find((country) => {
+    return countries.find((country) => {
       const { properties } = country;
       const { NAME, NAME_LONG, ABBREV, ADMIN, BRK_NAME, NAME_SORT } = properties;
       const name = langKey ? (properties[langKey()] as string) : NAME;
@@ -140,14 +142,9 @@ export default function (props: Props) {
         NAME_SORT.toLowerCase() === fixedGuess
       );
     });
-    if (!foundCountry) {
-      setMsg(
-        t('Game19', `"${guess}" not found in database.`, {
-          guess,
-        }),
-      );
-      return;
-    }
+  }
+
+  function useCountryIfNew(foundCountry: Country) {
     const existingGuess = props.guesses.countries.find((guess) => {
       return foundCountry.properties.NAME === guess.properties.NAME;
     });
@@ -162,9 +159,22 @@ export default function (props: Props) {
     return foundCountry;
   }
 
+  function directSearch(guess: string) {
+    const foundCountry = findExactCountry(guess);
+    if (!foundCountry) {
+      setMsg(
+        t('Game19', `"${guess}" not found in database.`, {
+          guess,
+        }),
+      );
+      return;
+    }
+    return useCountryIfNew(foundCountry);
+  }
+
   function findCountry(newGuess: string) {
     // Clear any prior suggestion so a stale one doesn't linger across guesses.
-    setSuggestion('');
+    setSuggestion(undefined);
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, '');
 
     if (buggyNames?.includes(cleanedGuess.toLowerCase())) {
@@ -192,6 +202,12 @@ export default function (props: Props) {
 
     const searchPhrase = findAltName(cleanedGuess) ?? cleanedGuess;
 
+    // Exact official and localized names should never be sent through the
+    // fuzzy-suggestion path. In particular, "The Gambia" is the English
+    // display name while the canonical data name is "Gambia".
+    const exactCountry = findExactCountry(searchPhrase);
+    if (exactCountry) return useCountryIfNew(exactCountry);
+
     if (searchPhrase.length <= 5) {
       return directSearch(searchPhrase);
     }
@@ -213,25 +229,14 @@ export default function (props: Props) {
     const topScore = topAnswer.score ?? 1;
     const name = formatFullName(topAnswer.item, locale);
     if (topScore < CORRECT_THRESHHOLD) {
-      const existingGuess = props.guesses.countries.find((guess) => {
-        return topAnswer.item.properties.NAME === guess.properties.NAME;
-      });
-      if (existingGuess) {
-        if (locale === 'en-CA') {
-          setMsg(`Already guessed ${name}.`);
-        } else {
-          setMsg(t('Game6', 'Already guessed'));
-        }
-        return;
-      }
-      return topAnswer.item;
+      return useCountryIfNew(topAnswer.item);
     } else if (topScore < APPROX_THRESHHOLD) {
       setMsg(
         t('Game20', `Did you mean ${name}?`, {
           guess: name,
         }),
       );
-      setSuggestion(name);
+      setSuggestion({ country: topAnswer.item, displayName: name });
       return;
     } else {
       setMsg(`"${newGuess}" not found in database.`);
@@ -260,6 +265,24 @@ export default function (props: Props) {
     const foundCountry = findCountry(guess);
     if (!foundCountry) return;
 
+    addCountry(foundCountry);
+  }
+
+  function acceptSuggestion() {
+    const suggestedCountry = suggestion()?.country;
+    if (!suggestedCountry) return;
+    setSuggestion(undefined);
+
+    const alreadyWon = props.guesses.countries.some(
+      (c) => c.properties.NAME === props.ans.properties.NAME,
+    );
+    if (props.win() || alreadyWon) return;
+    const foundCountry = useCountryIfNew(suggestedCountry);
+    if (!foundCountry) return;
+    addCountry(foundCountry);
+  }
+
+  function addCountry(foundCountry: Country) {
     const newCountry = JSON.parse(JSON.stringify(foundCountry)) as Country;
     const name = formatFullName(newCountry, locale);
     const distance = polygonDistance(newCountry, props.ans);
@@ -340,8 +363,8 @@ export default function (props: Props) {
         <p class="text-center font-medium" style={{ color: msgColour() }} data-testid="guess-msg">
           <Suggestion
             message={customMsg()}
-            countryName={suggestion()}
-            submitGuess={submitGuess}
+            countryName={suggestion()?.displayName ?? ''}
+            onAccept={acceptSuggestion}
           />
         </p>
       </Show>

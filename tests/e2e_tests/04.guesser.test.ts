@@ -194,4 +194,31 @@ test.describe('The Gambia display name', () => {
       'The Mystery Country is The Gambia!',
     );
   });
+
+  test('accepts The Gambia when its displayed suggestion is clicked', async ({ page }) => {
+    await page.goto('/game');
+    await page.getByTestId('guesser').fill('The Gambia?');
+    await page.keyboard.press('Enter');
+
+    await expect(page.locator('p[data-testid="guess-msg"]')).toContainText(
+      'Did you mean The Gambia?',
+    );
+    await page.locator('p[data-testid="guess-msg"] span', { hasText: 'The Gambia' }).click();
+
+    await expect(page.locator('[data-cy="countries-list"]')).toContainText('The Gambia');
+    await expect(page.locator('p[data-testid="guess-msg"]')).toContainText(
+      'The Mystery Country is The Gambia!',
+    );
+  });
+
+  test('accepts the exact official English name without suggesting it again', async ({ page }) => {
+    await page.goto('/game');
+    await page.getByTestId('guesser').fill('The Gambia');
+    await page.keyboard.press('Enter');
+
+    await expect(page.locator('[data-cy="countries-list"]')).toContainText('The Gambia');
+    await expect(page.locator('p[data-testid="guess-msg"]')).toContainText(
+      'The Mystery Country is The Gambia!',
+    );
+  });
 });
