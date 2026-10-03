@@ -1,24 +1,25 @@
-import { createEffect } from 'solid-js';
+import { createEffect, onCleanup } from 'solid-js';
 
-export function useGoogleFont(fontFamily: string) {
+export function useGoogleFont(fontFamily: () => string | undefined) {
   createEffect(() => {
-    if (!fontFamily) return;
+    const family = fontFamily();
+    if (!family) return;
 
     const link = document.createElement('link');
-    const encodedFont = fontFamily.replace(/ /g, '+');
+    const encodedFont = family.replace(/ /g, '+');
     link.href = `https://fonts.googleapis.com/css2?family=${encodedFont}&display=swap`;
     link.rel = 'stylesheet';
 
-    // Defer appending to avoid blocking the main thread during mount
+    // Defer appending to avoid blocking the main thread during mount.
     const timer = setTimeout(() => {
       document.head.appendChild(link);
     }, 0);
 
-    return () => {
+    onCleanup(() => {
       clearTimeout(timer);
       if (link.parentNode) {
         document.head.removeChild(link);
       }
-    };
-  }, [fontFamily]);
+    });
+  });
 }
