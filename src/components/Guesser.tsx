@@ -177,15 +177,6 @@ export default function (props: Props) {
     setSuggestion(undefined);
     const cleanedGuess = newGuess.replace(/[.,\/#!$%\^&\*;:{}=\_`~()]/g, '');
 
-    if (buggyNames?.includes(cleanedGuess.toLowerCase())) {
-      setMsg(
-        t('Game19', `"${newGuess}" not found in database.`, {
-          guess: newGuess,
-        }),
-      );
-      return;
-    }
-
     // Hardcoded exceptions
     if (cleanedGuess.toLowerCase() === 'namibia') {
       return directSearch('Namibia');
@@ -207,6 +198,17 @@ export default function (props: Props) {
     // display name while the canonical data name is "Gambia".
     const exactCountry = findExactCountry(searchPhrase);
     if (exactCountry) return useCountryIfNew(exactCountry);
+
+    // A rejected English typo can be an official name in another language
+    // (for example, "Dominique" in French). Exact names take priority.
+    if (buggyNames?.includes(cleanedGuess.toLowerCase())) {
+      setMsg(
+        t('Game19', `"${newGuess}" not found in database.`, {
+          guess: newGuess,
+        }),
+      );
+      return;
+    }
 
     if (searchPhrase.length <= 5) {
       return directSearch(searchPhrase);
