@@ -4,7 +4,7 @@ import { onRequestGet } from '../../functions/discordLogin';
 
 const fixture = {
   DISCORD_CLIENT_ID: 'fixture-client',
-  DISCORD_SECRET: 'fixture-private-client-secret',
+  DISCORD_SECRET: 'fixture-private-client-secret', // secret-scan: allow -- synthetic test credential
   DISCORD_STATE: '271828',
   DATABASE_NAME: 'fixture',
   MONGO_URL: '',
