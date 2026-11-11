@@ -1,3 +1,4 @@
+import { lastWinPuzzleDate } from '../util/statsDate';
 import dayjs from 'dayjs';
 import { Accessor, createMemo, createSignal, onCleanup, Setter } from 'solid-js';
 import Icon from './Icon';
@@ -16,7 +17,7 @@ export default function (props: Props) {
   const context = getContext();
 
   const wonToday = createMemo(() => {
-    const lastWin = dayjs(context.storedStats().lastWin);
+    const lastWin = dayjs(lastWinPuzzleDate(context.storedStats()));
     return lastWin.isSame(dayjs(), 'date');
   });
 
@@ -27,8 +28,8 @@ export default function (props: Props) {
     const showAvgGuesses = usedGuesses.length === 0 ? '--' : avgGuesses;
     const todaysGuesses = wonToday() ? usedGuesses[usedGuesses.length - 1] : '--';
 
-    const showLastWin = dayjs(lastWin).isAfter('2022-01-01')
-      ? dayjs(lastWin).format('YYYY-MM-DD')
+    const showLastWin = dayjs(lastWinPuzzleDate(context.storedStats())).isAfter('2022-01-01')
+      ? dayjs(lastWinPuzzleDate(context.storedStats())).format('YYYY-MM-DD')
       : '--';
 
     const statsTable = [
@@ -53,7 +54,7 @@ export default function (props: Props) {
     if (sharing()) return;
 
     const { lastWin, currentStreak, usedGuesses, emojiGuesses } = context.storedStats();
-    const date = dayjs(lastWin);
+    const date = dayjs(lastWinPuzzleDate(context.storedStats()));
     const sumGuesses = usedGuesses.reduce((a: number, b: number) => a + b, 0);
     const avgGuesses = Math.round((sumGuesses / usedGuesses.length) * 100) / 100;
     const showAvgGuesses = usedGuesses.length === 0 ? '--' : avgGuesses;

@@ -19,6 +19,7 @@ declare global {
   type Stats = {
     gamesWon: number;
     lastWin: string;
+    lastWinPuzzleDate?: string | null;
     currentStreak: number;
     maxStreak: number;
     usedGuesses: number[];

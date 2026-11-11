@@ -194,6 +194,7 @@ test('add game to stats', () => {
   const newStats = addGameToStats(stats1, guesses, ans);
   expect(newStats).toEqual({
     lastWin: dayjs().toString(),
+    lastWinPuzzleDate: dayjs().format('YYYY-MM-DD'),
     currentStreak: 1,
     emojiGuesses: '🟥🟥',
     gamesWon: 17,

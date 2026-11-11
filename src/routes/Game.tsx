@@ -150,7 +150,8 @@ function Inner(props: Props) {
           const localStats = context.storedStats();
           const combinedStats = combineStats(localStats, accountStats);
           console.log('Synced stats on game page load:', combinedStats);
-          context.storeStats(combinedStats);
+          // A concurrent win sync owns the completed puzzle and its new stats.
+          if (!win()) context.storeStats(combinedStats);
         } else if (isAccountMissingResult(accountStats)) {
           const localStats = context.storedStats();
           if (localStats.gamesWon > 0) {
@@ -216,7 +217,7 @@ function Inner(props: Props) {
         }
         // Then add the current game win to the stats
         console.log('Storing new game stats locally');
-        const newStats = addGameToStats(currentStats, winningGuesses, props.ans);
+        const newStats = addGameToStats(currentStats, winningGuesses, props.ans, props.puzzleDate);
         console.log("Storing final stats with today's win", newStats);
         console.log('newStats.lastWin value:', newStats.lastWin, 'type:', typeof newStats.lastWin);
         context.storeStats(newStats);
@@ -255,7 +256,7 @@ function Inner(props: Props) {
             guessesNames = context.storedGuesses().countries;
           }
           const dailyStatsBody = {
-            date: today.format('YYYY-MM-DD'),
+            date: props.puzzleDate,
             email,
             guesses: guessesNames,
             answer: props.ans.properties.NAME,
@@ -303,7 +304,7 @@ function Inner(props: Props) {
           withGatewayHeaders({
             method: 'PUT',
             body: JSON.stringify({
-              date: dayjs().format('YYYY-MM-DD'),
+              date: props.puzzleDate,
               email,
               guesses: guessNames,
               answer: props.ans.properties.NAME,

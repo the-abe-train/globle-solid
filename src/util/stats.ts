@@ -1,3 +1,4 @@
+import { lastWinPuzzleDate } from './statsDate';
 import dayjs from 'dayjs';
 import { z } from 'zod';
 import { emojiString } from './colour';
@@ -8,6 +9,7 @@ import { getAccountEndpoint, withGatewayHeaders } from './api';
 const StatsSchema = z.object({
   gamesWon: z.number(),
   lastWin: z.string(),
+  lastWinPuzzleDate: z.string().nullish(),
   currentStreak: z.number(),
   maxStreak: z.number(),
   usedGuesses: z.array(z.number()),
@@ -21,9 +23,17 @@ const AccountDataSchema = z.object({
 const ACCOUNT_CREATED_RESULT = 'Account created!';
 const ACCOUNT_NOT_FOUND_RESULT = 'Account not found!';
 
-export function addGameToStats(storedStats: Stats, guesses: Country[], ans: Country) {
-  const today = dayjs();
-  const lastWin = dayjs(storedStats.lastWin);
+export function addGameToStats(
+  storedStats: Stats,
+  guesses: Country[],
+  ans: Country,
+  puzzleDate = dayjs().format('YYYY-MM-DD'),
+) {
+  const today = dayjs(puzzleDate);
+  const lastWin = dayjs(lastWinPuzzleDate(storedStats));
+
+  // A delayed completion must not move newer progress backwards.
+  if (lastWin.isAfter(today, 'date')) return storedStats;
 
   // Check if user has already won today - if so, don't add a duplicate game.
   // We still reconcile today's guess count: legacy records (written before the
@@ -34,11 +44,7 @@ export function addGameToStats(storedStats: Stats, guesses: Country[], ans: Coun
   if (today.isSame(lastWin, 'date')) {
     const correctCount = guesses.length;
     const lastIndex = storedStats.usedGuesses.length - 1;
-    if (
-      lastIndex >= 0 &&
-      correctCount > 0 &&
-      storedStats.usedGuesses[lastIndex] !== correctCount
-    ) {
+    if (lastIndex >= 0 && correctCount > 0 && storedStats.usedGuesses[lastIndex] !== correctCount) {
       console.log(
         `Game already won today - correcting guess count from ${storedStats.usedGuesses[lastIndex]} to ${correctCount}`,
       );
@@ -52,13 +58,14 @@ export function addGameToStats(storedStats: Stats, guesses: Country[], ans: Coun
 
   // Store new stats in local storage
   const gamesWon = storedStats.gamesWon + 1;
-  const streakBroken = !dayjs().subtract(1, 'day').isSame(lastWin, 'date');
+  const streakBroken = !today.subtract(1, 'day').isSame(lastWin, 'date');
   const currentStreak = streakBroken ? 1 : storedStats.currentStreak + 1;
   const maxStreak = currentStreak > storedStats.maxStreak ? currentStreak : storedStats.maxStreak;
   const usedGuesses = [...storedStats.usedGuesses, guesses.length];
   const emojiGuesses = emojiString(guesses, ans);
   const newStats = {
-    lastWin: today.toString(),
+    lastWin: dayjs().toString(),
+    lastWinPuzzleDate: puzzleDate,
     gamesWon,
     currentStreak,
     maxStreak,
@@ -72,14 +79,16 @@ export function addGameToStats(storedStats: Stats, guesses: Country[], ans: Coun
 // On Oct 5, games won > 1000 was 612 (oops)
 
 export function combineStats(localStats: Stats, accountStats: Stats) {
-  const localLastWin = dayjs(localStats.lastWin);
-  const accountLastWin = dayjs(accountStats.lastWin);
+  const localLastWin = dayjs(lastWinPuzzleDate(localStats));
+  const accountLastWin = dayjs(lastWinPuzzleDate(accountStats));
 
   // If both stats are from the same day, this is a duplicate - return database version
   // Compare dates only (not timestamps) to avoid issues with different time formats
   if (localLastWin.isSame(accountLastWin, 'date')) {
     console.log('Same lastWin date detected - using database stats to avoid duplication');
-    return accountStats;
+    return localStats.lastWinPuzzleDate && !accountStats.lastWinPuzzleDate
+      ? { ...accountStats, lastWinPuzzleDate: localStats.lastWinPuzzleDate }
+      : accountStats;
   }
 
   let mostWins = localStats.gamesWon > accountStats.gamesWon ? localStats : accountStats;
@@ -91,8 +100,8 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
   const olderStats = localLastWin.isAfter(accountLastWin, 'date') ? accountStats : localStats;
   // const latestStats = localStats;
   // const olderStats = accountStats;
-  const prevWin = dayjs(olderStats.lastWin);
-  const lastWin = dayjs(latestStats.lastWin);
+  const prevWin = dayjs(lastWinPuzzleDate(olderStats));
+  const lastWin = dayjs(lastWinPuzzleDate(latestStats));
   const streakContnues =
     latestStats.currentStreak < olderStats.currentStreak &&
     lastWin.subtract(1, 'day').isSame(prevWin, 'date');
@@ -118,6 +127,7 @@ export function combineStats(localStats: Stats, accountStats: Stats) {
 
   const combinedStats: Stats = {
     lastWin: latestStats.lastWin,
+    ...(latestStats.lastWinPuzzleDate ? { lastWinPuzzleDate: latestStats.lastWinPuzzleDate } : {}),
     currentStreak,
     emojiGuesses: latestStats.emojiGuesses,
     gamesWon: usedGuesses.length,
