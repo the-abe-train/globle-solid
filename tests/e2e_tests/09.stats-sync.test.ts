@@ -2,10 +2,13 @@ import { test, expect } from './fixtures';
 import dayjs from 'dayjs';
 
 test.describe('Stats Sync with Database', () => {
-  const testEmail = 'test@example.com';
+  test.beforeEach(async ({ page }) => {
+    await page.clock.install();
+  });
+  const testEmail = 'test@example.test';
 
   // These are the fake stats that should be manually added to the database
-  // for the test@example.com account
+  // for the test@example.test account
   const databaseStats = {
     gamesWon: 42,
     lastWin: new Date('2025-10-04'), // Yesterday
@@ -63,6 +66,9 @@ test.describe('Stats Sync with Database', () => {
     // await page.waitForLoadState('networkidle');
 
     // Open stats modal to verify starting state (empty)
+    await expect(page.getByRole('button', { name: 'Statistics' })).toBeVisible();
+    // Finish the initial 500ms closed-modal transition before opening it.
+    await page.clock.runFor(500);
     await page.getByRole('button', { name: 'Statistics' }).click();
 
     await expect(page.locator('h2[data-i18n="StatsTitle"]')).toBeVisible();
@@ -100,6 +106,9 @@ test.describe('Stats Sync with Database', () => {
     // await page.waitForLoadState('networkidle');
 
     // Open stats modal to check synced values
+    await expect(page.getByRole('button', { name: 'Statistics' })).toBeVisible();
+    // Finish the initial 500ms closed-modal transition before opening it.
+    await page.clock.runFor(500);
     await page.getByRole('button', { name: 'Statistics' }).click();
     await expect(page.locator('h2[data-i18n="StatsTitle"]')).toBeVisible();
 
@@ -136,6 +145,9 @@ test.describe('Stats Sync with Database', () => {
     }, databaseStats.gamesWon);
 
     // Check stats again after refresh
+    await expect(page.getByRole('button', { name: 'Statistics' })).toBeVisible();
+    // Finish the initial 500ms closed-modal transition before opening it.
+    await page.clock.runFor(500);
     await page.getByRole('button', { name: 'Statistics' }).click();
     await expect(page.locator('h2[data-i18n="StatsTitle"]')).toBeVisible();
 
@@ -196,6 +208,9 @@ test.describe('Stats Sync with Database', () => {
     // await page.waitForLoadState('networkidle');
 
     // Open stats modal to verify starting state (local stats)
+    await expect(page.getByRole('button', { name: 'Statistics' })).toBeVisible();
+    // Finish the initial 500ms closed-modal transition before opening it.
+    await page.clock.runFor(500);
     await page.getByRole('button', { name: 'Statistics' }).click();
     await expect(page.locator('h2[data-i18n="StatsTitle"]')).toBeVisible();
 
@@ -231,6 +246,9 @@ test.describe('Stats Sync with Database', () => {
     // await page.waitForLoadState('networkidle');
 
     // Open stats modal to check merged values
+    await expect(page.getByRole('button', { name: 'Statistics' })).toBeVisible();
+    // Finish the initial 500ms closed-modal transition before opening it.
+    await page.clock.runFor(500);
     await page.getByRole('button', { name: 'Statistics' }).click();
     await expect(page.locator('h2[data-i18n="StatsTitle"]')).toBeVisible();
 

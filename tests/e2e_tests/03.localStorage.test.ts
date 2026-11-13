@@ -1,9 +1,8 @@
 import { test, expect } from './fixtures';
 import dayjs from 'dayjs';
 import AES from 'crypto-js/aes';
-import dotenv from 'dotenv';
 
-dotenv.config();
+
 
 test.describe('Guesses', () => {
   test('fabricate guesses in localStorage', async ({ page }) => {

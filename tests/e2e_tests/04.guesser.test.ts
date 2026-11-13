@@ -1,8 +1,7 @@
 import { test, expect } from './fixtures';
 import AES from 'crypto-js/aes';
-import dotenv from 'dotenv';
 
-dotenv.config();
+
 
 test.describe('Tests with a fake answer', () => {
   test.beforeEach(async ({ page }) => {

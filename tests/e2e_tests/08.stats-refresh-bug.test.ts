@@ -1,11 +1,10 @@
 import { test, expect, Page } from './fixtures';
 import dayjs from 'dayjs';
-import dotenv from 'dotenv';
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
 import rawAnswerData from '../../src/data/country_data.json';
 
-dotenv.config();
+
 /**
  * E2E tests for the stats refresh bug where gamesWon would increment on page refresh.
  *
@@ -21,7 +20,7 @@ dotenv.config();
  * - This prevents duplicate counting of the same game
  */
 test.describe('Stats refresh bug - gamesWon incrementing on refresh', () => {
-  const testEmail = 'test2@example.com';
+  const testEmail = 'test2@example.test';
 
   function decryptName(encryptedAnsKey: string): string {
     const cryptoKey = process.env.CRYPTO_KEY;

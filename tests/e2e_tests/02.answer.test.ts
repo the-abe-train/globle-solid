@@ -2,9 +2,8 @@ import { test, expect } from './fixtures';
 import AES from 'crypto-js/aes';
 import Utf8 from 'crypto-js/enc-utf8';
 import rawAnswerData from '../../src/data/country_data.json';
-import dotenv from 'dotenv';
 
-dotenv.config();
+
 
 test.describe('Game play tests', () => {
   function decryptName(encryptedAnsKey: string): string {

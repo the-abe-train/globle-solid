@@ -1,30 +1,27 @@
 import { defineConfig, devices } from '@playwright/test';
-
+process.env.CRYPTO_KEY = 'puzzle-date-test-key';
+process.env.VITE_CRYPTO_KEY = 'puzzle-date-test-key';
 export default defineConfig({
-  // Look for tests in both legacy e2eTests and new tests/e2e_tests folders
-  testDir: '.',
-  testMatch: ['e2eTests/**/*.test.ts', 'tests/e2e_tests/**/*.test.ts'],
+  testDir: './tests/e2e_tests',
+  testMatch: '*.test.ts',
+  testIgnore: ['**/security/**', '**/support/**'],
   fullyParallel: false,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  reporter: [['list']],
+  workers: 1,
+  forbidOnly: true,
+  retries: 0,
+  reporter: 'list',
+  metadata: { puzzleDateKey: 'puzzle-date-test-key' },
   use: {
-    baseURL: 'http://localhost:8788',
+    baseURL: 'http://127.0.0.1:4317',
     testIdAttribute: 'data-cy',
-    trace: 'on-first-retry',
+    serviceWorkers: 'block',
     screenshot: 'only-on-failure',
-    video: 'off',
+    trace: 'retain-on-failure',
   },
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-  ],
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'npm run build && wrangler pages dev dist --port 8788',
-    url: 'http://localhost:8788',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
+    command: 'env -i PATH="$PATH" HOME="$HOME" node tests/support/server.mjs 4317',
+    url: 'http://127.0.0.1:4317',
+    reuseExistingServer: false,
   },
 });

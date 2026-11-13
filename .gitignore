@@ -19,3 +19,6 @@ src/.DS_Store
 test-results/
 src/images/.DS_Store
 public/version.json
+
+# Local package-manager cache
+.pnpm-store/

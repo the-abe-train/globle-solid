@@ -1,11 +1,11 @@
-import { loadEnv } from 'vite';
-import { test, expect } from '@playwright/test';
+
+import { test, expect } from './fixtures';
 import crypto from 'crypto-js';
 import data from '../../src/data/country_data.json';
 
 test.use({ timezoneId: 'Europe/Prague', serviceWorkers: 'block' });
 test('puzzle date counts the next win and survives refresh', async ({ page }, testInfo) => {
-  const cryptoKey = testInfo.project.metadata.puzzleDateKey ?? loadEnv('development', process.cwd(), 'VITE_CRYPTO_KEY').VITE_CRYPTO_KEY;
+  const cryptoKey = testInfo.project.metadata.puzzleDateKey ?? 'puzzle-date-test-key';
   if (!cryptoKey) throw new Error('Missing public answer encryption key');
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));

@@ -10,7 +10,7 @@ test.describe('Authentication and membership tests', () => {
   const url = (email: string) => `/sponsor?email=${encodeURIComponent(email)}`;
 
   test('Club member', async ({ request, baseURL }) => {
-    const resp = await request.get(`${baseURL}${url('whytecheddamack@gmail.com')}`);
+    const resp = await request.get(`${baseURL}${url('member@example.test')}`);
     expect(resp.ok()).toBeTruthy();
     const json = (await resp.json()) as ResourceProps;
     console.log(json);
@@ -18,14 +18,14 @@ test.describe('Authentication and membership tests', () => {
   });
 
   test('Teacher', async ({ request, baseURL }) => {
-    const resp = await request.get(`${baseURL}${url('rgennes@andovercsd.org')}`);
+    const resp = await request.get(`${baseURL}${url('teacher@example.test')}`);
     expect(resp.ok()).toBeTruthy();
     const json = (await resp.json()) as ResourceProps;
     expect(json.isTeacher).toBe(true);
   });
 
   test('Not a club member', async ({ request, baseURL }) => {
-    const resp = await request.get(`${baseURL}${url('ventottoquattro@gmail.com')}`);
+    const resp = await request.get(`${baseURL}${url('nonmember@example.test')}`);
     expect(resp.ok()).toBeTruthy();
     const json = (await resp.json()) as ResourceProps;
     expect(json.clubMember).toBe(false);

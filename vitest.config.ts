@@ -1,29 +1,28 @@
 // vitest.config.ts
-import { defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  envDir: false,
   test: {
+    setupFiles: ['./tests/support/unit-setup.ts'],
     // Test configuration
-    environment: "happy-dom", // Use happy-dom for DOM testing
+    environment: 'happy-dom', // Use happy-dom for DOM testing
     globals: true, // Enable global test functions
     watch: true,
     testTimeout: 10_000, // Set test timeout to 10 seconds
     include: [
-      "tests/unit_tests/**/*.{test,spec}.{ts,tsx,js,jsx}",
+      'tests/unit_tests/**/*.{test,spec}.{ts,tsx,js,jsx}',
+      'tests/security/**/*.test.ts',
+      'tests/support/**/*.test.ts',
     ],
-    exclude: [
-      "node_modules/**",
-      "dist/**",
-      "e2eTests/**",
-      "tests/e2e_tests/**",
-    ],
+    exclude: ['node_modules/**', 'dist/**', 'e2eTests/**', 'tests/e2e_tests/**'],
   },
   define: {
     // This helps resolve the "ws does not work in browser" error
-    global: "globalThis",
+    global: 'globalThis',
   },
   // Explicitly set browser: false for problematic dependencies
   optimizeDeps: {
-    exclude: ["ws", "puppeteer"],
+    exclude: ['ws', 'puppeteer'],
   },
 });

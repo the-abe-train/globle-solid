@@ -1,10 +1,7 @@
 import { expect, test as base } from '@playwright/test';
 
-const thirdPartyResource =
-  /^https:\/\/(?:fonts\.googleapis\.com|fonts\.gstatic\.com|www\.googletagmanager\.com|s\.nitropay\.com)(?:\/|$)/;
-
 export const test = base.extend({
-  page: async ({ page }, use) => {
+  page: async ({ page, baseURL }, use) => {
     // App readiness is asserted through locators in each test. Waiting for the
     // full load event makes navigation depend on ads, analytics, and fonts.
     const goto = page.goto.bind(page);
@@ -26,8 +23,13 @@ export const test = base.extend({
         },
       });
     });
-    await page.route(thirdPartyResource, (route) => route.abort('blockedbyclient'));
+    await page.route('**/*', (route) =>
+      new URL(route.request().url()).origin === new URL(baseURL!).origin
+        ? route.continue()
+        : route.abort('blockedbyclient'),
+    );
     await use(page);
+    expect(await (await page.request.get('/__test__/violations')).json()).toEqual([]);
   },
 });
 
